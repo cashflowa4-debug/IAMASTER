@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0a1f44">
+<title>IA MASTER Academy</title>
+<style>
+:root{--b:#0a1f44;--b2:#1e3a8a;--o:#f59e0b;--o2:#fbbf24;--v:#059669;--r:#dc2626;--bg:#f3f4f6;--c:#fff;--t:#1a1a1a;--m:#6b7280;--br:#e5e7eb}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--t);font-size:15px;line-height:1.5;min-height:100vh;padding-bottom:72px}
+#netBar{position:fixed;top:0;left:0;right:0;height:22px;line-height:22px;text-align:center;font-size:11px;font-weight:600;z-index:9999;background:#d1fae5;color:#065f46}
+#netBar.off{background:#fee2e2;color:#991b1b}
+.screen{display:none;min-height:100vh;padding-top:22px}.screen.active{display:block}
+.topbar{position:sticky;top:22px;background:var(--b);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:100}
+.topbar h1{font-size:15px;font-weight:800;flex:1}.topbar h1 span{color:var(--o2)}
+.btn-logout{background:rgba(255,255,255,.2);border:none;color:#fff;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+.view{display:none;padding:16px}.view.active{display:block}
+.navbar{position:fixed;bottom:0;left:0;right:0;background:var(--c);display:flex;border-top:1px solid var(--br);z-index:100}
+.nav-item{flex:1;background:none;border:none;padding:8px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--m);font-size:9px;font-weight:600;cursor:pointer;font-family:inherit;position:relative}
+.nav-icon{font-size:18px}.nav-item.active{color:var(--b2)}
+.nav-badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--r);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:10px;min-width:14px;text-align:center}
+.card{background:var(--c);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-title{font-size:12px;color:var(--m);font-weight:700;text-transform:uppercase;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat{background:var(--c);border-radius:14px;padding:14px}
+.stat-label{font-size:10px;color:var(--m);font-weight:600;text-transform:uppercase}
+.stat-value{font-size:20px;font-weight:800;color:var(--b);margin-top:4px}
+.stat.hl{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff}.stat.hl .stat-label{color:var(--o2)}.stat.hl .stat-value{color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn:active{opacity:.8}
+.btn-primary{background:var(--b);color:#fff}.btn-or{background:var(--o);color:#fff}.btn-vert{background:var(--v);color:#fff}.btn-rouge{background:var(--r);color:#fff}
+.btn-outline{background:transparent;border:2px solid var(--b);color:var(--b)}
+.btn-block{display:flex;width:100%}.btn-sm{padding:8px 12px;font-size:13px;border-radius:8px}
+.form-group{margin-bottom:14px}.form-label{font-size:13px;font-weight:600;display:block;margin-bottom:6px}
+.form-input,.form-textarea{width:100%;padding:12px;border:2px solid var(--br);border-radius:10px;font-size:16px;font-family:inherit;background:var(--c);color:var(--t)}
+.form-input:focus,.form-textarea:focus{outline:none;border-color:var(--b2)}
+.form-textarea{resize:vertical;min-height:90px}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--o));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0}
+.row{background:var(--c);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.row .info{flex:1;min-width:0}.row .info b{display:block;color:var(--b);font-size:15px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .info small{color:var(--m);font-size:12px}
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-vert{background:#d1fae5;color:var(--v)}.badge-or{background:#fef3c7;color:#92400e}
+.badge-gris{background:#e5e7eb;color:var(--m)}.badge-bleu{background:#dbeafe;color:var(--b2)}.badge-rouge{background:#fee2e2;color:var(--r)}
+.login-screen{min-height:100vh;background:linear-gradient(135deg,var(--b),var(--b2) 60%,var(--o));display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;color:#fff;text-align:center;padding-top:22px}
+.login-screen h1{font-size:38px;font-weight:900;margin-bottom:8px}.login-screen h1 span{color:var(--o2)}
+.login-screen .quote{font-size:14px;opacity:.9;margin-bottom:32px;font-style:italic;max-width:85%}
+.login-btn{background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;padding:16px 22px;border-radius:14px;width:100%;max-width:320px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;gap:12px;font-family:inherit;text-align:left}
+.login-btn .icon{font-size:26px}.login-btn .txt{flex:1}.login-btn .sub{font-size:11px;opacity:.8;font-weight:400;display:block}
+.mod-card{background:var(--c);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;display:flex;gap:12px;align-items:center;border-left:5px solid var(--o)}
+.mod-card.done{border-left-color:var(--v)}
+.mod-card.locked{opacity:.55;border-left-color:var(--m);background:#f9fafb}
+.mod-card.locked .num{background:var(--m)}
+.mod-card.locked h3{color:var(--m)}
+.mod-card .num{width:40px;height:40px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+.mod-card.done .num{background:var(--v)}
+.mod-card h3{font-size:14px;color:var(--b);margin-bottom:2px}.mod-card small{font-size:12px;color:var(--m)}
+.lesson{background:var(--c);border-radius:12px;padding:16px;margin-bottom:10px}
+.lesson h4{color:var(--b);font-size:14px;margin-bottom:8px;font-weight:800}
+.lesson p{font-size:14px;line-height:1.7;white-space:pre-line}
+.prompt-box{background:var(--b);color:#e0e7ff;padding:12px;border-radius:8px;font-family:Consolas,monospace;font-size:12px;margin:8px 0;line-height:1.6;white-space:pre-line}
+.exercise-box{background:#fef3c7;border-left:4px solid var(--o);padding:12px;border-radius:8px;margin:10px 0}
+.exercise-box b{color:#92400e;font-size:12px;text-transform:uppercase;display:block;margin-bottom:4px}
+.revenu-box{background:#d1fae5;border-left:4px solid var(--v);padding:12px;border-radius:8px;margin:10px 0;color:#065f46;font-weight:700;font-size:13px}
+.progress-bar{height:8px;background:var(--br);border-radius:4px;overflow:hidden;margin:8px 0}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--o),var(--v));border-radius:4px}
+.search-bar{position:relative;margin-bottom:12px}
+.search-bar input{width:100%;padding:12px 14px 12px 40px;border:2px solid transparent;background:var(--c);border-radius:12px;font-size:16px;font-family:inherit;color:var(--t)}
+.search-bar input:focus{outline:none;border-color:var(--b2)}
+.search-bar::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px}
+.msg{background:var(--c);border-radius:12px;padding:12px;margin-bottom:8px;max-width:85%}
+.msg-admin{background:#dbeafe;border-left:4px solid var(--b2);margin-right:auto;color:#1e3a8a}
+.msg-learner{background:#d1fae5;border-left:4px solid var(--v);margin-left:auto;color:#065f46}
+.msg-peer{background:#f3e8ff;border-left:4px solid #9333ea;margin-right:auto;color:#581c87}
+.msg-announcement{background:#fef3c7;border-left:4px solid var(--o);max-width:100%;color:#92400e}
+.msg-meta{font-size:11px;margin-bottom:4px;font-weight:600;opacity:.8}
+.msg-text{font-size:14px;line-height:1.5;white-space:pre-wrap}
+.msg-wa{display:inline-block;margin-top:6px;font-size:12px;color:#25d366;font-weight:700;text-decoration:none}
+.empty{text-align:center;padding:40px 20px;color:var(--m)}.empty-icon{font-size:48px;margin-bottom:10px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.active{display:flex}
+.modal{background:var(--c);width:100%;max-width:500px;border-radius:20px 20px 0 0;padding:20px;max-height:90vh;overflow-y:auto;color:var(--t)}
+.modal-title{font-size:18px;font-weight:800;color:var(--b);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:var(--bg);border:none;width:32px;height:32px;border-radius:50%;font-size:18px;color:var(--m);cursor:pointer}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--b);color:#fff;padding:12px 20px;border-radius:30px;font-size:14px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300;max-width:90%}
+.toast.show{opacity:1}.toast.toast-success{background:var(--v)}.toast.toast-error{background:var(--r)}
+.flex{display:flex;gap:8px}.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}
+.text-muted{color:var(--m);font-size:13px}
+.back-btn{background:none;border:none;color:var(--b2);font-weight:700;padding:8px 0;cursor:pointer;font-size:14px;font-family:inherit;margin-bottom:8px}
+.warning-box{background:#fef3c7;border-left:4px solid var(--o);padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px;color:#92400e}
+.info-box{background:#dbeafe;border-left:4px solid var(--b2);padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px;color:#1e3a8a}
+.detail-header{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;padding:20px;border-radius:14px;margin-bottom:14px}
+.detail-header h2{font-size:20px;margin-bottom:4px}.detail-header p{color:var(--o2);font-size:13px;font-weight:600}
+.submission{background:var(--c);border-radius:12px;padding:14px;margin-bottom:10px;border-left:4px solid var(--o)}
+.submission.approved{border-left-color:var(--v)}.submission.rejected{border-left-color:var(--r)}
+.submission .s-head{display:flex;justify-content:space-between;margin-bottom:8px}
+.submission .s-content{font-size:14px;line-height:1.5;white-space:pre-wrap;padding:10px;background:var(--bg);border-radius:8px;margin:8px 0}
+.submission .s-feedback{background:#fef3c7;border-left:3px solid var(--o);padding:10px;border-radius:6px;font-size:13px;margin-top:8px;color:#92400e}
+.submission .s-feedback.approved{background:#d1fae5;border-left-color:var(--v);color:#065f46}
+.quiz-q{background:var(--c);border-radius:12px;padding:16px;margin-bottom:10px}
+.quiz-q h4{font-size:14px;color:var(--b);margin-bottom:10px}
+.quiz-opt{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;margin-bottom:6px;cursor:pointer;border:2px solid transparent}
+.quiz-opt.selected{border-color:var(--b2);background:#dbeafe;color:#1e3a8a}
+.quiz-opt.correct{border-color:var(--v);background:#d1fae5;color:#065f46}
+.quiz-opt.wrong{border-color:var(--r);background:#fee2e2;color:#991b1b}
+.quiz-opt .letter{width:26px;height:26px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0}
+.note-area{width:100%;padding:12px;border:2px solid var(--br);border-radius:10px;font-size:14px;font-family:inherit;background:var(--bg);color:var(--t);resize:vertical;min-height:80px}
+.search-result{background:var(--c);border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer}
+.search-result .st{font-size:10px;color:var(--m);font-weight:700;text-transform:uppercase;margin-bottom:2px}
+.search-result .sh{font-size:14px;font-weight:700;color:var(--b);margin-bottom:2px}
+.search-result .sp{font-size:12px;color:var(--m)}
+mark{background:#fef3c7;color:#92400e;padding:0 2px;border-radius:3px}
+audio{width:100%;margin:8px 0}
+.msg-input-bar{position:sticky;bottom:72px;background:var(--bg);padding:8px 0;display:flex;gap:8px;margin-top:8px}
+</style>
+</head>
+<body>
+<div id="netBar">● En ligne</div>
+
+<div class="screen active" id="s-login"><div class="login-screen"><h1>IA <span>MASTER</span></h1><p class="quote">« L'IA ne remplace pas l'Africain. Elle arme l'Africain. »</p>
+<button class="login-btn" data-action="go" data-screen="s-admin-login"><span class="icon">👨‍💼</span><div class="txt">Administrateur<span class="sub">Gestion</span></div></button>
+<button class="login-btn" data-action="go" data-screen="s-learner-entry"><span class="icon">🎓</span><div class="txt">Apprenant<span class="sub">Mon espace</span></div></button>
+<div style="margin-top:20px;font-size:11px;opacity:.6">IA MASTER ACADEMY · v10.5 (Freemium Pro)</div></div></div>
+
+<div class="screen" id="s-admin-login"><div class="login-screen" style="background:linear-gradient(135deg,var(--b),var(--b2))"><h1 style="font-size:22px">Accès Admin</h1><p style="font-size:12px;opacity:.8;margin-bottom:16px">Mot de passe sécurisé</p>
+<div style="width:100%;max-width:340px"><input id="adminPwd" type="password" placeholder="Mot de passe" style="width:100%;padding:14px;border-radius:10px;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);color:#fff;font-size:16px;margin-bottom:10px;outline:none"><button class="btn btn-or btn-block" data-action="auth.adminLogin">🔓 Se connecter</button></div>
+<button class="btn" data-action="go" data-screen="s-login" style="background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.4);margin-top:20px">← Retour</button></div></div>
+
+<div class="screen" id="s-learner-entry"><div class="login-screen"><h1 style="font-size:30px">🎓 Apprenant</h1><p class="quote">Bienvenue dans IA MASTER</p>
+<button class="login-btn" data-action="go" data-screen="s-learner-register"><span class="icon">✨</span><div class="txt">S'inscrire<span class="sub">Créer mon compte</span></div></button>
+<button class="login-btn" data-action="go" data-screen="s-learner-login"><span class="icon">🔑</span><div class="txt">Se connecter<span class="sub">J'ai un compte</span></div></button>
+<button class="btn" data-action="go" data-screen="s-login" style="background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.4);margin-top:16px">← Retour</button></div></div>
+
+<div class="screen" id="s-learner-login"><div class="login-screen">
+<h1 style="font-size:26px">🔑 Connexion</h1>
+<div style="width:100%;max-width:340px;text-align:left">
+<div class="form-group"><label class="form-label" style="color:#fff">Identifiant (Nom ou Téléphone)</label><input id="loginId" type="text" placeholder="Ex: Marie Dupont" style="width:100%;padding:14px;border-radius:10px;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);color:#fff;font-size:16px;outline:none"></div>
+<div class="form-group"><label class="form-label" style="color:#fff">Mot de passe ou Code PIN</label><input id="loginPwd" type="password" placeholder="••••••" style="width:100%;padding:14px;border-radius:10px;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);color:#fff;font-size:16px;outline:none"></div>
+<button class="btn btn-or btn-block mt-12" data-action="auth.learnerLogin">🔓 Se connecter</button>
+</div>
+<button class="btn" data-action="go" data-screen="s-learner-entry" style="background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.4);margin-top:20px">← Retour</button></div></div>
+
+<div class="screen" id="s-learner-register"><div class="topbar"><h1>✨ <span>Inscription</span></h1><button class="btn-logout" data-action="go" data-screen="s-learner-entry">Retour</button></div><div class="view active"><div class="card"><div class="card-title">Créer mon compte</div>
+<div class="info-box">🔐 Mot de passe ou PIN : 4+ caractères.</div>
+<div class="form-group"><label class="form-label">Nom complet *</label><input class="form-input" id="reg_name" placeholder="Marie Dupont"></div>
+<div class="form-group"><label class="form-label">Téléphone WhatsApp *</label><input class="form-input" id="reg_phone" type="tel" placeholder="+237 6 XX XX XX XX"></div>
+<div class="form-group"><label class="form-label">Mot de passe / PIN *</label><input class="form-input" id="reg_pwd" type="password" placeholder="Ex: 1234"></div>
+<div class="form-group"><label class="form-label">Confirmer *</label><input class="form-input" id="reg_pwd2" type="password" placeholder="Retape"></div>
+<button class="btn btn-or btn-block" data-action="auth.register">✅ Créer mon compte</button></div></div></div>
+
+<div class="screen" id="s-learner-payment"><div class="topbar"><h1>💳 <span>Débloquer</span></h1><button class="btn-logout" data-action="auth.logout">Quitter</button></div>
+<div class="view active">
+<div class="detail-header"><h2>Choisis ton option</h2><p id="payLearnerName"></p></div>
+<div class="card"><div class="card-title">💰 Achats en ligne</div><div id="payOptions"></div></div>
+<div class="card"><div class="card-title">✅ Paiement manuel (OM/MoMo direct)</div>
+<div class="info-box" style="font-size:12px">Si tu as payé directement au coach, colle la référence de ta transaction ci-dessous.</div>
+<div class="form-group"><label class="form-label">Méthode *</label><select class="form-input" id="pay_method"><option>Orange Money</option><option>MTN MoMo</option><option>Espèces</option></select></div>
+<div class="form-group"><label class="form-label">Ce paiement concerne :</label><select class="form-input" id="pay_type"><option value="pack">Le Pack Complet</option><option value="module">Un Module spécifique</option></select></div>
+<div class="form-group" id="pay_module_group" style="display:none"><label class="form-label">Quel module ?</label><select class="form-input" id="pay_module_id"></select></div>
+<div class="form-group"><label class="form-label">Référence transaction *</label><input class="form-input" id="pay_ref" placeholder="Ex: MP250417.1234"></div>
+<button class="btn btn-vert btn-block" data-action="learner.submitPayment">📤 Envoyer au coach</button></div>
+</div></div>
+
+<div class="screen" id="s-admin"><div class="topbar"><h1>👨‍💼 <span id="adminWho">Admin</span></h1><button class="btn-logout" data-action="auth.logout">Déconnexion</button></div>
+<div id="adminViews"><div class="view active" id="av-home"></div><div class="view" id="av-learners"></div><div class="view" id="av-detail"></div><div class="view" id="av-submissions"></div><div class="view" id="av-content"></div><div class="view" id="av-messages"></div><div class="view" id="av-chat"></div><div class="view" id="av-community"></div><div class="view" id="av-payments"></div><div class="view" id="av-settings"></div></div>
+<div class="navbar"><button class="nav-item active" data-action="nav" data-screen="admin" data-tab="home"><span class="nav-icon">🏠</span>Accueil</button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="learners"><span class="nav-icon">👥</span>Apprenants</button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="submissions"><span class="nav-icon">📝</span>Rendus<span class="nav-badge" id="adminBadgeSub" style="display:none">0</span></button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="content"><span class="nav-icon">📖</span>Contenu</button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="messages"><span class="nav-icon">💬</span>Messages<span class="nav-badge" id="adminBadgeMsg" style="display:none">0</span></button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="community"><span class="nav-icon">🌍</span>Communauté</button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="payments"><span class="nav-icon">💰</span>Paiements</button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="settings"><span class="nav-icon">⚙️</span>Réglages</button></div></div>
+
+<div class="screen" id="s-learner"><div class="topbar"><h1>🎓 <span id="learnerWho">Mon espace</span></h1><button class="btn-logout" data-action="auth.logout">Déconnexion</button></div>
+<div id="learnerViews"><div class="view active" id="lv-home"></div><div class="view" id="lv-modules"></div><div class="view" id="lv-module-detail"></div><div class="view" id="lv-submissions"></div><div class="view" id="lv-messages"></div><div class="view" id="lv-community"></div><div class="view" id="lv-attestation"></div><div class="view" id="lv-profile"></div></div>
+<div class="navbar"><button class="nav-item active" data-action="nav" data-screen="learner" data-tab="home"><span class="nav-icon">🏠</span>Accueil</button><button class="nav-item" data-action="nav" data-screen="learner" data-tab="modules"><span class="nav-icon">📚</span>Modules</button><button class="nav-item" data-action="nav" data-screen="learner" data-tab="submissions"><span class="nav-icon">📝</span>Rendus</button><button class="nav-item" data-action="nav" data-screen="learner" data-tab="messages"><span class="nav-icon">💬</span>Coach<span class="nav-badge" id="learnerBadgeMsg" style="display:none">0</span></button><button class="nav-item" data-action="nav" data-screen="learner" data-tab="community"><span class="nav-icon">🌍</span>Communauté</button><button class="nav-item" data-action="nav" data-screen="learner" data-tab="profile"><span class="nav-icon">👤</span>Profil</button></div></div>
+
+<div class="modal-bg" id="modalBg"><div class="modal" id="modalContent"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+/* **══════** SUPABASE SYNC (CLOUD) **══════** */
+const SUPABASE_URL = 'https://xmeqtsjgcivzarvkwcrg.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_yM8qSsStV4LL_KBnQ7RoXA_pkbZvwNs';
+
+const SupaSync = {
+  _saving: false,
+  async load() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/app_state?id=eq.main&select=data`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const rows = await res.json();
+      if (!rows.length || !rows[0].data || Object.keys(rows[0].data).length === 0) return null;
+      return rows[0].data;
+    } catch (e) { console.error('[Sync] load error:', e); return null; }
+  },
+  async save(data) {
+    if (this._saving) return;
+    this._saving = true;
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/app_state`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates'
+        },
+        body: JSON.stringify({ id: 'main', data: data, updated_at: new Date().toISOString() })
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+    } catch (e) { console.error('[Sync] save error:', e); To.show('⚠️ Sync échouée', 'error'); }
+    finally { this._saving = false; }
+  },
+  subscribe(onUpdate) {
+    if (!window.WebSocket) return;
+    const wsUrl = SUPABASE_URL.replace('https://', 'wss://') + '/realtime/v1/websocket?apikey=' + SUPABASE_KEY;
+    try {
+      const ws = new WebSocket(wsUrl);
+      ws.onopen = () => {
+        ws.send(JSON.stringify({
+          topic: 'realtime:public:app_state', event: 'phx_join',
+          payload: { config: { broadcast: { self: false }, presence: { key: '' }, postgres_changes: [{ event: '*', schema: 'public', table: 'app_state' }] } },
+          ref: '1'
+        }));
+      };
+      ws.onmessage = (msg) => {
+        try {
+          const d = JSON.parse(msg.data);
+          if (d.event === 'postgres_changes' && d.payload?.record?.id === 'main') onUpdate(d.payload.record.data);
+        } catch {}
+      };
+      setInterval(async () => {
+        if (ws.readyState !== 1) {
+          const remote = await this.load();
+          if (remote) onUpdate(remote);
+        }
+      }, 5000);
+    } catch (e) {}
+  },
+  async test() {
+    const data = await this.load();
+    if (data === null) return { ok: true, msg: '✅ Connecté (base vide)' };
+    return { ok: true, msg: '✅ Connecté — ' + (data.learners?.length || 0) + ' apprenant(s)' };
+  }
+};
+window.SupaSync = SupaSync;
+
+/* **══════** UTILS **══════** */
+const U={uid:()=>Date.now().toString(36)+Math.random().toString(36).substr(2,8),esc:s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),money:n=>new Intl.NumberFormat('fr-FR').format(Number(n)||0)+' F',date:i=>{if(!i)return'';try{return new Date(i).toLocaleDateString('fr-FR')}catch{return''}},dateTime:i=>{if(!i)return'';try{const d=new Date(i);return d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}catch{return''}},today:()=>new Date().toISOString().split('T')[0],debounce:(f,ms)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>f(...a),ms)}},hl:(x,q)=>{if(!q)return U.esc(x);try{return U.esc(x).replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>')}catch{return U.esc(x)}}};
+
+const Cr={async hash(p,s='iamaster-v9'){const d=new TextEncoder().encode(s+'::'+String(p));const b=await crypto.subtle.digest('SHA-256',d);return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')},async verify(p,h){const x=await Cr.hash(p);if(x.length!==h.length)return false;let d=0;for(let i=0;i<x.length;i++)d|=x.charCodeAt(i)^h.charCodeAt(i);return d===0},isStrong(p){return typeof p==='string'&&p.length>=6&&/[a-zA-Z]/.test(p)&&/\d/.test(p)&&/[^a-zA-Z\d]/.test(p)}};
+
+const St={
+  KEY:'iamaster_v9', _t:null, _d:false, _cache:null,
+  load:()=>{try{const r=localStorage.getItem(St.KEY);if(r){St._cache=JSON.parse(r);return St._cache}}catch(e){}return St._cache;},
+  save:d=>{
+    St._cache=d;
+    try{localStorage.setItem(St.KEY,JSON.stringify(d))}catch(e){}
+    St._d=true;
+    if(St._t)return true;
+    St._t=setTimeout(()=>{
+      try{ if(window.SupaSync) SupaSync.save(d); }catch(e){console.error(e)}
+      St._d=false; St._t=null;
+    },2000);
+    return true;
+  },
+  async loadFromCloud(){ if(!window.SupaSync) return null; const r=await SupaSync.load(); if(r){St._cache=r;try{localStorage.setItem(St.KEY,JSON.stringify(r))}catch(e){}return r}return null; },
+  flush:()=>{if(St._d&&St._t){clearTimeout(St._t);St._t=null;if(window.SupaSync&&St._cache)SupaSync.save(St._cache);}}
+};
+window.addEventListener('beforeunload',()=>St.flush());
+window.addEventListener('pagehide',()=>St.flush());
+
+const Nw={init(){const r=()=>{const e=document.getElementById('netBar');if(!e)return;e.className=navigator.onLine?'':'off';e.textContent=navigator.onLine?'● En ligne':'○ Hors ligne'};window.addEventListener('online',r);window.addEventListener('offline',r);r()}};
+const Hp={tap:()=>navigator.vibrate?.(10),ok:()=>navigator.vibrate?.([10,50,10]),err:()=>navigator.vibrate?.([100,50,100])};
+const To={show(m,t='info'){const e=document.getElementById('toast');if(!e)return;e.textContent=m;e.className='toast show'+(t==='success'?' toast-success':t==='error'?' toast-error':'');if(t==='success')Hp.ok();else if(t==='error')Hp.err();clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),2500)}};
+
+const Md={open(h){document.getElementById('modalContent').innerHTML=h;document.getElementById('modalBg').classList.add('active')},close(){document.getElementById('modalBg').classList.remove('active')}};
+const Dg={
+confirm(msg,onYes,opts={}){const{title='Confirmer',yes='Confirmer',no='Annuler',danger=false}=opts;
+Md.open(`<div class="modal-title">${U.esc(title)}<button class="modal-close" data-action="modal.close">✕</button></div>
+<p style="font-size:14px;margin-bottom:16px;white-space:pre-line">${U.esc(msg)}</p>
+<div class="flex"><button class="btn btn-outline btn-block" data-action="modal.close">${U.esc(no)}</button>
+<button class="btn ${danger?'btn-rouge':'btn-primary'} btn-block" id="dgYes">${U.esc(yes)}</button></div>`);
+document.getElementById('dgYes').onclick=()=>{Md.close();onYes()}},
+prompt(msg,onYes,opts={}){const{title='Saisir',placeholder='',value='',yes='Valider'}=opts;
+Md.open(`<div class="modal-title">${U.esc(title)}<button class="modal-close" data-action="modal.close">✕</button></div>
+<div class="form-group"><label class="form-label">${U.esc(msg)}</label><textarea class="form-textarea" id="dgInput" placeholder="${U.esc(placeholder)}">${U.esc(value)}</textarea></div>
+<div class="flex"><button class="btn btn-outline btn-block" data-action="modal.close">Annuler</button>
+<button class="btn btn-primary btn-block" id="dgYes">${U.esc(yes)}</button></div>`);
+const inp=document.getElementById('dgInput');inp.focus();
+document.getElementById('dgYes').onclick=()=>{const v=inp.value.trim();Md.close();onYes(v)}}
+};
+
+const Content={MODULES:{
+1:{title:"Maîtrise des Prompts",objectif:"Savoir parler à l'IA pour obtenir exactement ce que tu veux, du premier coup.",lessons:[
+{h:"🤔 C'est quoi un prompt ?",p:"Un prompt, c'est la consigne que tu écris à l'IA. Imagine un assistant très intelligent mais qui ne te connaît pas : il ne devine rien, il fait exactement ce que tu lui dis.\n\nUn bon prompt = réponse utile. Un mauvais prompt = réponse à côté de la plaque.\n\n👉 C'est LA compétence n°1. Si tu maîtrises ça, tout le reste devient facile."},
+{h:"🏆 La formule PROMPT PRO",p:"RÔLE + TÂCHE + DÉTAILS + STYLE + FORMAT\n\n• RÔLE : Qui doit être l'IA ? (expert marketing, coach sportif...)\n• TÂCHE : Que doit-elle faire ? (écrire, corriger, traduire...)\n• DÉTAILS : Le contexte (lieu, public, prix...)\n• STYLE : Le ton (sérieux, drôle, jeune...)\n• FORMAT : La forme (liste, paragraphe, tableau...)\n\nAvec ces 5 éléments, tu obtiens 90% du résultat dès le 1er essai."},
+{h:"📝 Exemple concret",prompt:"RÔLE : Tu es un expert marketing digital.\nTÂCHE : Écris 5 slogans pour une boutique de vêtements.\nDÉTAILS : Douala, jeunes 18-30 ans, prix 5 000-25 000 FCFA.\nSTYLE : Jeune, dynamique, français simple.\nFORMAT : Liste numérotée + 1 ligne d'explication par slogan."},
+{h:"⚠️ Les 3 erreurs à éviter",p:"1. Prompt trop court → réponse vague\n« Écris un texte » → l'IA ne sait pas pour quoi\n\n2. Trop de demandes d'un coup → résultat brouillon\n« Écris un slogan + affiche + vidéo + logo » → une chose à la fois\n\n3. Ne pas relire → publier une erreur\nL'IA se trompe parfois : vérifie toujours avant d'envoyer à un client."},
+{h:"💰 Les 5 prompts qui rapportent",p:"• Slogan boutique : 500-1 000 FCFA\n• Description produit WhatsApp : 500-1 500 FCFA\n• Texte pub Facebook : 1 000-2 000 FCFA\n• Message de relance client : 500-1 000 FCFA\n• 10 idées TikTok : 2 000-3 000 FCFA\n\n👉 Pack 5 prompts = 2 000-5 000 FCFA. Tu peux en vendre 3/jour = 6 000 FCFA/jour."}
+],exercice:"Écris 3 prompts complets avec la formule PROMPT PRO pour 3 commerces différents. Colle les résultats, dis lequel est le meilleur.",revenu:"500–2 000 FCFA par prompt · 2 000–5 000 FCFA par pack de 5"},
+2:{title:"Affiches Pro + 1er Client",objectif:"Créer une affiche qui vend en 10 minutes, et la vendre dès aujourd'hui.",lessons:[
+{h:"🎨 Pourquoi Canva est ton meilleur ami",p:"Canva = Photoshop pour les gens normaux.\n\n✅ Gratuit ✅ En français ✅ Sur téléphone ✅ Des milliers de modèles\n\nToutes tes affiches passeront par Canva. Apprends-le une fois, utilise-le toute ta vie."},
+{h:"📱 Les 6 étapes",p:"1. Canva → « Créer un design » → « Post Instagram » (1080×1080)\n2. Modèle gratuit adapté à l'activité\n3. Remplace TOUT : nom, produit, prix, WhatsApp, lieu\n4. Change les couleurs\n5. Exporte en PNG haute qualité\n\n⚡ 10 min la 1ère fois, 3 min après."},
+{h:"💡 Une affiche qui VEND, ça contient quoi",p:"• Nom du commerce EN GRAND\n• Le produit/service principal\n• Le prix (ou « à partir de... »)\n• Numéro WhatsApp CLICQUABLE\n• Une seule action (« Appelez maintenant »)\n• 2-3 couleurs max\n\n❌ Erreur n°1 : trop de texte.\n✅ Règle : si ta grand-mère ne peut pas lire en 3 sec, c'est trop chargé."},
+{h:"🔥 Action commerciale (1er client)",p:"1. Choisis 1 commerçant de ton quartier\n2. Fais son affiche GRATUITEMENT\n3. Montre-lui : « J'ai vu que tu n'avais pas d'affiche pro, je t'en ai fait une. Elle te plaît ? »\n4. S'il aime : « Je peux t'en faire 3 autres avec ta photo, 2 000 FCFA. »\n5. Envoie la capture dans ton rendu\n\n⚡ 9 fois sur 10, il dit oui."},
+{h:"💰 Grille de prix",p:"• 1 affiche : 1 000–1 500 FCFA\n• 3 affiches cohérentes : 3 000 FCFA\n• Pack 5 : 5 000 FCFA\n• Abonnement mensuel (4 affiches) : 8 000 FCFA\n\n👉 Objectif Jour 2 : 1 client = 2 000 FCFA."}
+],exercice:"Créer 3 affiches (restaurant, vêtements, coiffure) en 1080×1080. Envoyer les 3 captures + nom du 1er commerçant contacté.",revenu:"1 000–3 000 FCFA par affiche · 5 000 FCFA par pack"},
+3:{title:"Logo Professionnel",objectif:"Créer un logo simple, propre et mémorable en 15 minutes.",lessons:[
+{h:"🎯 C'est quoi un BON logo",p:"Un bon logo n'est pas un dessin compliqué. C'est une marque qu'on reconnaît en 2 secondes.\n\n4 règles d'or :\n1. SIMPLE (2 couleurs max)\n2. MÉMORABLE\n3. LISIBLE petit comme grand\n4. INTEMPOREL\n\n👉 Nike, Apple, MTN : tous ultra simples."},
+{h:"🛠️ Les 5 étapes Canva",p:"1. Canva → recherche « Logo »\n2. Filtre « Gratuit »\n3. Modèle adapté à l'activité\n4. Remplace nom + slogan\n5. 2 couleurs max\n6. Exporte en PNG fond transparent\n\n⚠️ Fond transparent = le client peut l'utiliser partout."},
+{h:"🎨 Les 2 couleurs",p:"• Bleu → confiance (banque, tech)\n• Rouge → énergie (alimentation, sport)\n• Vert → naturel (bio, agriculture)\n• Jaune/Orange → jeunesse (créatif, resto)\n• Noir → luxe (mode, cosmétique)"},
+{h:"💰 Tarification",p:"• Logo simple (1 concept) : 5 000 FCFA\n• Logo + 2 variantes : 8 000 FCFA\n• Logo + mini-charte : 15 000 FCFA\n\n💡 Astuce : demande TOUJOURS 2 propositions."}
+],exercice:"Créer 1 logo complet pour un commerce réel.",revenu:"5 000–15 000 FCFA par logo"},
+4:{title:"Shooting Photo IA",objectif:"Rendre une photo amateur professionnelle en 2 minutes.",lessons:[
+{h:"📸 Pourquoi les photos sont moches",p:"Regarde les boutiques autour de toi : floues, sombres, mauvais cadrage.\n\nC'est NORMAL. Ils n'ont pas de photographe.\n\n👉 Toi, avec 2 apps gratuites, tu passes en 2 min d'une photo amateur à une photo de catalogue."},
+{h:"✨ Remini : netteté magique",p:"1. Télécharge Remini (gratuit)\n2. « Améliorer une photo »\n3. Choisis la photo\n4. Laisse l'IA travailler (10 sec)\n5. Sauvegarde\n\n⚡ Résultat : photo nette, lisible, pro."},
+{h:"🖼️ PhotoRoom : fond propre en 1 clic",p:"1. PhotoRoom (gratuit)\n2. « Supprimer le fond »\n3. Choisis la photo\n4. Détourage auto en 5 sec\n5. Fond : blanc, couleur unie, ou scène pro\n6. Ombre légère\n7. Exporte\n\n👉 Ressemble à un produit Amazon ou Jumia."},
+{h:"💼 Utilisation commerciale",p:"• Retouche 1 photo : 1 000 FCFA\n• Pack 5 photos (resto) : 4 000 FCFA\n• Pack 10 photos + menu : 10 000 FCFA"}
+],exercice:"Retoucher 2 photos : 1 Remini + 1 PhotoRoom.",revenu:"1 000–2 000 FCFA par photo · 4 000 FCFA pack 5"},
+5:{title:"Vidéo IA avec Avatar",objectif:"Créer une vidéo de 30 secondes qui présente un produit.",lessons:[
+{h:"🎬 Structure d'une vidéo qui vend",p:"30 sec = 3 parties :\n\n0-3 sec : LE HOOK\n« Tu cherches un resto pas cher à Douala ? »\n\n3-25 sec : LA VALEUR\n\n25-30 sec : LE CTA\n« Commandez au 6 XX XX XX XX »\n\n⚠️ 80% des vidéos échouent sur le hook."},
+{h:"🛠️ Les 6 étapes CapCut",p:"1. CapCut (gratuit)\n2. Nouveau projet\n3. Visuel produit\n4. Texte animé\n5. Voix off\n6. Musique libre\n7. Export 1080p\n\n⚡ 20-30 min la 1ère, 10 min après."},
+{h:"🎭 Avatar IA",p:"Avatar = présentateur virtuel.\n\n✅ Si tu ne veux pas montrer ton visage\n❌ Client local préfère VOIR le vrai vendeur\n\n💡 Meilleur : voix OFF réelle + vidéo produit."},
+{h:"💰 Tarification",p:"• Vidéo 30 sec simple : 5 000 FCFA\n• Vidéo 30 sec + voix off : 8 000 FCFA\n• Vidéo 60 sec : 10 000–15 000 FCFA\n• Pack 5 vidéos : 30 000 FCFA"}
+],exercice:"Créer 1 vidéo 30 sec avec hook + valeur + CTA.",revenu:"5 000–15 000 FCFA par vidéo"},
+6:{title:"Musique avec Suno",objectif:"Créer une musique de fond, un jingle ou un son de pub en 5 minutes.",lessons:[
+{h:"🎵 C'est quoi Suno",p:"Suno est une IA qui compose de la musique sur commande.\n\n• Musique de fond vidéo pub\n• Jingle radio locale\n• Son d'intro TikTok\n\n⚡ Attention au droit commercial."},
+{h:"🛠️ Les 6 étapes",p:"1. suno.com (navigateur)\n2. Compte gratuit\n3. « Create »\n4. Décris : style + ambiance + tempo\n5. Durée\n6. Télécharge\n\n🎁 Gratuit = 50 crédits/jour."},
+{h:"📝 Comment prompter Suno",prompt:"Style : Afrobeat moderne, ambiance joyeuse\nTempo : 100 BPM\nInstruments : percussion, basse, synthé\nDurée : 30 secondes\nUsage : jingle pub boutique Douala\nVoix : féminine, français simple"},
+{h:"⚠️ DROIT COMMERCIAL",p:"🔥 Gratuit = usage PERSONNEL\n• COMMERCIAL = plan payant\n• Pro = ≈10 $/mois\n\nSi tu vends une musique avec le compte gratuit, tu es en infraction."}
+],exercice:"Créer 1 musique 30 sec.",revenu:"1 000–3 000 FCFA par musique"},
+7:{title:"TikTok Rentable",objectif:"Comprendre la vraie monétisation TikTok et trouver les alternatives qui paient.",lessons:[
+{h:"❌ La vérité",p:"TikTok NE PAIE PAS les créateurs camerounais par les vues.\n\nCreator Fund réservé à :\n• USA, UK, Allemagne, France, Brésil…\n• PAS le Cameroun, PAS l'Afrique francophone\n\n👉 TikTok reste utile (vitrine). Monétise autrement."},
+{h:"✅ Plateformes qui PAIENT",p:"1. TAMTAM (recommandé)\n• App chinoise qui paie les vues au Cameroun\n• 400–1 200 FCFA / 1 000 vues\n\n2. PIXIA ONE (Douala)\n\n3. ADINFLUENCE\n\n4. UGC : 30 000–180 000 FCFA la vidéo"},
+{h:"🎯 Stratégie",p:"1. Crée du contenu sur TikTok (visibilité)\n2. Reposte sur TamTam (payant)\n3. Vends tes services à des commerçants\n\n👉 TikTok = vitrine\n👉 TamTam = salaire\n👉 Clients locaux = vrai revenu"},
+{h:"💼 Vendre TikTok",p:"« Je crée 5 vidéos TikTok pour ta boutique pour 20 000 FCFA. »\n\n⚡ Pack 5 = 20 000 FCFA. 2 clients/mois = 40 000 FCFA."}
+],exercice:"Créer 1 vidéo TikTok 30 sec.",revenu:"10 000–20 000 FCFA / pack 5 vidéos"},
+8:{title:"YouTube Vitrine",objectif:"Utiliser YouTube comme carte de visite professionnelle.",lessons:[
+{h:"❌ YouTube paie-t-il ?",p:"Non, pas encore au Cameroun.\n\n👉 MAIS YouTube reste l'outil n°1 pour :\n• Se positionner en expert\n• Trouver des clients\n• Être recommandé par Google"},
+{h:"🎯 Stratégie",p:"Tu n'utilises PAS YouTube pour être payé par YouTube.\n\nTu l'utilises pour :\n1. VITRINE pro\n2. CRÉDIBILITÉ\n3. SEO (Google)\n4. TamTam paie aussi les vues YouTube (astuce !)"},
+{h:"🖼️ Créer une miniature qui clic",p:"Taille : 1280×720 px\n\n3 règles :\n1. Visage/objet en GRAND (50%)\n2. Texte COURT (3-4 mots)\n3. Couleurs CONTRASTÉES\n\n⚡ Une bonne miniature triple le taux de clic."},
+{h:"💰 Vendre du YouTube",p:"• Création chaîne : 25 000 FCFA\n• Miniature pro : 2 000 FCFA\n• Script vidéo 5 min : 5 000 FCFA\n• Pack 10 miniatures : 15 000 FCFA\n• Gestion mensuelle : 40 000 FCFA/mois"}
+],exercice:"Créer 1 miniature YouTube (1280×720).",revenu:"2 000 FCFA / miniature · 25 000 FCFA création chaîne"},
+9:{title:"Créer un PDF à vendre",objectif:"Transformer ton savoir en produit digital à 5 000 FCFA, vendable à l'infini.",lessons:[
+{h:"💡 Pourquoi un PDF",p:"Tu le crées UNE fois, tu le vends 100 fois. Aucun stock, aucune livraison.\n\nExemples :\n• « 30 prompts IA pour commerçants »\n• « Guide TikTok pour boutiques »\n• « 10 modèles d'affiches Canva »\n\nPrix : 5 000 FCFA. 10 ventes = 50 000 FCFA."},
+{h:"📝 Structure",p:"1. COUVERTURE soignée\n2. SOMMAIRE\n3. INTRO : problème + promesse\n4. CONTENU : étapes claires\n5. CONCLUSION : appel à l'action\n6. BONUS : 1 chose offerte\n\n⚡ 5-10 pages suffisent."},
+{h:"🛠️ Canva",p:"1. Canva → « Document A4 »\n2. Modèle « Guide »\n3. Couverture accrocheuse\n4. Remplis les pages\n5. Exporte PDF standard\n\n💡 Ajoute ton logo + WhatsApp."},
+{h:"💰 Vendre",p:"Où :\n• WhatsApp (statut)\n• Facebook (groupes)\n• TikTok (démo)\n• TamTam\n\nPrix : 5 000 FCFA local à 15 000 FCFA pro\n\nStratégie : 3 pages gratuites → suite payante"}
+],exercice:"Créer 1 PDF 5 pages.",revenu:"5 000 FCFA par vente · passif à vie"},
+10:{title:"Clients & Prix",objectif:"Transformer tes compétences en argent régulier.",lessons:[
+{h:"📊 Grille complète",p:"AFFICHES : 1 = 1 500–3 000 · Pack 5 = 8 000\n\nLOGOS : 5 000 · +variantes 8 000 · +charte 15 000\n\nPHOTO : 1 retouche 1 500 · Pack 5 = 4 000\n\nVIDÉO : 30s 5 000–8 000 · Pack 5 = 20 000–30 000\n\nGROS PACKS :\n• Pack Boutique Pro : 15 000–25 000\n• Community Manager IA : 30 000–50 000/mois"},
+{h:"🔥 Pack Boutique Pro",p:"1 logo + 3 affiches + 1 photo retouchée = 15 000–25 000 FCFA\n\nPitch : « Bonjour, je propose un pack : logo + 3 affiches + 1 photo retouchée. Livraison 48h. Je te montre un exemple ? »\n\n⚡ 2 packs/mois = 40 000 FCFA minimum."},
+{h:"🎯 10 clients en 48h",p:"1. TON QUARTIER (1h à pied)\n2. WHATSAPP (2h)\n3. GROUPES FACEBOOK\n4. TAMTAM\n5. PIXIA ONE\n\n⚠️ RÈGLE DES 3 : 10 contacts → 3 réponses → 1 achète."},
+{h:"🗺️ Plan 6 mois",p:"PHASE 1 (M1-2) : 50 000–100 000 FCFA\nPHASE 2 (M3-4) : 90 000–250 000/mois\nPHASE 3 (M5-6) : +100 000/mois\nPHASE 4 (M6-12) : +1M/mois"},
+{h:"🧠 3 règles d'or",p:"1. LIVRE TOUJOURS À TEMPS\n2. DEMANDE UN AVIS\n3. NE BAISSE JAMAIS TES PRIX\n\n👉 Ces 3 règles font la différence."}
+],exercice:"Lister 10 clients potentiels + envoyer le pitch à 3.",revenu:"50 000 FCFA/mois minimum · 1M+ FCFA/mois à terme"}
+},QUIZZES:{
+1:[{q:"Que signifie PROMPT PRO ?",options:["Rôle + Tâche + Détails + Style + Format","Rôle + Texte + Délai + Style + Format","Rien"],correct:0},{q:"Rôle du RÔLE ?",options:["Qui doit être l'IA","Langue","Durée"],correct:0},{q:"Erreur débutant ?",options:["Prompts courts/vagues","Trop de mots","En français"],correct:0},{q:"Élément qui définit la forme ?",options:["STYLE","FORMAT","TÂCHE"],correct:1},{q:"Pack 5 prompts rapporte ?",options:["500 FCFA","2 000–5 000 FCFA","50 000"],correct:1}],
+2:[{q:"Prix 1 affiche ?",options:["500–800","1 000–3 000","10 000+"],correct:1},{q:"Meilleur outil gratuit ?",options:["Photoshop","Canva","Illustrator"],correct:1},{q:"Taille post Instagram ?",options:["800×600","1080×1080","2000×2000"],correct:1},{q:"Règle n°1 affiche ?",options:["Beaucoup de texte","Peu de texte + action","Images seules"],correct:1},{q:"1er client approche ?",options:["Payer d'abord","Faire gratuit puis proposer","Attendre"],correct:1}],
+3:[{q:"Couleurs max logo ?",options:["1","2","5"],correct:1},{q:"Format export ?",options:["PNG transparent","JPG flou","PDF N&B"],correct:0},{q:"Prix logo simple ?",options:["500","5 000–15 000","100 000+"],correct:1},{q:"Bon logo doit être…",options:["Détaillé","Simple et mémorable","Noir"],correct:1},{q:"Pourquoi 2 propositions ?",options:["Gagner temps","Client choisit + paie plus","Stresser"],correct:1}],
+4:[{q:"Remini sert à ?",options:["Supprimer fond","Améliorer netteté","Vidéo"],correct:1},{q:"PhotoRoom sert à ?",options:["Netteté","Supprimer fond","Écrire"],correct:1},{q:"Prix photo ?",options:["100","1 000–2 000","10 000"],correct:1},{q:"Pourquoi retoucher ?",options:["Décorer","Client commande plus","Style"],correct:1},{q:"Photos pack resto ?",options:["1","5","50"],correct:1}],
+5:[{q:"Durée pub vidéo ?",options:["5 sec","30 sec","5 min"],correct:1},{q:"Outil vidéo 30s ?",options:["Suno","CapCut","PhotoRoom"],correct:1},{q:"Prix vidéo 30s ?",options:["1 000","5 000–8 000","50 000"],correct:1},{q:"Contenu vidéo qui vend ?",options:["Musique","Hook + valeur + CTA","Prix"],correct:1},{q:"Export vidéo pro ?",options:["480p","720p","1080p"],correct:2}],
+6:[{q:"Suno app Android ?",options:["Oui","Non, navigateur","Beta"],correct:1},{q:"Crédits gratuits/jour ?",options:["5","50","500"],correct:1},{q:"Plan commercial Suno ?",options:["Gratuit","≈10 $/mois","100 $/mois"],correct:1},{q:"Prix musique ?",options:["100","1 000–3 000","20 000"],correct:1},{q:"Gratuit pour client ?",options:["Oui","Non, plan payant","Oui si court"],correct:1}],
+7:[{q:"TikTok paie vues CM ?",options:["Oui","Non","1000+"],correct:1},{q:"Plateforme qui paie ?",options:["Instagram","TamTam","YouTube"],correct:1},{q:"TamTam 1000 vues ?",options:["10","400–1 200","10 000"],correct:1},{q:"Mission UGC ?",options:["1 000","30 000–180 000","500"],correct:1},{q:"Meilleur usage TikTok ?",options:["Attendre revenus","Vitrine + TamTam + vendre","Acheter vues"],correct:1}],
+8:[{q:"YouTube paie CM ?",options:["Oui","Non","Grosses chaînes"],correct:1},{q:"Usage YouTube ?",options:["Attendre monétisation","Vitrine pro","Acheter vues"],correct:1},{q:"Taille miniature ?",options:["800×600","1280×720","2000×2000"],correct:1},{q:"Pack 10 miniatures ?",options:["5 000","15 000","100 000"],correct:1},{q:"TamTam paie vues YT ?",options:["Non","Oui (astuce)","Parfois"],correct:1}],
+9:[{q:"Prix PDF 5 pages ?",options:["1 000","5 000","20 000"],correct:1},{q:"Pages min PDF ?",options:["1","5–10","100"],correct:1},{q:"Outil PDF ?",options:["Word","Canva","Paint"],correct:1},{q:"Où vendre PDF ?",options:["Nulle part","WhatsApp/FB/TikTok/TamTam","Librairie"],correct:1},{q:"Sujet PDF ?",options:["Roman","Guide pratique","Poésie"],correct:1}],
+10:[{q:"Pack Boutique Pro ?",options:["5–10 000","15 000–25 000","100 000+"],correct:1},{q:"Community Manager IA ?",options:["5 000","30 000–50 000","1 000"],correct:1},{q:"Où trouver clients ?",options:["Étranger","Quartier + WhatsApp + FB","Attendre"],correct:1},{q:"Règle des 3 ?",options:["3 clients","10 contacts → 3 réponses → 1 vente","3 prix"],correct:1},{q:"Clients 48h ?",options:["1","10 (via 30 contacts)","1000"],correct:1}]
+}};
+
+const State=(()=>{let d=null;
+const def=()=>({version:9,
+settings:{masterPasswordHash:null,coachName:'Coach IA MASTER',coachWhatsApp:'',theme:'light',activationCodes:[],whatsappGroup:'',whatsappChannel:'',tiktok:'',youtube:'',facebook:'',instagram:'',telegram:'',coachOrangeMoney:'',coachMtnMomo:'',coachPaymentName:'',chariowUrl:'',chariowReturnUrl:'',packPrice:20000,modulePrice:5000,chariowPackUrl:'',chariowModuleUrl:''},
+coAdmins:[],adminLog:[],learners:[],payments:[],messages:[],community:[],voiceNotes:[],customLessons:[],submissions:[],notes:{},quizScores:{},streak:{},lastAttestation:0,currentUser:null});
+return{
+init:async()=>{const sv=St.load();d=sv&&sv.version===9?Object.assign(def(),sv):def();
+(d.learners||[]).forEach(l=>{
+  if(!('accessStatus'in l))l.accessStatus='active';
+  if(l.accessStatus==='pending')l.accessStatus='awaiting_payment';
+  if(!l.unlockedModules)l.unlockedModules=[];
+  if(l.hasFullAccess===undefined)l.hasFullAccess=false;
+});
+['tiktok','youtube','facebook','instagram','telegram','whatsappGroup','whatsappChannel','coachOrangeMoney','coachMtnMomo','coachPaymentName','chariowUrl','chariowReturnUrl','chariowPackUrl','chariowModuleUrl'].forEach(k=>{if(typeof d.settings[k]==='undefined')d.settings[k]=''});
+if(!Array.isArray(d.settings.activationCodes))d.settings.activationCodes=[];
+if(!Array.isArray(d.community))d.community=[];
+St.save(d);
+try{
+  const remote = await St.loadFromCloud();
+  if(remote && remote.version===9){
+    d = Object.assign(def(), remote);
+    (d.learners||[]).forEach(l=>{
+      if(!('accessStatus'in l))l.accessStatus='active';
+      if(l.accessStatus==='pending')l.accessStatus='awaiting_payment';
+      if(!l.unlockedModules)l.unlockedModules=[];
+      if(l.hasFullAccess===undefined)l.hasFullAccess=false;
+    });
+    St._cache = d;
+    try{localStorage.setItem(St.KEY,JSON.stringify(d))}catch(e){}
+  }
+}catch(e){console.warn('Cloud load failed:',e)}
+},
+get:()=>d,save:()=>St.save(d),reset:()=>{d=def();St.save(d)},
+learner:id=>d.learners.find(l=>l.id===id),
+currentLearner:()=>d.currentUser?.role==='learner'?d.learners.find(l=>l.id===d.currentUser.id):null,
+currentAdmin:()=>d.currentUser?.role==='admin'?d.currentUser:null
+}})();
+
+const Access={
+isActive:l=>l?.accessStatus==='active',
+isModuleUnlocked(l,k){
+  if(!l) return false;
+  if(l.hasFullAccess) return true;
+  return (l.unlockedModules||[]).includes(Number(k));
+},
+gen(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';const g=n=>Array.from({length:n},()=>c[Math.floor(Math.random()*c.length)]).join('');return`IAM-${g(4)}-${g(4)}`},
+create(n=1){const s=State.get();const out=[];for(let i=0;i<n;i++){let code;do{code=Access.gen()}while(s.settings.activationCodes.some(c=>c.code===code));const e={code,createdAt:new Date().toISOString(),used:false,usedBy:null,usedAt:null};s.settings.activationCodes.push(e);out.push(code)}State.save();return out},
+activateWithCode(lid,raw){const s=State.get();const l=State.learner(lid);if(!l)return{ok:false,msg:'Compte introuvable'};if(l.accessStatus==='active')return{ok:false,msg:'Déjà activé'};const code=String(raw||'').trim().toUpperCase();if(!code)return{ok:false,msg:'Entre un code'};const e=s.settings.activationCodes.find(c=>c.code===code);if(!e)return{ok:false,msg:'❌ Code invalide'};if(e.used)return{ok:false,msg:'❌ Code déjà utilisé'};e.used=true;e.usedBy=lid;e.usedAt=new Date().toISOString();l.accessStatus='active';l.activatedAt=new Date().toISOString();l.activatedBy='code:'+code;delete s._chariowPendingAt;State.save();return{ok:true,msg:'✅ Code validé !'}},
+activateManually(lid){const s=State.get();const l=State.learner(lid);if(!l)return false;l.accessStatus='active';l.activatedAt=new Date().toISOString();l.activatedBy='admin';State.save();return true},
+deactivate(lid){const s=State.get();const l=State.learner(lid);if(!l)return false;l.accessStatus='awaiting_payment';delete l.activatedAt;delete l.activatedBy;State.save();return true},
+approvePayment(lid,type,mid){
+  const s=State.get();const l=State.learner(lid);if(!l)return false;
+  const proof=l.paymentProof||{};
+  let amount = 0;
+  if (type === 'pack') {
+    amount = Number(proof.amount) || s.settings.packPrice || 20000;
+    l.hasFullAccess = true;
+    l.accessStatus = 'active';
+  } else {
+    amount = Number(proof.amount) || s.settings.modulePrice || 5000;
+    if(!l.unlockedModules) l.unlockedModules = [];
+    if(!l.unlockedModules.includes(Number(mid))) l.unlockedModules.push(Number(mid));
+    l.accessStatus = 'active';
+  }
+  s.payments.push({id:U.uid(),learnerId:lid,amount,method:proof.method||'Mobile Money',type:type==='pack'?'Pack Complet':'Module '+mid,ref:proof.ref||'',date:new Date().toISOString()});
+  l.amountPaid=(l.amountPaid||0)+amount;
+  l.paymentApprovedAt=new Date().toISOString();
+  s.messages.push({id:U.uid(),learnerId:lid,from:'admin',text:`✅ Paiement validé !\n\nTon accès (${type==='pack'?'Pack Complet':'Module '+mid}) est maintenant ACTIF.`,date:new Date().toISOString(),read:false});
+  State.save();return true;
+},
+rejectPayment(lid,reason){
+  const s=State.get();const l=State.learner(lid);if(!l)return false;
+  l.accessStatus='awaiting_payment';
+  l.paymentRejected={reason:reason||'',date:new Date().toISOString()};
+  s.messages.push({id:U.uid(),learnerId:lid,from:'admin',text:`❌ Paiement non validé\n\nMotif : ${reason||'Référence introuvable'}\n\nVérifie ta référence, renvoie la preuve, ou contacte le coach.`,date:new Date().toISOString(),read:false});
+  State.save();return false;
+}
+};
+
+const Streak={
+update(id){const s=State.get();const r=s.streak[id]||{count:0,lastDate:null};const t=U.today();if(r.lastDate===t)return r;const gap=r.lastDate?Math.floor((new Date(t)-new Date(r.lastDate))/86400000):999;r.count=gap===1?r.count+1:1;r.lastDate=t;s.streak[id]=r;State.save();return r},
+get:id=>State.get().streak[id]||{count:0,lastDate:null}};
+
+const Chariow={
+_shownFor:null,
+open(lid){
+  const s=State.get();const l=State.learner(lid);if(!l)return;
+  if(!s.settings.chariowUrl)return To.show('⚠️ Lien de paiement non configuré','error');
+  let url=s.settings.chariowUrl;
+  const returnUrl=s.settings.chariowReturnUrl||(window.location.origin+window.location.pathname);
+  try{const u=new URL(url);u.searchParams.set('return_url',returnUrl);u.searchParams.set('ref',l.id);url=u.toString()}catch{}
+  s._chariowPendingAt=Date.now();
+  s._chariowReturnUrl=returnUrl;
+  s._chariowLearnerId=lid;
+  State.save();
+  window.location.href=url;
+},
+checkReturn(){
+  const p=new URLSearchParams(window.location.search);
+  if(p.get('payment')==='success'){
+    const type=p.get('type'),mid=p.get('mid'),lid=p.get('lid');
+    const l=State.learner(lid);
+    let shouldProcess = false;
+    if(l){
+      if(type==='pack' && !l.hasFullAccess) shouldProcess = true;
+      if(type==='module' && !(l.unlockedModules||[]).includes(Number(mid))) shouldProcess = true;
+    }
+    if(shouldProcess){
+      setTimeout(()=>{
+        Access.approvePayment(lid,type,mid);
+        To.show('🎉 Paiement validé avec succès !','success');
+        window.history.replaceState({},document.title,window.location.pathname);
+        if(State.get().currentUser?.role==='learner') LearnerUI.open();
+      },1500);
+    } else window.history.replaceState({},document.title,window.location.pathname);
+  }
+}
+};
+
+const Modules={
+isUnlocked(l,k){return Access.isModuleUnlocked(l,k)},
+next(l){for(let k=1;k<=10;k++){if(!l?.exercises?.[k])return k}return 10},
+unlockedCount(l){let n=0;for(let k=1;k<=10;k++){if(Access.isModuleUnlocked(l,k))n++}return n}
+};
+
+const Social={
+links(s){
+const arr=[];
+if(s.whatsappGroup)arr.push({icon:'💬',label:'Groupe WhatsApp',url:s.whatsappGroup,bg:'#d1fae5',clr:'#065f46'});
+if(s.whatsappChannel)arr.push({icon:'📢',label:'Chaîne WhatsApp',url:s.whatsappChannel,bg:'#d1fae5',clr:'#065f46'});
+if(s.tiktok)arr.push({icon:'🎵',label:'TikTok',url:s.tiktok,bg:'#f3f4f6',clr:'#000'});
+if(s.youtube)arr.push({icon:'📺',label:'YouTube',url:s.youtube,bg:'#fee2e2',clr:'#991b1b'});
+if(s.facebook)arr.push({icon:'📘',label:'Facebook',url:s.facebook,bg:'#dbeafe',clr:'#1e3a8a'});
+if(s.instagram)arr.push({icon:'📸',label:'Instagram',url:s.instagram,bg:'#fce7f3',clr:'#9f1239'});
+if(s.telegram)arr.push({icon:'✈️',label:'Telegram',url:s.telegram,bg:'#dbeafe',clr:'#075985'});
+return arr},
+render(s){const L=this.links(s);if(!L.length)return'';
+return`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">`
++L.map(x=>`<a href="${U.esc(x.url)}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;background:${x.bg};color:${x.clr};padding:10px 12px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">
+<span style="font-size:18px">${x.icon}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.label}</span><span style="opacity:.5">→</span></a>`).join('')+`</div>`},
+count(s){return this.links(s).length}
+};
+
+const Quiz={
+start(mid){const l=State.currentLearner();if(!l)return;const qs=Content.QUIZZES[mid]||[];if(!qs.length)return To.show('Pas de quiz');
+const prev=State.get().quizScores[l.id]?.[mid];
+document.getElementById('lv-module-detail').innerHTML=`<button class="back-btn" data-action="learner.go" data-tab="modules">← Retour</button>
+<div class="detail-header"><h2>Quiz · Module ${mid}</h2><p>${qs.length} questions</p></div>
+${prev?`<div class="info-box">Meilleur score : ${prev.score}/${prev.total}</div>`:''}
+<div id="quizBox">${qs.map((q,i)=>`<div class="quiz-q" data-q="${i}"><h4>${i+1}. ${U.esc(q.q)}</h4>
+${q.options.map((o,j)=>`<div class="quiz-opt" data-action="quiz.select" data-q="${i}" data-o="${j}"><span class="letter">${String.fromCharCode(65+j)}</span><span>${U.esc(o)}</span></div>`).join('')}</div>`).join('')}</div>
+<button class="btn btn-or btn-block mt-12" data-action="quiz.submit" data-module="${mid}">✅ Valider</button>`;
+LearnerUI.showTab('module-detail')},
+select(qIdx,oIdx,el){el.parentElement.querySelectorAll('.quiz-opt').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');el.parentElement.dataset.answer=oIdx},
+submit(mid){const l=State.currentLearner();if(!l)return;const qs=Content.QUIZZES[mid]||[];let score=0;
+document.querySelectorAll('.quiz-q').forEach((qEl,qi)=>{const ans=Number(qEl.dataset.answer);const c=qs[qi].correct;qEl.querySelectorAll('.quiz-opt').forEach((o,oi)=>{if(oi===c)o.classList.add('correct');else if(oi===ans)o.classList.add('wrong')});if(ans===c)score++});
+const s=State.get();if(!s.quizScores[l.id])s.quizScores[l.id]={};s.quizScores[l.id][mid]={score,total:qs.length,date:new Date().toISOString()};State.save();
+To.show(`🎯 ${score}/${qs.length}`,score===qs.length?'success':'info');
+const btn=document.querySelector('[data-action="quiz.submit"]');if(btn)btn.outerHTML=`<div class="flex mt-12"><button class="btn btn-outline btn-block" data-action="learner.go" data-tab="modules">← Modules</button><button class="btn btn-or btn-block" data-action="quiz.start" data-module="${mid}">🔄 Refaire</button></div>`},
+back(){LearnerUI.go('modules')}};
+
+const Search={query(q){q=q.trim().toLowerCase();if(!q)return[];const r=[];
+for(const k of Object.keys(Content.MODULES)){const m=Content.MODULES[k];
+if(m.title.toLowerCase().includes(q))r.push({type:'Module',title:m.title,preview:m.objectif,action:()=>LearnerUI.openModule(Number(k))});
+for(const ls of m.lessons){const txt=(ls.h+' '+(ls.p||'')+' '+(ls.prompt||'')).toLowerCase();if(txt.includes(q))r.push({type:'M'+k,title:ls.h,preview:(ls.p||ls.prompt||'').substring(0,100),action:()=>LearnerUI.openModule(Number(k))})}}
+const s=State.get();for(const cl of s.customLessons){if((cl.title+' '+cl.content).toLowerCase().includes(q))r.push({type:'Coach M'+cl.moduleId,title:cl.title,preview:cl.content.substring(0,100),action:()=>LearnerUI.openModule(Number(cl.moduleId))})}
+return r.slice(0,30)}};
+
+const Auth={
+attempts:{},
+async adminLogin(){
+const inp=document.getElementById('adminPwd');const pwd=inp?.value||'';
+if(!pwd)return To.show('⚠️ Mot de passe requis','error');
+const now=Date.now();const a=this.attempts.admin||{count:0,until:0};
+if(now<a.until)return To.show(`⏱ Attendez ${Math.ceil((a.until-now)/1000)}s`,'error');
+const s=State.get();
+if(!s.settings.masterPasswordHash){
+if(!Cr.isStrong(pwd))return To.show('❌ 6+ car. avec lettre+chiffre+symbole','error');
+s.settings.masterPasswordHash=await Cr.hash(pwd);State.save();To.show('✅ Mot de passe admin défini','success');
+s.currentUser={role:'admin',type:'owner',name:'Admin'};State.save();AdminUI.open();return}
+if(!(await Cr.verify(pwd,s.settings.masterPasswordHash))){
+a.count=(a.count||0)+1;
+if(a.count>=5){a.count=0;a.until=now+120000;To.show('⚠️ 5 échecs. 2 min','error')}
+else To.show('❌ Mot de passe incorrect','error');
+this.attempts.admin=a;return}
+s.currentUser={role:'admin',type:'owner',name:'Admin'};State.save();
+s.adminLog.unshift({who:'Admin',type:'owner',when:new Date().toISOString()});
+if(s.adminLog.length>100)s.adminLog=s.adminLog.slice(0,100);
+State.save();AdminUI.open()},
+async learnerLogin(){
+const idInput=document.getElementById('loginId').value.trim().toLowerCase();
+const pwd=document.getElementById('loginPwd').value;
+if(!idInput||!pwd)return To.show('⚠️ Identifiant et mot de passe requis','error');
+const s=State.get();
+const l=s.learners.find(x=>x.name.toLowerCase()===idInput||(x.phone&&x.phone.replace(/\D/g,'')===idInput.replace(/\D/g,'')));
+if(!l)return To.show('❌ Profil introuvable','error');
+if(!l.passwordHash)return To.show('❌ Compte sans mot de passe','error');
+if(!(await Cr.verify(pwd,l.passwordHash)))return To.show('❌ Mot de passe incorrect','error');
+s.currentUser={role:'learner',id:l.id};State.save();
+Streak.update(l.id);LearnerUI.open()},
+async register(){
+const name=document.getElementById('reg_name').value.trim();
+const phone=document.getElementById('reg_phone').value.trim();
+const pwd=document.getElementById('reg_pwd').value;
+const pwd2=document.getElementById('reg_pwd2').value;
+if(!name||name.length<2)return To.show('⚠️ Nom invalide','error');
+if(!phone||phone.replace(/\D/g,'').length<8)return To.show('⚠️ Téléphone invalide','error');
+if(!Cr.isStrong(pwd))return To.show('❌ 6+ car. + lettre + chiffre + symbole','error');
+if(pwd!==pwd2)return To.show('⚠️ Mots de passe différents','error');
+const s=State.get();
+if(s.learners.some(l=>(l.phone||'').replace(/\D/g,'')===phone.replace(/\D/g,'')))return To.show('⚠️ Téléphone déjà inscrit','error');
+const hash=await Cr.hash(pwd);
+const learner={id:U.uid(),name,phone,passwordHash:hash,totalPrice:s.settings.packPrice,amountPaid:0,exercises:{},unlockedModules:[],hasFullAccess:false,attestationNum:null,dateStart:new Date().toISOString(),onboarded:false,accessStatus:'awaiting_payment',whatsapp:phone};
+s.learners.push(learner);
+s.messages.push({id:U.uid(),learnerId:learner.id,from:'admin',text:`Bienvenue ${name} ! 🎓\n\nTu peux dès maintenant explorer le programme. Débloque les modules pour commencer.`,date:new Date().toISOString(),read:false});
+s.currentUser={role:'learner',id:learner.id};State.save();
+To.show('✅ Inscription réussie','success');
+setTimeout(()=>{LearnerUI.open()},500)},
+logout(){const s=State.get();s.currentUser=null;delete s._pendingLearner;State.save();Router.go('s-login')},
+forgotPassword(){
+Md.open(`<div class="modal-title">🔐 Mot de passe oublié<button class="modal-close" data-action="modal.close">✕</button></div>
+<div class="info-box">Le coach est le seul à pouvoir réinitialiser ton mot de passe.</div>
+<div class="form-group"><label class="form-label">Ton nom</label><input class="form-input" id="fp_name" placeholder="Ton nom complet"></div>
+<div class="form-group"><label class="form-label">Ton téléphone WhatsApp</label><input class="form-input" id="fp_phone" placeholder="+237..."></div>
+<button class="btn btn-vert btn-block" data-action="auth.sendForgot">📱 Contacter le coach</button>`)},
+sendForgot(){const s=State.get();const name=document.getElementById('fp_name').value.trim();const phone=document.getElementById('fp_phone').value.trim();
+if(!name||!phone)return To.show('⚠️ Nom et téléphone requis','error');
+const coach=s.settings.coachWhatsApp||'';
+if(!coach)return To.show('⚠️ Coach non configuré','error');
+const msg=`Bonjour Coach IA MASTER,\n\nJe suis ${name} (${phone}). J'ai oublié mon mot de passe.\n\nMerci !`;
+window.open(`https://wa.me/${coach.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');
+Md.close();To.show('📱 WhatsApp ouvert','success')}
+};
+
+const Router={go(sc){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));const el=document.getElementById(sc);if(el)el.classList.add('active');window.scrollTo(0,0)}};
+
+const AdminUI={currentTab:'home',
+open(){const w=document.getElementById('adminWho');if(w)w.textContent='Admin';Router.go('s-admin');this.go('home')},
+go(tab){this.currentTab=tab;
+document.querySelectorAll('#s-admin .view').forEach(v=>v.classList.remove('active'));
+const v=document.getElementById('av-'+tab);if(v)v.classList.add('active');
+document.querySelectorAll('#s-admin .nav-item').forEach(n=>n.classList.remove('active'));
+document.querySelectorAll('#s-admin .nav-item').forEach(n=>{if(n.dataset.tab===tab)n.classList.add('active')});
+window.scrollTo(0,0);this.renderTab(tab);this.updateBadges()},
+renderTab(t){const r={home:()=>this.renderHome(),learners:()=>this.renderLearners(),submissions:()=>this.renderSubmissions(),content:()=>this.renderContent(),messages:()=>this.renderMessages(),community:()=>this.renderCommunity(),payments:()=>this.renderPayments(),settings:()=>this.renderSettings(),detail:()=>{},chat:()=>{}};r[t]?.()},
+updateBadges(){const s=State.get();const p=s.submissions.filter(x=>x.status==='pending').length;const u=s.messages.filter(m=>m.from==='learner'&&!m.read).length;
+const bS=document.getElementById('adminBadgeSub');const bM=document.getElementById('adminBadgeMsg');
+if(bS){bS.textContent=p;bS.style.display=p>0?'block':'none'}if(bM){bM.textContent=u;bM.style.display=u>0?'block':'none'}},
+
+renderHome(){const s=State.get();
+const rev=s.payments.reduce((a,p)=>a+(Number(p.amount)||0),0);
+const paidLearners = s.learners.filter(l => l.hasFullAccess || (l.unlockedModules && l.unlockedModules.length > 0)).length;
+const convRate = s.learners.length > 0 ? Math.round((paidLearners / s.learners.length) * 100) : 0;
+const packRev = s.payments.filter(p=>p.type==='Pack Complet'||p.type==='Inscription').reduce((a,p)=>a+(Number(p.amount)||0),0);
+const modRev = s.payments.filter(p=>p.type!=='Pack Complet'&&p.type!=='Inscription').reduce((a,p)=>a+(Number(p.amount)||0),0);
+const pendingPmts=s.learners.filter(l=>l.accessStatus==='payment_submitted');
+
+document.getElementById('av-home').innerHTML=`
+<div class="stats">
+<div class="stat hl"><div class="stat-label">Apprenants</div><div class="stat-value">${s.learners.length}</div></div>
+<div class="stat hl"><div class="stat-label">Revenus</div><div class="stat-value">${U.money(rev)}</div></div>
+<div class="stat"><div class="stat-label">Conversion</div><div class="stat-value">${convRate}%</div></div>
+<div class="stat"><div class="stat-label">À valider</div><div class="stat-value">${pendingPmts.length}</div></div>
+</div>
+
+<div class="card">
+<div class="card-title">📊 Répartition des Revenus</div>
+<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px">
+  <span>Packs Complets</span><b style="color:var(--v)">${U.money(packRev)}</b>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:14px">
+  <span>Modules à l'unité</span><b style="color:var(--o)">${U.money(modRev)}</b>
+</div>
+</div>
+
+${pendingPmts.length?`<div class="card" style="border-left:4px solid var(--o);background:#fffbeb">
+<div class="card-title">💳 Paiements à valider (${pendingPmts.length})</div>
+${pendingPmts.slice(0,3).map(l=>`<div class="row" data-action="admin.go" data-tab="payments">
+<div class="avatar" style="background:var(--o)">${(l.name||'?').charAt(0)}</div>
+<div class="info"><b>${U.esc(l.name)}</b><small>${U.money(l.paymentProof?.amount||0)} · ${l.paymentProof?.type==='pack'?'Pack':'Module'}</small></div>
+<span class="badge badge-or">Voir</span></div>`).join('')}
+<button class="btn btn-vert btn-block mt-8" data-action="admin.go" data-tab="payments">💳 Tout voir</button></div>`:''}
+
+<div class="card"><div class="card-title">📜 Activité récente</div>
+${s.payments.slice(-3).reverse().map(p=>{const l=State.learner(p.learnerId);return`<div style="padding:8px 0;border-bottom:1px solid var(--br);font-size:13px">
+<b>${U.esc(l?.name||'?')}</b> a acheté <span style="color:var(--v)">${p.type}</span>
+</div>`}).join('') || '<p class="text-muted">Aucune activité</p>'}
+</div>`},
+
+renderLearners(){document.getElementById('av-learners').innerHTML=`
+<div class="search-bar"><input type="search" id="adminSearch" placeholder="Rechercher..." data-input="admin-search"></div>
+<div class="flex mb-12">
+<button class="btn btn-sm btn-primary" onclick="AdminUI.filterLearners('all')">Tous</button>
+<button class="btn btn-sm btn-vert" onclick="AdminUI.filterLearners('active')">Actifs</button>
+<button class="btn btn-sm btn-outline" onclick="AdminUI.filterLearners('free')">Gratuits</button>
+</div>
+<div id="adminLearnersList">${this.learnersHTML('', 'all')}</div>`},
+
+learnersHTML(q, filter='all'){const s=State.get();q=q.toLowerCase();
+let list=s.learners.filter(l=>l.name.toLowerCase().includes(q)||(l.phone||'').includes(q));
+if(filter==='active') list = list.filter(l=>l.hasFullAccess || (l.unlockedModules && l.unlockedModules.length > 0));
+if(filter==='free') list = list.filter(l=>!l.hasFullAccess && (!l.unlockedModules || l.unlockedModules.length === 0));
+
+if(!list.length)return'<div class="empty"><div class="empty-icon">👥</div><p>Aucun</p></div>';
+return list.map(l=>{const done=Object.values(l.exercises||{}).filter(Boolean).length;const unread=s.messages.filter(m=>m.learnerId===l.id&&m.from==='learner'&&!m.read).length;
+return`<div class="row" data-action="admin.openDetail" data-id="${l.id}">
+<div class="avatar">${(l.name||'?').charAt(0).toUpperCase()}</div>
+<div class="info"><b>${U.esc(l.name)} ${unread?`<span class="badge badge-rouge">${unread}</span>`:''}</b><small>${done}/10 · ${U.money(l.amountPaid)}</small></div>
+<span class="badge ${l.hasFullAccess?'badge-vert':(l.unlockedModules?.length>0?'badge-or':'badge-gris')}">${l.hasFullAccess?'Pack':(l.unlockedModules?.length>0?l.unlockedModules.length+' mod.':'Gratuit')}</span></div>`}).join('')},
+
+filterLearners(filter){const q=document.getElementById('adminSearch').value;document.getElementById('adminLearnersList').innerHTML=this.learnersHTML(q, filter)},
+
+openDetail(id){const s=State.get();const l=State.learner(id);if(!l)return;
+const done=Object.values(l.exercises||{}).filter(Boolean).length;
+const reste=(l.totalPrice||0)-(l.amountPaid||0);
+const pays=s.payments.filter(p=>p.learnerId===id);
+
+document.getElementById('av-detail').innerHTML=`
+<button class="back-btn" data-action="admin.go" data-tab="learners">← Retour</button>
+<div class="detail-header"><h2>${U.esc(l.name)}</h2><p>${U.esc(l.phone||'')}</p>
+<div style="margin-top:8px;font-size:12px;opacity:.9">Inscrit le ${U.date(l.dateStart)}</div></div>
+
+<div class="card"><div class="card-title">🔐 Accès Global</div>
+<div class="flex mb-8">
+<button class="btn btn-vert btn-block" data-action="admin.activateLearner" data-id="${l.id}">🎁 Activer Pack Complet</button>
+<button class="btn btn-rouge btn-block" data-action="admin.deactivateLearner" data-id="${l.id}">🔒 Révoquer Tout</button>
+</div></div>
+
+<div class="card"><div class="card-title">📚 Gestion Module par Module</div>
+${[1,2,3,4,5,6,7,8,9,10].map(k=>{
+  const isUnlocked = l.hasFullAccess || (l.unlockedModules||[]).includes(k);
+  const isDone = l.exercises?.[k];
+  return `<div class="row" style="cursor:default;padding:10px">
+  <div class="avatar" style="background:${isDone?'var(--v)':isUnlocked?'var(--b)':'var(--m)'}">${isDone?'✓':isUnlocked?'🔓':'🔒'}</div>
+  <div class="info"><b>Module ${k}</b><small>${Content.MODULES[k].title}</small></div>
+  <div class="flex">
+    <button class="btn btn-sm ${isUnlocked?'btn-rouge':'btn-or'}" onclick="AdminUI.toggleUnlock('${l.id}',${k})">${isUnlocked?'Verrouiller':'Débloquer'}</button>
+    <button class="btn btn-sm ${isDone?'btn-outline':'btn-vert'}" onclick="AdminUI.toggleModule('${l.id}',${k})" ${!isUnlocked?'disabled style="opacity:0.5"':''}>${isDone?'Annuler':'Valider'}</button>
+  </div></div>`;
+}).join('')}
+</div>
+
+<div class="card"><div class="card-title">💳 Paiements (${U.money(l.amountPaid)})</div>
+${pays.map(p=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--br)">
+<span style="font-size:13px">${U.date(p.date)} · ${U.esc(p.type)}</span>
+<b style="color:var(--v)">${U.money(p.amount)}</b></div>`).join('') || '<p class="text-muted">Aucun paiement</p>'}
+</div>`;
+this.go('detail')},
+
+toggleUnlock(id,k){const l=State.learner(id);if(!l)return;if(l.hasFullAccess)return To.show('Désactivez d\'abord le pack complet','error');
+if(!l.unlockedModules)l.unlockedModules=[];
+if(l.unlockedModules.includes(k))l.unlockedModules=l.unlockedModules.filter(x=>x!==k);
+else l.unlockedModules.push(k);
+State.save();this.openDetail(id)},
+
+toggleModule(id,k){const s=State.get();const l=State.learner(id);if(!l)return;
+l.exercises=l.exercises||{};l.exercises[k]=!l.exercises[k];State.save();this.openDetail(id)},
+activateLearner(id){Dg.confirm('Activer le Pack Complet ?',()=>{const l=State.learner(id);l.hasFullAccess=true;l.accessStatus='active';State.save();To.show('✅ Activé','success');this.openDetail(id)},{title:'Activer',yes:'Activer'})},
+deactivateLearner(id){Dg.confirm('Révoquer TOUS les accès ?',()=>{const l=State.learner(id);l.hasFullAccess=false;l.unlockedModules=[];l.accessStatus='awaiting_payment';State.save();this.openDetail(id)},{title:'Révoquer',yes:'Révoquer',danger:true})},
+
+renderSubmissions(){const s=State.get();const subs=[...s.submissions].sort((a,b)=>new Date(b.date)-new Date(a.date));
+document.getElementById('av-submissions').innerHTML=subs.length?subs.map(x=>{const l=State.learner(x.learnerId);
+return`<div class="submission ${x.status}"><div class="s-head"><div><b>${U.esc(l?.name||'?')}</b><br><small class="text-muted">M${x.moduleId} · ${U.dateTime(x.date)}</small></div>
+<span class="badge ${x.status==='approved'?'badge-vert':x.status==='rejected'?'badge-rouge':'badge-or'}">${x.status}</span></div>
+<div class="s-content">${U.esc(x.text)}</div>
+${x.status==='pending'?`<div class="flex mt-12">
+<button class="btn btn-vert btn-block btn-sm" data-action="admin.approveSub" data-id="${x.id}">✅ Approuver</button>
+<button class="btn btn-rouge btn-block btn-sm" data-action="admin.rejectSub" data-id="${x.id}">✕ Refuser</button></div>`:''}</div>`}).join(''):'<div class="empty"><div class="empty-icon">📝</div><p>Aucun</p></div>'},
+
+approveSub(id){const s=State.get();const x=s.submissions.find(v=>v.id===id);if(!x)return;
+x.status='approved';const l=State.learner(x.learnerId);if(l){l.exercises=l.exercises||{};l.exercises[x.moduleId]=true}
+State.save();To.show('✅ Validé','success');this.renderSubmissions()},
+rejectSub(id){Dg.prompt('Motif du rejet :',(fb)=>{const s=State.get();const x=s.submissions.find(v=>v.id===id);if(!x)return;x.status='rejected';x.feedback=fb;State.save();this.renderSubmissions()},{title:'Rejeter'})},
+
+renderPayments(){
+const s=State.get();
+const pending=s.learners.filter(l=>l.accessStatus==='payment_submitted'&&l.paymentProof);
+const pays=[...s.payments].sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+document.getElementById('av-payments').innerHTML=`
+${pending.length?`<div class="card" style="border-left:4px solid var(--o);background:#fffbeb">
+<div class="card-title">⏳ À valider (${pending.length})</div>
+${pending.map(l=>{const p=l.paymentProof;return`<div style="background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid #fde68a">
+<div style="display:flex;justify-content:space-between;margin-bottom:8px"><b>${U.esc(l.name)}</b><span class="badge badge-or">⏳</span></div>
+<div style="font-size:13px;margin-bottom:10px">
+<div><b>Montant :</b> ${U.money(p.amount||0)}</div>
+<div><b>Type :</b> ${p.type==='pack'?'Pack Complet':'Module '+p.moduleId}</div>
+<div><b>Réf :</b> <code>${U.esc(p.ref||'—')}</code></div>
+</div>
+<div class="flex"><button class="btn btn-vert btn-sm btn-block" onclick="Access.approvePayment('${l.id}','${p.type}','${p.moduleId}');AdminUI.renderPayments()">✅ Valider</button><button class="btn btn-rouge btn-sm btn-block" data-action="admin.rejectPayment" data-id="${l.id}">❌ Rejeter</button></div>
+</div>`}).join('')}</div>`:''}
+<div class="card"><div class="card-title">📊 Historique complet</div>
+${pays.map(p=>{const l=State.learner(p.learnerId);return`<div style="padding:10px 0;border-bottom:1px solid var(--br)"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><b>${U.esc(l?.name||'?')}</b><b style="color:var(--v)">${U.money(p.amount)}</b></div><div class="text-muted" style="font-size:11px">${U.date(p.date)} · ${U.esc(p.type)} · ${U.esc(p.method)}</div></div>`}).join('') || '<p class="text-muted">Aucun paiement</p>'}</div>`;
+},
+
+rejectPayment(id){Dg.prompt('Motif :',(reason)=>{Access.rejectPayment(id,reason);this.renderPayments()},{title:'Rejeter'})},
+
+renderSettings(){const s=State.get();
+document.getElementById('av-settings').innerHTML=`
+<div class="card"><div class="card-title">💰 Tarification & Paiement</div>
+<div class="form-group"><label class="form-label">Prix du Pack Complet (FCFA)</label><input class="form-input" id="setPackPrice" type="number" value="${s.settings.packPrice}"></div>
+<div class="form-group"><label class="form-label">Lien de paiement Pack</label><input class="form-input" id="setChariowPackUrl" value="${U.esc(s.settings.chariowPackUrl||'')}" placeholder="https://..."></div>
+<hr style="border:0;border-top:1px solid var(--br);margin:16px 0">
+<div class="form-group"><label class="form-label">Prix d'un Module (FCFA)</label><input class="form-input" id="setModulePrice" type="number" value="${s.settings.modulePrice}"></div>
+<div class="form-group"><label class="form-label">Lien de paiement Module</label><input class="form-input" id="setChariowModuleUrl" value="${U.esc(s.settings.chariowModuleUrl||'')}" placeholder="https://..."></div>
+<button class="btn btn-primary btn-block" data-action="admin.savePricing">💾 Enregistrer les tarifs</button></div>
+
+<div class="card"><div class="card-title">👨‍🏫 Coach</div>
+<div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="setCoachName" value="${U.esc(s.settings.coachName)}"></div>
+<div class="form-group"><label class="form-label">WhatsApp</label><input class="form-input" id="setCoachWA" value="${U.esc(s.settings.coachWhatsApp)}"></div>
+<button class="btn btn-primary btn-block" data-action="admin.saveCoach">💾 Enregistrer</button></div>
+
+<div class="card"><div class="card-title">🔐 Mot de passe Admin</div>
+<div class="form-group"><input class="form-input" id="setPwd" type="password" placeholder="Nouveau mot de passe"></div>
+<button class="btn btn-primary btn-block" data-action="admin.savePwd">💾 Mettre à jour</button></div>
+
+<div class="card"><div class="card-title">☁️ Synchronisation</div>
+<div id="syncStatus" style="font-size:13px;padding:10px;background:var(--bg);border-radius:8px;margin-bottom:10px">🔄 Test en cours…</div>
+<button class="btn btn-or btn-block" data-action="admin.forcePullCloud">⬇️ Récupérer du Cloud</button>
+<button class="btn btn-vert btn-block mt-8" data-action="admin.forcePushCloud">⬆️ Envoyer vers le Cloud</button></div>`;
+setTimeout(()=>this.testSync(),100)},
+
+savePricing(){const s=State.get();s.settings.packPrice=Number(document.getElementById('setPackPrice').value);s.settings.chariowPackUrl=document.getElementById('setChariowPackUrl').value.trim();s.settings.modulePrice=Number(document.getElementById('setModulePrice').value);s.settings.chariowModuleUrl=document.getElementById('setChariowModuleUrl').value.trim();State.save();To.show('✅ Tarifs mis à jour','success')},
+saveCoach(){const s=State.get();s.settings.coachName=document.getElementById('setCoachName').value.trim()||'Coach';s.settings.coachWhatsApp=document.getElementById('setCoachWA').value.trim();State.save();To.show('✅ Enregistré','success')},
+async savePwd(){const pwd=document.getElementById('setPwd').value;if(!pwd)return;const s=State.get();s.settings.masterPasswordHash=await Cr.hash(pwd);State.save();To.show('✅ Mot de passe mis à jour','success')}
+};
+
+const LearnerUI={
+currentTab:'home',_searchResults:[],
+
+open(){const l=State.currentLearner();if(!l)return Auth.logout();
+document.getElementById('learnerWho').textContent=l.name.split(' ')[0];
+Router.go('s-learner');this.go('home')},
+
+go(tab){const l=State.currentLearner();if(!l)return;
+this.currentTab=tab;
+document.querySelectorAll('#s-learner .view').forEach(v=>v.classList.remove('active'));
+const v=document.getElementById('lv-'+tab);if(v)v.classList.add('active');
+document.querySelectorAll('#s-learner .nav-item').forEach(n=>n.classList.remove('active'));
+document.querySelectorAll('#s-learner .nav-item').forEach(n=>{if(n.dataset.tab===tab)n.classList.add('active')});
+window.scrollTo(0,0);this.renderTab(tab);this.updateBadges()},
+
+showTab(tab){this.go(tab)},
+renderTab(t){const r={home:()=>this.renderHome(),modules:()=>this.renderModules(),submissions:()=>this.renderSubmissions(),messages:()=>this.renderMessages(),community:()=>this.renderCommunity(),attestation:()=>this.renderAttestation(),profile:()=>this.renderProfile(),'module-detail':()=>{}};r[t]?.()},
+updateBadges(){const s=State.get();const l=State.currentLearner();if(!l)return;
+const u=s.messages.filter(m=>(m.learnerId===l.id||m.learnerId===null)&&m.from==='admin'&&!m.read).length;
+const b=document.getElementById('learnerBadgeMsg');if(b){b.textContent=u;b.style.display=u>0?'block':'none'}},
+
+renderHome(){const l=State.currentLearner();if(!l)return;
+const done=Object.values(l.exercises||{}).filter(Boolean).length;
+const st=Streak.get(l.id);const s=State.get();
+document.getElementById('lv-home').innerHTML=`
+<div class="detail-header"><h2>Bonjour ${U.esc(l.name.split(' ')[0])} 👋</h2>
+<p>${done}/10 modules terminés</p>
+${st.count>0?`<div style="margin-top:8px"><span class="badge" style="background:linear-gradient(135deg,#f59e0b,#dc2626);color:#fff;padding:6px 12px;font-size:13px">🔥 ${st.count} jour${st.count>1?'s':''} d'affilée</span></div>`:''}</div>
+<div class="stats">
+<div class="stat hl"><div class="stat-label">Progression</div><div class="stat-value">${done}/10</div></div>
+<div class="stat"><div class="stat-label">Accès</div><div class="stat-value" style="font-size:14px;color:var(--v)">${l.hasFullAccess?'Pack Complet':(l.unlockedModules?.length||0)+' Module(s)'}</div></div>
+</div>
+<div class="card"><div class="card-title">Actions rapides</div>
+<button class="btn btn-primary btn-block mb-8" data-action="learner.go" data-tab="modules">📚 Explorer les modules</button>
+<button class="btn btn-or btn-block" data-action="learner.go" data-tab="profile">👤 Mon profil</button></div>`},
+
+renderModules(){
+const l=State.currentLearner();
+document.getElementById('lv-modules').innerHTML=`
+<div style="margin-bottom:12px;font-size:15px;color:var(--b);font-weight:800">📚 Le Programme (10 Modules)</div>
+<div class="info-box mb-12">🔓 <b>${l.hasFullAccess?'Accès Total':(l.unlockedModules?.length||0)+' module(s) débloqué(s)'}</b> · Clique sur un module verrouillé pour l'acheter.</div>
+${Object.keys(Content.MODULES).map(k=>{
+  const kn=Number(k);
+  const done=l?.exercises?.[k];
+  const unlocked=Access.isModuleUnlocked(l,kn);
+  const price=State.get().settings.modulePrice||5000;
+  return`<div class="mod-card ${done?'done':''} ${!unlocked?'locked':''}" onclick="${unlocked?`LearnerUI.openModule(${k})`:`LearnerUI.showUnlockModal(${k})`}">
+  <div class="num">${done?'✓':unlocked?'🔓':'🔒'}</div>
+  <div class="info"><h3>${U.esc(Content.MODULES[k].title)}</h3>
+  <small>${done?'✅ Terminé':unlocked?'▶️ Continuer':'🔒 Débloquer pour '+U.money(price)}</small></div>
+  ${done?'<span class="badge badge-vert">OK</span>':(!unlocked?'<span class="badge badge-or">💳</span>':'<span class="badge badge-bleu">GO</span>')}</div>`}).join('')}`},
+
+showUnlockModal(k){
+const s=State.get();
+const l=State.currentLearner();
+Md.open(`
+<div class="modal-title">🔓 Débloquer le Module ${k}<button class="modal-close" data-action="modal.close">✕</button></div>
+<div class="info-box" style="margin-bottom:16px">
+<b>Module ${k} : ${U.esc(Content.MODULES[k].title)}</b><br>
+Choisis ton option pour accéder à ce contenu :
+</div>
+<button class="btn btn-or btn-block mb-8" onclick="LearnerUI.payOnline('module',${k})">
+📱 Débloquer ce module (${U.money(s.settings.modulePrice)})
+</button>
+<button class="btn btn-vert btn-block mb-8" onclick="LearnerUI.payOnline('pack')">
+🚀 Débloquer tout le programme (${U.money(s.settings.packPrice)})
+</button>
+<button class="btn btn-outline btn-block" data-action="modal.close">Annuler</button>
+`) },
+
+payOnline(type,mid){
+const s=State.get();
+const l=State.currentLearner();
+const base=type==='pack'?s.settings.chariowPackUrl:s.settings.chariowModuleUrl;
+if(!base)return To.show('⚠️ Lien de paiement non configuré','error');
+const url=new URL(window.location.href);
+url.searchParams.set('payment','success');url.searchParams.set('type',type);
+if(mid)url.searchParams.set('mid',mid);
+url.searchParams.set('lid',l.id);
+try{const u=new URL(base);u.searchParams.set('return_url',url.toString());window.location.href=u.toString()}catch{window.location.href=base}
+},
+
+submitPayment(){
+const l=State.currentLearner();if(!l)return;
+const ref=document.getElementById('pay_ref').value.trim();if(!ref)return To.show('⚠️ Référence requise','error');
+const type=document.getElementById('pay_type').value;
+const mid=type==='module'?document.getElementById('pay_module_id').value:null;
+const amount=type==='pack'?State.get().settings.packPrice:State.get().settings.modulePrice;
+l.accessStatus='payment_submitted';
+l.paymentProof={ref,amount,type,moduleId:mid,method:document.getElementById('pay_method').value};
+State.save();To.show('✅ Preuve envoyée','success');setTimeout(()=>this.openLocked(l.id),500)},
+
+openLocked(lid){
+const l=State.learner(lid);if(!l)return;
+document.getElementById('lockedLearnerName').textContent=l.name;
+if(l.accessStatus==='payment_submitted'){
+document.getElementById('lockedIcon').textContent='⏳';document.getElementById('lockedTitle').textContent='En vérification';
+document.getElementById('lockedMsg').textContent='Le coach vérifie ta preuve sous 24h.';
+document.getElementById('lockedActionBtn').innerHTML=`<button class="btn btn-vert btn-block" onclick="LearnerUI.checkStatus()">🔄 Vérifier</button>`;
+} else {
+document.getElementById('lockedIcon').textContent='💳';document.getElementById('lockedTitle').textContent='Accès verrouillé';
+document.getElementById('lockedMsg').textContent='Choisis ton mode d\'accès.';
+document.getElementById('lockedActionBtn').innerHTML=`<button class="btn btn-or btn-block" onclick="LearnerUI.payOnline('pack')">💳 Payer maintenant</button>`;
+}
+Router.go('s-learner-locked')},
+
+checkStatus(){const l=State.currentLearner();if(l&&(l.accessStatus==='active'||l.hasFullAccess||l.unlockedModules?.length>0)){this.open();To.show('✅ Activé','success')}else To.show('⏳ En attente','info')},
+
+openModule(k){
+const m=Content.MODULES[k];if(!m)return;
+const l=State.currentLearner();
+const isDone=l.exercises?.[k];
+
+document.getElementById('lv-module-detail').innerHTML=`
+<button class="back-btn" data-action="learner.go" data-tab="modules">← Retour</button>
+<div class="detail-header"><h2>Module ${k}</h2><p>${U.esc(m.title)}</p></div>
+
+<div class="card"><div class="card-title">🎯 Objectif</div><p style="font-size:14px">${U.esc(m.objectif)}</p></div>
+
+${m.lessons.map(ls=>`<div class="lesson"><h4>${U.esc(ls.h)}</h4>
+${ls.prompt?`<div class="prompt-box">${U.esc(ls.prompt)}</div>`:''}
+${ls.p?`<p>${U.esc(ls.p)}</p>`:''}</div>`).join('')}
+
+<div class="exercise-box"><b>📝 Exercice Pratique</b><p>${U.esc(m.exercice)}</p></div>
+<div class="revenu-box">💰 Revenus estimés : ${U.esc(m.revenu)}</div>
+
+${isDone?`<div class="info-box mt-12" style="text-align:center">✅ Module terminé !</div>`:`
+<div class="card mt-12">
+<button class="btn btn-vert btn-block" onclick="LearnerUI.markCompleted(${k})">✅ Marquer comme terminé</button>
+</div>`}
+
+${Content.QUIZZES[k]?`<button class="btn btn-primary btn-block mt-12 mb-12" data-action="quiz.start" data-module="${k}">🎯 Faire le quiz du module</button>`:''}
+`;
+this.go('module-detail')},
+
+markCompleted(k){
+const l=State.currentLearner();
+l.exercises=l.exercises||{};
+l.exercises[k]=true;
+State.save();
+To.show('🎉 Félicitations ! Module terminé.','success');
+this.openModule(k);
+},
+
+renderProfile(){const l=State.currentLearner();const st=Streak.get(l.id);
+document.getElementById('lv-profile').innerHTML=`
+<div class="card" style="text-align:center">
+<div class="avatar" style="width:80px;height:80px;font-size:32px;margin:0 auto 12px">${(l.name||'?').charAt(0).toUpperCase()}</div>
+<h2 style="color:var(--b)">${U.esc(l.name)}</h2><p class="text-muted">${U.esc(l.phone||'')}</p>
+${st.count>0?`<div style="margin-top:8px"><span class="badge" style="background:linear-gradient(135deg,#f59e0b,#dc2626);color:#fff;padding:6px 12px;font-size:13px">🔥 ${st.count} jours</span></div>`:''}
+</div>
+<div class="stats">
+<div class="stat hl"><div class="stat-label">Modules terminés</div><div class="stat-value">${Object.values(l.exercises||{}).filter(Boolean).length}/10</div></div>
+<div class="stat"><div class="stat-label">Accès</div><div class="stat-value" style="font-size:14px">${l.hasFullAccess?'Pack Complet':(l.unlockedModules?.length||0)+' Module(s)'}</div></div>
+</div>
+<div class="card"><div class="card-title">Actions</div>
+<button class="btn btn-outline btn-block" data-action="auth.logout">🚪 Déconnexion</button></div>`},
+
+renderSubmissions(){const l=State.currentLearner();const s=State.get();
+const subs=s.submissions.filter(x=>x.learnerId===l.id).sort((a,b)=>new Date(b.date)-new Date(a.date));
+document.getElementById('lv-submissions').innerHTML=`<div class="info-box">📝 Tes exercices envoyés au coach.</div>`
++(subs.length?subs.map(x=>{const m=Content.MODULES[x.moduleId];
+return`<div class="submission ${x.status}">
+<div class="s-head"><b>M${x.moduleId} · ${U.esc(m?.title||'')}</b>
+<span class="badge ${x.status==='approved'?'badge-vert':x.status==='rejected'?'badge-rouge':'badge-or'}">${x.status==='approved'?'✅ Validé':x.status==='rejected'?'❌ À refaire':'⏳ En attente'}</span></div>
+<div class="s-content">${U.esc(x.text)}</div>
+</div>`}).join(''):'<div class="empty"><div class="empty-icon">📝</div><p>Aucun rendu</p></div>')},
+
+renderMessages(){const l=State.currentLearner();const s=State.get();
+const msgs=s.messages.filter(m=>m.learnerId===l.id||m.learnerId===null).sort((a,b)=>new Date(a.date)-new Date(b.date));
+s.messages.forEach(m=>{if((m.learnerId===l.id||m.learnerId===null)&&m.from==='admin')m.read=true});State.save();
+document.getElementById('lv-messages').innerHTML=`<div style="margin-bottom:80px">`
++(msgs.length?msgs.map(m=>{
+if(m.learnerId===null){return`<div class="msg msg-announcement"><div class="msg-meta">📢 Annonce · ${U.dateTime(m.date)}</div><div class="msg-text">${U.esc(m.text)}</div></div>`}
+return`<div class="msg ${m.from==='admin'?'msg-admin':'msg-learner'}"><div class="msg-meta">${m.from==='admin'?'👨‍💼 Coach':'🎓 Moi'} · ${U.dateTime(m.date)}</div><div class="msg-text">${U.esc(m.text)}</div></div>`}).join(''):'<div class="empty"><div class="empty-icon">💬</div><p>Aucun message</p></div>')
++`</div><div class="msg-input-bar" style="position:sticky;bottom:62px;background:var(--bg);padding:8px 0"><input class="form-input" id="learnerMsgInput" placeholder="Écrire au coach..." style="flex:1"><button class="btn btn-primary" data-action="learner.sendMessage">➤</button></div>`;
+this.updateBadges()},
+
+sendMessage(){const l=State.currentLearner();const inp=document.getElementById('learnerMsgInput');
+const txt=inp?.value.trim();if(!txt)return;
+const s=State.get();s.messages.push({id:U.uid(),learnerId:l.id,from:'learner',text:txt,date:new Date().toISOString(),read:false});State.save();
+this.renderMessages()},
+
+renderCommunity(){const l=State.currentLearner();const s=State.get();
+const sorted=[...s.community].sort((a,b)=>new Date(a.date)-new Date(b.date));
+document.getElementById('lv-community').innerHTML=
+`<div class="info-box">💬 Chat public. Partage tes réussites.</div>
+<div class="card" style="max-height:450px;overflow-y:auto">
+${sorted.length?sorted.map(m=>{const mine=m.learnerId===l.id;const from=m.from==='coach';return`<div class="msg ${from?'msg-admin':mine?'msg-learner':'msg-peer'}">
+<div class="msg-meta">${from?'👨‍💼 '+(m.name||'Coach'):mine?'🎓 Moi':`🎓 ${U.esc(m.name)}`} · ${U.dateTime(m.date)}</div>
+<div class="msg-text">${U.esc(m.text)}</div></div>`}).join(''):'<p class="text-muted">Aucun message.</p>'}
+</div>
+<div class="msg-input-bar"><input class="form-input" id="learnerCommunityInput" placeholder="Message au groupe..." style="flex:1"><button class="btn btn-primary" data-action="learner.sendCommunityMessage">➤</button></div>`},
+
+sendCommunityMessage(){const l=State.currentLearner();const inp=document.getElementById('learnerCommunityInput');
+const txt=inp?.value.trim();if(!txt)return;
+const s=State.get();s.community.push({id:U.uid(),from:'learner',learnerId:l.id,name:l.name,whatsapp:l.whatsapp||l.phone||'',text:txt,date:new Date().toISOString()});State.save();
+this.renderCommunity()},
+
+renderAttestation(){const l=State.currentLearner();
+document.getElementById('lv-attestation').innerHTML=l.attestationNum?`
+<div class="card" style="text-align:center"><div style="font-size:64px">🏆</div>
+<h2 style="color:var(--b);margin:12px 0">Attestation obtenue !</h2>
+<p class="text-muted">N° ${U.esc(l.attestationNum)}</p>
+</div>`:`
+<div class="empty"><div class="empty-icon">🏆</div><p>Termine les 10 modules pour recevoir ton attestation.</p></div>`}
+};
+
+document.addEventListener('click',e=>{
+if(e.target.id==='modalBg'){Md.close();return}
+const el=e.target.closest('[data-action]');
+if(!el)return;
+const action=el.dataset.action;
+Hp.tap();
+const handlers={
+'go':()=>Router.go(el.dataset.screen),
+'nav':()=>{if(el.dataset.screen==='admin')AdminUI.go(el.dataset.tab);else if(el.dataset.screen==='learner')LearnerUI.go(el.dataset.tab)},
+'modal.close':()=>Md.close(),
+'auth.adminLogin':()=>Auth.adminLogin(),
+'auth.learnerLogin':()=>Auth.learnerLogin(),
+'auth.register':()=>Auth.register(),
+'auth.logout':()=>Auth.logout(),
+'auth.forgotPassword':()=>Auth.forgotPassword(),
+'auth.sendForgot':()=>Auth.sendForgot(),
+'learner.go':()=>LearnerUI.go(el.dataset.tab),
+'learner.openModule':()=>LearnerUI.openModule(Number(el.dataset.k)),
+'learner.sendMessage':()=>LearnerUI.sendMessage(),
+'learner.sendCommunityMessage':()=>LearnerUI.sendCommunityMessage(),
+'admin.go':()=>AdminUI.go(el.dataset.tab),
+'admin.openDetail':()=>AdminUI.openDetail(el.dataset.id),
+'admin.activateLearner':()=>{e.stopPropagation();AdminUI.activateLearner(el.dataset.id)},
+'admin.deactivateLearner':()=>AdminUI.deactivateLearner(el.dataset.id),
+'admin.toggleModule':()=>AdminUI.toggleModule(el.dataset.id,Number(el.dataset.k)),
+'admin.approveSub':()=>AdminUI.approveSub(el.dataset.id),
+'admin.rejectSub':()=>AdminUI.rejectSub(el.dataset.id),
+'admin.rejectPayment':()=>AdminUI.rejectPayment(el.dataset.id),
+'admin.savePricing':()=>AdminUI.savePricing(),
+'admin.saveCoach':()=>AdminUI.saveCoach(),
+'admin.savePwd':()=>AdminUI.savePwd(),
+'admin.forcePullCloud':()=>AdminUI.forcePullCloud(),
+'admin.forcePushCloud':()=>AdminUI.forcePushCloud(),
+'quiz.start':()=>Quiz.start(Number(el.dataset.module)),
+'quiz.select':()=>Quiz.select(Number(el.dataset.q),Number(el.dataset.o),el),
+'quiz.submit':()=>Quiz.submit(Number(el.dataset.module))
+};
+if(handlers[action]){e.preventDefault();try{handlers[action]()}catch(err){console.error('Action error:',action,err);To.show('Erreur : '+err.message,'error')}}
+});
+
+document.addEventListener('input',e=>{
+const el=e.target.closest('[data-input]');
+if(!el)return;
+if(el.dataset.input==='admin-search')AdminUI.filterLearners(AdminUI._currentFilter||'all');
+});
+
+document.addEventListener('keypress',e=>{
+if(e.key!=='Enter')return;
+if(e.target.id==='adminChatInput'){document.querySelector('[data-action="admin.sendChat"]')?.click()}
+else if(e.target.id==='learnerMsgInput'){document.querySelector('[data-action="learner.sendMessage"]')?.click()}
+else if(e.target.id==='learnerCommunityInput'){document.querySelector('[data-action="learner.sendCommunityMessage"]')?.click()}
+});
+
+(async function boot(){
+await State.init();
+Nw.init();
+if(window.SupaSync) Chariow.checkReturn(); // Validation au démarrage
+Router.go('s-login');
+
+if(window.SupaSync){
+  SupaSync.subscribe((remoteData)=>{
+    if(!remoteData||remoteData.version!==9)return;
+    if(St._d)return;
+    const current=State.get();
+    if(JSON.stringify(current)===JSON.stringify(remoteData))return;
+    const d=State.get();
+    Object.keys(remoteData).forEach(k=>{d[k]=remoteData[k]});
+    St._cache=d;
+    try{localStorage.setItem(St.KEY,JSON.stringify(d))}catch(e){}
+  });
+  const bar=document.getElementById('netBar');
+  if(bar){
+    setTimeout(()=>{
+      if(window.SupaSync)SupaSync.test().then(r=>{bar.textContent=r.msg+' · ☁️ Synchro active'}).catch(()=>{});
+    },1000);
+  }
+}
+})();
+</script>
+</body>
+</html>
