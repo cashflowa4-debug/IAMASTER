@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0a1f44">
+<title>IA MASTER Academy</title>
+<style>
+:root{--b:#0a1f44;--b2:#1e3a8a;--o:#f59e0b;--o2:#fbbf24;--v:#059669;--r:#dc2626;--bg:#f3f4f6;--c:#fff;--t:#1a1a1a;--m:#6b7280;--br:#e5e7eb}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--t);font-size:15px;line-height:1.5;min-height:100vh;padding-bottom:72px}
+#netBar{position:fixed;top:0;left:0;right:0;height:22px;line-height:22px;text-align:center;font-size:11px;font-weight:600;z-index:9999;background:#d1fae5;color:#065f46}
+#netBar.off{background:#fee2e2;color:#991b1b}
+.screen{display:none;min-height:100vh;padding-top:22px}.screen.active{display:block}
+.topbar{position:sticky;top:22px;background:var(--b);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:100}
+.topbar h1{font-size:15px;font-weight:800;flex:1}.topbar h1 span{color:var(--o2)}
+.btn-logout{background:rgba(255,255,255,.2);border:none;color:#fff;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+.view{display:none;padding:16px}.view.active{display:block}
+.navbar{position:fixed;bottom:0;left:0;right:0;background:var(--c);display:flex;border-top:1px solid var(--br);z-index:100}
+.nav-item{flex:1;background:none;border:none;padding:8px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--m);font-size:9px;font-weight:600;cursor:pointer;font-family:inherit;position:relative}
+.nav-icon{font-size:18px}.nav-item.active{color:var(--b2)}
+.nav-badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--r);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:10px;min-width:14px;text-align:center}
+.card{background:var(--c);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-title{font-size:12px;color:var(--m);font-weight:700;text-transform:uppercase;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat{background:var(--c);border-radius:14px;padding:14px}
+.stat-label{font-size:10px;color:var(--m);font-weight:600;text-transform:uppercase}
+.stat-value{font-size:20px;font-weight:800;color:var(--b);margin-top:4px}
+.stat.hl{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff}.stat.hl .stat-label{color:var(--o2)}.stat.hl .stat-value{color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn:active{opacity:.8}
+.btn-primary{background:var(--b);color:#fff}.btn-or{background:var(--o);color:#fff}.btn-vert{background:var(--v);color:#fff}.btn-rouge{background:var(--r);color:#fff}
+.btn-outline{background:transparent;border:2px solid var(--b);color:var(--b)}
+.btn-block{display:flex;width:100%}.btn-sm{padding:8px 12px;font-size:13px;border-radius:8px}
+.form-group{margin-bottom:14px}.form-label{font-size:13px;font-weight:600;display:block;margin-bottom:6px}
+.form-input,.form-textarea{width:100%;padding:12px;border:2px solid var(--br);border-radius:10px;font-size:16px;font-family:inherit;background:var(--c);color:var(--t)}
+.form-input:focus,.form-textarea:focus{outline:none;border-color:var(--b2)}
+.form-textarea{resize:vertical;min-height:90px}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--o));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0;overflow:hidden;position:relative}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.avatar-edit{position:absolute;bottom:0;right:0;background:var(--o);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid #fff;cursor:pointer}
+.row{background:var(--c);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.row .info{flex:1;min-width:0}.row .info b{display:block;color:var(--b);font-size:15px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .info small{color:var(--m);font-size:12px}
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-vert{background:#d1fae5;color:var(--v)}.badge-or{background:#fef3c7;color:#92400e}
+.badge-gris{background:#e5e7eb;color:var(--m)}.badge-bleu{background:#dbeafe;color:var(--b2)}.badge-rouge{background:#fee2e2;color:var(--r)}
+.login-screen{min-height:100vh;background:linear-gradient(135deg,var(--b),var(--b2) 60%,var(--o));display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;color:#fff;text-align:center;padding-top:22px}
+.login-screen h1{font-size:38px;font-weight:900;margin-bottom:8px}.login-screen h1 span{color:var(--o2)}
+.login-screen .quote{font-size:14px;opacity:.9;margin-bottom:32px;font-style:italic;max-width:85%}
+.login-btn{background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;padding:16px 22px;border-radius:14px;width:100%;max-width:320px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;gap:12px;font-family:inherit;text-align:left}
+.login-btn .icon{font-size:26px}.login-btn .txt{flex:1}.login-btn .sub{font-size:11px;opacity:.8;font-weight:400;display:block}
+.mod-card{background:var(--c);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;display:flex;gap:12px;align-items:center;border-left:5px solid var(--o)}
+.mod-card.done{border-left-color:var(--v)}
+.mod-card.locked{opacity:.55;border-left-color:var(--m);background:#f9fafb}
+.mod-card.locked .num{background:var(--m)}
+.mod-card.locked h3{color:var(--m)}
+.mod-card .num{width:40px;height:40px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+.mod-card.done .num{background:var(--v)}
+.mod-card h3{font-size:14px;color:var(--b);margin-bottom:2px}.mod-card small{font-size:12px;color:var(--m)}
+.lesson{background:var(--c);border-radius:12px;padding:16px;margin-bottom:10px}
+.lesson h4{color:var(--b);font-size:14px;margin-bottom:8px;font-weight:800}
+.lesson p{font-size:14px;line-height:1.7;white-space:pre-line}
+.prompt-box{background:var(--b);color:#e0e7ff;padding:12px;border-radius:8px;font-family:Consolas,monospace;font-size:12px;margin:8px 0;line-height:1.6;white-space:pre-line}
+.exercise-box{background:#fef3c7;border-left:4px solid var(--o);padding:12px;border-radius:8px;margin:10px 0}
+.exercise-box b{color:#92400e;font-size:12px;text-transform:uppercase;display:block;margin-bottom:4px}
+.revenu-box{background:#d1fae5;border-left:4px solid var(--v);padding:12px;border-radius:8px;margin:10px 0;color:#065f46;font-weight:700;font-size:13px}
+.progress-bar{height:8px;background:var(--br);border-radius:4px;overflow:hidden;margin:8px 0}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--o),var(--v));border-radius:4px}
+.search-bar{position:relative;margin-bottom:12px}
+.search-bar input{width:100%;padding:12px 14px 12px 40px;border:2px solid transparent;background:var(--c);border-radius:12px;font-size:16px;font-family:inherit;color:var(--t)}
+.search-bar input:focus{outline:none;border-color:var(--b2)}
+.search-bar::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px}
+.msg{background:var(--c);border-radius:12px;padding:12px;margin-bottom:8px;max-width:85%}
+.msg-admin{background:#dbeafe;border-left:4px solid var(--b2);margin-right:auto;color:#1e3a8a}
+.msg-learner{background:#d1fae5;border-left:4px solid var(--v);margin-left:auto;color:#065f46}
+.msg-peer{background:#f3e8ff;border-left:4px solid #9333ea;margin-right:auto;color:#581c87}
+.msg-announcement{background:#fef3c7;border-left:4px solid var(--o);max-width:100%;color:#92400e}
+.msg-meta{font-size:11px;margin-bottom:4px;font-weight:600;opacity:.8}
+.msg-text{font-size:14px;line-height:1.5;white-space:pre-wrap}
+.msg-wa{display:inline-block;margin-top:6px;font-size:12px;color:#25d366;font-weight:700;text-decoration:none}
+.empty{text-align:center;padding:40px 20px;color:var(--m)}.empty-icon{font-size:48px;margin-bottom:10px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.active{display:flex}
+.modal{background:var(--c);width:100%;max-width:500px;border-radius:20px 20px 0 0;padding:20px;max-height:90vh;overflow-y:auto;color:var(--t)}
+.modal-title{font-size:18px;font-weight:800;color:var(--b);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:var(--bg);border:none;width:32px;height:32px;border-radius:50%;font-size:18px;color:var(--m);cursor:pointer}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--b);color:#fff;padding:12px 20px;border-radius:30px;font-size:14px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300;max-width:90%}
+.toast.show{opacity:1}.toast.toast-success{background:var(--v)}.toast.toast-error{background:var(--r)}
+.flex{display:flex;gap:8px}.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}
+.text-muted{color:var(--m);font-size:13px}
+.back-btn{background:none;border:none;color:var(--b2);font-weight:700;padding:8px 0;cursor:pointer;font-size:14px;font-family:inherit;margin-bottom:8px}
+.warning-box{background:#fef3c7;border-left:4px solid var(--o);padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px;color:#92400e}
+.info-box{background:#dbeafe;border-left:4px solid var(--b2);padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px;color:#1e3a8a}
+.detail-header{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;padding:20px;border-radius:14px;margin-bottom:14px}
+.detail-header h2{font-size:20px;margin-bottom:4px}.detail-header p{color:var(--o2);font-size:13px;font-weight:600}
+.submission{background:var(--c);border-radius:12px;padding:14px;margin-bottom:10px;border-left:4px solid var(--o)}
+.submission.approved{border-left-color:var(--v)}.submission.rejected{border-left-color:var(--r)}
+.submission .s-head{display:flex;justify-content:space-between;margin-bottom:8px}
+.submission .s-content{font-size:14px;line-height:1.5;white-space:pre-wrap;padding:10px;background:var(--bg);border-radius:8px;margin:8px 0}
+.submission .s-feedback{background:#fef3c7;border-left:3px solid var(--o);padding:10px;border-radius:6px;font-size:13px;margin-top:8px;color:#92400e}
+.submission .s-feedback.approved{background:#d1fae5;border-left-color:var(--v);color:#065f46}
+.quiz-q{background:var(--c);border-radius:12px;padding:16px;margin-bottom:10px}
+.quiz-q h4{font-size:14px;color:var(--b);margin-bottom:10px}
+.quiz-opt{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;margin-bottom:6px;cursor:pointer;border:2px solid transparent}
+.quiz-opt.selected{border-color:var(--b2);background:#dbeafe;color:#1e3a8a}
+.quiz-opt.correct{border-color:var(--v);background:#d1fae5;color:#065f46}
+.quiz-opt.wrong{border-color:var(--r);background:#fee2e2;color:#991b1b}
+.quiz-opt .letter{width:26px;height:26px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0}
+.note-area{width:100%;padding:12px;border:2px solid var(--br);border-radius:10px;font-size:14px;font-family:inherit;background:var(--bg);color:var(--t);resize:vertical;min-height:80px}
+.search-result{background:var(--c);border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer}
+.search-result .st{font-size:10px;color:var(--m);font-weight:700;text-transform:uppercase;margin-bottom:2px}
+.search-result .sh{font-size:14px;font-weight:700;color:var(--b);margin-bottom:2px}
+.search-result .sp{font-size:12px;color:var(--m)}
+mark{background:#fef3c7;color:#92400e;padding:0 2px;border-radius:3px}
+audio{width:100%;margin:8px 0}
+.msg-input-bar{position:sticky;bottom:72px;background:var(--bg);padding:8px 0;display:flex;gap:8px;margin-top:8px}
+</style>
+</head>
+<body>
+<div id="netBar">● En ligne</div>
+
+<!-- ÉCRAN LOGIN -->
+<div class="screen active" id="s-login"><div class="login-screen"><h1>IA <span>MASTER</span></h1><p class="quote">« L'IA ne remplace pas l'Africain. Elle arme l'Africain. »</p>
+<button class="login-btn" data-action="go" data-screen="s-admin-login"><span class="icon">👨‍💼</span><div class="txt">Administrateur<span class="sub">Gestion</span></div></button>
+<button class="login-btn" data-action="go" data-screen="s-learner-login"><span class="icon">🎓</span><div class="txt">Espace Apprenant<span class="sub">Connexion / Inscription</span></div></button>
+<div style="margin-top:20px;font-size:11px;opacity:.6">IA MASTER ACADEMY · v10.0 (Pro PWA)</div></div></div>
+
+<!-- LOGIN ADMIN -->
+<div class="screen" id="s-admin-login"><div class="login-screen" style="background:linear-gradient(135deg,var(--b),var(--b2))"><h1 style="font-size:22px">Accès Admin</h1><p style="font-size:12px;opacity:.8;margin-bottom:16px">Mot de passe sécurisé</p>
+<div style="width:100%;max-width:340px"><input id="adminPwd" type="password" placeholder="Mot de passe" style="width:100%;padding:14px;border-radius:10px;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);color:#fff;font-size:16px;margin-bottom:10px;outline:none"><button class="btn btn-or btn-block" data-action="auth.adminLogin">🔓 Se connecter</button></div>
+<button class="btn" data-action="go" data-screen="s-login" style="background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.4);margin-top:20px">← Retour</button></div></div>
+
+<!-- LOGIN APPRENANT (Sans friction, sans liste) -->
+<div class="screen" id="s-learner-login"><div class="login-screen">
+<h1 style="font-size:26px">🎓 Connexion</h1>
+<div style="width:100%;max-width:340px;text-align:left">
+<div class="form-group"><label class="form-label" style="color:#fff">Identifiant (Nom ou Téléphone)</label><input id="loginId" type="text" placeholder="Ex: Marie Dupont" style="width:100%;padding:14px;border-radius:10px;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);color:#fff;font-size:16px;outline:none"></div>
+<div class="form-group"><label class="form-label" style="color:#fff">Mot de passe ou Code PIN</label><input id="loginPwd" type="password" placeholder="••••••" style="width:100%;padding:14px;border-radius:10px;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);color:#fff;font-size:16px;outline:none"></div>
+<button class="btn btn-or btn-block mt-12" data-action="auth.learnerLogin">🔓 Se connecter</button>
+<div class="mt-12" style="text-align:center"><button class="btn" data-action="go" data-screen="s-learner-register" style="background:transparent;color:var(--o2);font-size:13px">Pas encore de compte ? S'inscrire</button></div>
+<button class="btn" data-action="auth.forgotPassword" style="background:transparent;color:#fff;opacity:.7;font-size:12px;margin-top:8px">Mot de passe oublié ?</button>
+</div>
+<button class="btn" data-action="go" data-screen="s-login" style="background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.4);margin-top:20px">← Retour</button></div></div>
+
+<!-- INSCRIPTION -->
+<div class="screen" id="s-learner-register"><div class="topbar"><h1>✨ <span>Inscription</span></h1><button class="btn-logout" data-action="go" data-screen="s-login">Retour</button></div><div class="view active"><div class="card"><div class="card-title">Créer mon compte</div>
+<div class="info-box">📌 Ton compte sera activé après paiement.<br>🔐 Mot de passe ou PIN : 4+ caractères.</div>
+<div class="form-group"><label class="form-label">Nom complet *</label><input class="form-input" id="reg_name" placeholder="Marie Dupont"></div>
+<div class="form-group"><label class="form-label">Téléphone WhatsApp *</label><input class="form-input" id="reg_phone" type="tel" placeholder="+237 6 XX XX XX XX"></div>
+<div class="form-group"><label class="form-label">Mot de passe / PIN *</label><input class="form-input" id="reg_pwd" type="password" placeholder="Ex: 1234 ou Marie2024!"></div>
+<div class="form-group"><label class="form-label">Confirmer *</label><input class="form-input" id="reg_pwd2" type="password" placeholder="Retape"></div>
+<button class="btn btn-or btn-block" data-action="auth.register">✅ Créer mon compte</button></div></div></div>
+
+<!-- PAIEMENT -->
+<div class="screen" id="s-learner-payment"><div class="topbar"><h1>💳 <span>Paiement</span></h1><button class="btn-logout" data-action="auth.logout">Quitter</button></div>
+<div class="view active">
+<div class="detail-header"><h2>Active ton compte</h2><p id="payLearnerName"></p></div>
+<div class="card"><div class="card-title">💰 Choisis ton option</div><div id="payOptions"></div></div>
+<div class="card"><div class="card-title">✅ Paiement manuel</div>
+<div class="info-box" style="font-size:12px">Si tu as payé directement au coach.</div>
+<div class="form-group"><label class="form-label">Méthode *</label><select class="form-input" id="pay_method"><option>Orange Money</option><option>MTN MoMo</option><option>Espèces</option></select></div>
+<div class="form-group"><label class="form-label">Ce paiement concerne :</label><select class="form-input" id="pay_type"><option value="pack">Le Pack Complet</option><option value="module">Un Module spécifique</option></select></div>
+<div class="form-group" id="pay_module_group" style="display:none"><label class="form-label">Quel module ?</label><select class="form-input" id="pay_module_id">${Object.keys(Content.MODULES).map(k=>`<option value="${k}">M${k} - ${Content.MODULES[k].title}</option>`).join('')}</select></div>
+<div class="form-group"><label class="form-label">Référence transaction *</label><input class="form-input" id="pay_ref" placeholder="Ex: MP250417.1234"></div>
+<div class="form-group"><label class="form-label">Nom du payeur</label><input class="form-input" id="pay_name" placeholder="Ton nom"></div>
+<button class="btn btn-vert btn-block" data-action="learner.submitPayment">📤 Envoyer au coach</button></div>
+</div></div>
+
+<!-- ÉCRAN VERROUILLÉ -->
+<div class="screen" id="s-learner-locked"><div class="login-screen" style="background:linear-gradient(135deg,#1f2937,#0a1f44)">
+<div style="font-size:64px;margin-bottom:16px" id="lockedIcon">🔒</div>
+<h1 style="font-size:22px" id="lockedTitle">Accès en attente</h1>
+<p style="font-size:13px;opacity:.85;max-width:320px;margin:16px 0" id="lockedMsg">…</p>
+<div id="lockedLearnerName" style="font-weight:700;margin-bottom:20px"></div>
+<div id="lockedActionBtn" style="width:100%;max-width:340px;margin-bottom:12px"></div>
+<div style="width:100%;max-width:340px;margin-bottom:8px"><button class="btn btn-outline btn-block" data-action="learner.previewModule" style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.3)">👀 Aperçu Module 1 (gratuit)</button></div>
+<div style="display:flex;gap:8px;width:100%;max-width:340px">
+<button class="btn" data-action="learner.contactCoach" style="flex:1;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);font-size:13px">📱 Contacter</button>
+<button class="btn" data-action="auth.logout" style="flex:1;background:rgba(220,38,38,.3);color:#fff;border:1px solid rgba(255,255,255,.3);font-size:13px">🚪 Quitter</button>
+</div></div></div>
+
+<!-- ADMIN -->
+<div class="screen" id="s-admin"><div class="topbar"><h1>👨‍💼 <span id="adminWho">Admin</span></h1><button class="btn-logout" data-action="auth.logout">Déconnexion</button></div>
+<div id="adminViews"><div class="view active" id="av-home"></div><div class="view" id="av-learners"></div><div class="view" id="av-detail"></div><div class="view" id="av-submissions"></div><div class="view" id="av-content"></div><div class="view" id="av-messages"></div><div class="view" id="av-chat"></div><div class="view" id="av-community"></div><div class="view" id="av-payments"></div><div class="view" id="av-settings"></div></div>
+<div class="navbar"><button class="nav-item active" data-action="nav" data-screen="admin" data-tab="home"><span class="nav-icon">🏠</span>Accueil</button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="learners"><span class="nav-icon">👥</span>Apprenants</button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="submissions"><span class="nav-icon">📝</span>Rendus<span class="nav-badge" id="adminBadgeSub" style="display:none">0</span></button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="content"><span class="nav-icon">📖</span>Contenu</button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="messages"><span class="nav-icon">💬</span>Messages<span class="nav-badge" id="adminBadgeMsg" style="display:none">0</span></button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="community"><span class="nav-icon">🌍</span>Communauté</button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="payments"><span class="nav-icon">💰</span>Paiements</button><button class="nav-item" data-action="nav" data-screen="admin" data-tab="settings"><span class="nav-icon">⚙️</span>Réglages</button></div></div>
+
+<!-- LEARNER -->
+<div class="screen" id="s-learner"><div class="topbar"><h1>🎓 <span id="learnerWho">Mon espace</span></h1><button class="btn-logout" data-action="auth.logout">Déconnexion</button></div>
+<div id="learnerViews"><div class="view active" id="lv-home"></div><div class="view" id="lv-modules"></div><div class="view" id="lv-module-detail"></div><div class="view" id="lv-submissions"></div><div class="view" id="lv-messages"></div><div class="view" id="lv-community"></div><div class="view" id="lv-attestation"></div><div class="view" id="lv-profile"></div></div>
+<div class="navbar"><button class="nav-item active" data-action="nav" data-screen="learner" data-tab="home"><span class="nav-icon">🏠</span>Accueil</button><button class="nav-item" data-action="nav" data-screen="learner" data-tab="modules"><span class="nav-icon">📚</span>Modules</button><button class="nav-item" data-action="nav" data-screen="learner" data-tab="submissions"><span class="nav-icon">📝</span>Rendus</button><button class="nav-item" data-action="nav" data-screen="learner" data-tab="messages"><span class="nav-icon">💬</span>Coach<span class="nav-badge" id="learnerBadgeMsg" style="display:none">0</span></button><button class="nav-item" data-action="nav" data-screen="learner" data-tab="community"><span class="nav-icon">🌍</span>Communauté</button><button class="nav-item" data-action="nav" data-screen="learner" data-tab="profile"><span class="nav-icon">👤</span>Profil</button></div></div>
+
+<div class="modal-bg" id="modalBg"><div class="modal" id="modalContent"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+const SUPABASE_URL = 'https://xmeqtsjgcivzarvkwcrg.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_yM8qSsStV4LL_KBnQ7RoXA_pkbZvwNs';
+
+/* =========================================================
+   SUPASYNC (MODE FUSION & CLOUD)
+   ========================================================= */
+const SupaSync = {
+  _isSyncing: false, _pendingData: null, _retryCount: 0, _maxRetries: 5,
+  push(data) { this._pendingData = data; if (!this._isSyncing) this._processQueue(); },
+  async _processQueue() {
+    if (this._isSyncing || !this._pendingData) return;
+    this._isSyncing = true;
+    while (this._pendingData) {
+      const payload = this._pendingData; this._pendingData = null;
+      try { await this._pushToCloud(payload); this._retryCount = 0; }
+      catch (err) {
+        if (this._retryCount < this._maxRetries) {
+          this._retryCount++; const delay = Math.min(1000 * Math.pow(2, this._retryCount), 10000);
+          if (!this._pendingData) this._pendingData = payload;
+          setTimeout(() => { this._isSyncing = false; this._processQueue(); }, delay); return;
+        }
+      }
+    }
+    this._isSyncing = false;
+  },
+  async _pushToCloud(data) {
+    let cloudData = null;
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/app_state?id=eq.main&select=data`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
+      if (res.ok) { const rows = await res.json(); if (rows.length > 0 && rows[0].data) cloudData = rows[0].data; }
+    } catch(e) {}
+    if (cloudData && cloudData.version === 9) {
+      const mergeArrays = (localArr, cloudArr) => {
+        const arr = [...(cloudArr || [])];
+        (localArr || []).forEach(item => { const idx = arr.findIndex(c => c.id === item.id); if (idx === -1) arr.push(item); else arr[idx] = item; });
+        return arr;
+      };
+      data.learners = mergeArrays(data.learners, cloudData.learners);
+      data.payments = mergeArrays(data.payments, cloudData.payments);
+      data.messages = mergeArrays(data.messages, cloudData.messages);
+      data.submissions = mergeArrays(data.submissions, cloudData.submissions);
+      data.community = mergeArrays(data.community, cloudData.community);
+      if (!data.settings.masterPasswordHash && cloudData.settings?.masterPasswordHash) data.settings = cloudData.settings;
+    }
+    const pushRes = await fetch(`${SUPABASE_URL}/rest/v1/app_state`, {
+      method: 'POST', headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
+      body: JSON.stringify({ id: 'main', data: data, updated_at: new Date().toISOString() })
+    });
+    if (!pushRes.ok) throw new Error('HTTP ' + pushRes.status);
+    if (typeof St !== 'undefined') { St._cache = data; try { localStorage.setItem(St.KEY, JSON.stringify(data)); } catch(e) {} }
+  },
+  async load() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/app_state?id=eq.main&select=data,updated_at`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const rows = await res.json(); if (!rows.length || !rows[0].data || Object.keys(rows[0].data).length === 0) return null;
+      return { ...rows[0].data, updated_at: rows[0].updated_at };
+    } catch (e) { return null; }
+  },
+  subscribe(onUpdate) {
+    if (!window.WebSocket) return;
+    const wsUrl = SUPABASE_URL.replace('https://', 'wss://') + '/realtime/v1/websocket?apikey=' + SUPABASE_KEY;
+    try {
+      const ws = new WebSocket(wsUrl);
+      ws.onopen = () => { ws.send(JSON.stringify({ topic: 'realtime:public:app_state', event: 'phx_join', payload: { config: { broadcast: { self: false }, presence: { key: '' }, postgres_changes: [{ event: '*', schema: 'public', table: 'app_state' }] } }, ref: '1' })); };
+      ws.onmessage = (msg) => { try { const d = JSON.parse(msg.data); if (d.event === 'postgres_changes' && d.payload?.record?.id === 'main') onUpdate({ ...d.payload.record.data, updated_at: d.payload.record.updated_at }); } catch {} };
+      setInterval(async () => { if (ws.readyState !== 1) { const remote = await this.load(); if (remote) onUpdate(remote); } }, 15000);
+    } catch (e) {}
+  }
+};
+window.SupaSync = SupaSync;
+
+const St = {
+  KEY: 'iamaster_v9', _t: null, _d: false, _cache: null,
+  load: () => { try { const r = localStorage.getItem(St.KEY); if (r) { St._cache = JSON.parse(r); return St._cache; } } catch(e) {} return St._cache; },
+  save: (d) => { St._cache = d; try { localStorage.setItem(St.KEY, JSON.stringify(d)); } catch(e) {} St._d = true; if (St._t) return true; St._t = setTimeout(() => { try { if (window.SupaSync) SupaSync.push(d); } catch(e) {} St._d = false; St._t = null; }, 1000); return true; },
+  async loadFromCloud() { if (!window.SupaSync) return null; const r = await SupaSync.load(); if (r) { St._cache = r; try { localStorage.setItem(St.KEY, JSON.stringify(r)); } catch(e) {} return r; } return null; },
+  flush: () => { if (St._d && St._t) { clearTimeout(St._t); St._t = null; if (window.SupaSync && St._cache) SupaSync.push(St._cache); St._d = false; } }
+};
+
+/* =========================================================
+   UTILS & SÉCURITÉ
+   ========================================================= */
+const U = {
+  uid: () => Date.now().toString(36) + Math.random().toString(36).substr(2,8),
+  esc: s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),
+  money: n => new Intl.NumberFormat('fr-FR').format(Number(n)||0) + ' F',
+  date: i => { if(!i) return ''; try{ return new Date(i).toLocaleDateString('fr-FR'); }catch{ return ''; } },
+  dateTime: i => { if(!i) return ''; try{ const d=new Date(i); return d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }catch{ return ''; } },
+  today: () => new Date().toISOString().split('T')[0],
+  debounce: (f, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => f(...a), ms); }; },
+  avatarHtml: (name, avatar, extraStyle = '') => {
+    if (avatar) return `<div class="avatar" style="${extraStyle}"><img src="${avatar}" alt="${U.esc(name)}"></div>`;
+    return `<div class="avatar" style="${extraStyle}">${(name||'?').charAt(0).toUpperCase()}</div>`;
+  },
+  resizeImage: (file) => new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas'); let w = img.width, h = img.height; const max = 200;
+        if (w > h) { if (w > max) { h *= max / w; w = max; } } else { if (h > max) { w *= max / h; h = max; } }
+        canvas.width = w; canvas.height = h; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  })
+};
+
+const Cr = {
+  async hash(p, s='iamaster-v9') { const d = new TextEncoder().encode(s + '::' + String(p)); const b = await crypto.subtle.digest('SHA-256', d); return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join(''); },
+  async verify(p, h) { const x = await Cr.hash(p); if (x.length !== h.length) return false; let d = 0; for (let i = 0; i < x.length; i++) d |= x.charCodeAt(i) ^ h.charCodeAt(i); return d === 0; },
+  isStrong(p) { return typeof p === 'string' && p.length >= 4; } // Modifié pour accepter les codes PIN de 4 chiffres
+};
+
+const Nw = { init(){ const r = () => { const e = document.getElementById('netBar'); if(!e) return; e.className = navigator.onLine ? '' : 'off'; e.textContent = navigator.onLine ? '● En ligne' : '○ Hors ligne'; }; window.addEventListener('online', r); window.addEventListener('offline', r); r(); } };
+const Hp = { tap: () => navigator.vibrate?.(10), ok: () => navigator.vibrate?.([10,50,10]), err: () => navigator.vibrate?.([100,50,100]) };
+const To = { show(m, t='info') { const e = document.getElementById('toast'); if(!e) return; e.textContent = m; e.className = 'toast show' + (t==='success'?' toast-success':t==='error'?' toast-error':''); if(t==='success') Hp.ok(); else if(t==='error') Hp.err(); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove('show'), 2500); } };
+
+const Md = { open(h) { document.getElementById('modalContent').innerHTML = h; document.getElementById('modalBg').classList.add('active'); }, close() { document.getElementById('modalBg').classList.remove('active'); } };
+const Dg = {
+  confirm(msg, onYes, opts={}) { const {title='Confirmer', yes='Confirmer', no='Annuler', danger=false} = opts;
+    Md.open(`<div class="modal-title">${U.esc(title)}<button class="modal-close" data-action="modal.close">✕</button></div><p style="font-size:14px;margin-bottom:16px;white-space:pre-line">${U.esc(msg)}</p><div class="flex"><button class="btn btn-outline btn-block" data-action="modal.close">${U.esc(no)}</button><button class="btn ${danger?'btn-rouge':'btn-primary'} btn-block" id="dgYes">${U.esc(yes)}</button></div>`);
+    document.getElementById('dgYes').onclick = () => { Md.close(); onYes(); };
+  },
+  prompt(msg, onYes, opts={}) { const {title='Saisir', placeholder='', value='', yes='Valider'} = opts;
+    Md.open(`<div class="modal-title">${U.esc(title)}<button class="modal-close" data-action="modal.close">✕</button></div><div class="form-group"><label class="form-label">${U.esc(msg)}</label><textarea class="form-textarea" id="dgInput" placeholder="${U.esc(placeholder)}">${U.esc(value)}</textarea></div><div class="flex"><button class="btn btn-outline btn-block" data-action="modal.close">Annuler</button><button class="btn btn-primary btn-block" id="dgYes">${U.esc(yes)}</button></div>`);
+    const inp = document.getElementById('dgInput'); inp.focus(); document.getElementById('dgYes').onclick = () => { const v = inp.value.trim(); Md.close(); onYes(v); };
+  }
+};
+
+/* =========================================================
+   CONTENU DES 10 MODULES
+   ========================================================= */
+const Content = {MODULES:{
+1:{title:"Maîtrise des Prompts",objectif:"Savoir parler à l'IA pour obtenir exactement ce que tu veux, du premier coup.",lessons:[{h:"🤔 C'est quoi un prompt ?",p:"Un prompt, c'est la consigne que tu écris à l'IA."},{h:"🏆 La formule PROMPT PRO",p:"RÔLE + TÂCHE + DÉTAILS + STYLE + FORMAT."},{h:"📝 Exemple concret",prompt:"RÔLE : Tu es un expert marketing digital.\nTÂCHE : Écris 5 slogans."},{h:"⚠️ Les 3 erreurs à éviter",p:"1. Prompt trop court\n2. Trop de demandes\n3. Ne pas relire"},{h:"💰 Les 5 prompts qui rapportent",p:"Slogan boutique : 500-1 000 FCFA..."}],exercice:"Écris 3 prompts complets.",revenu:"500–2 000 FCFA par prompt"},
+2:{title:"Affiches Pro + 1er Client",objectif:"Créer une affiche qui vend en 10 minutes.",lessons:[{h:"🎨 Pourquoi Canva",p:"Canva = Photoshop pour les gens normaux."},{h:"📱 Les 6 étapes",p:"Créer un design..."},{h:"💡 Une affiche qui VEND",p:"Nom + produit + prix + WhatsApp."},{h:"🔥 Action commerciale",p:"Faire 1 affiche gratuite."},{h:"💰 Grille de prix",p:"1 affiche : 1 000–1 500 FCFA"}],exercice:"Créer 3 affiches (restaurant, vêtements, coiffure).",revenu:"1 000–3 000 FCFA"},
+3:{title:"Logo Professionnel",objectif:"Créer un logo simple et mémorable.",lessons:[{h:"🎯 C'est quoi un BON logo",p:"Simple + 2 couleurs max."},{h:"🛠️ Les 5 étapes Canva",p:"Recherche Logo..."},{h:"🎨 Les 2 couleurs",p:"Bleu = confiance."},{h:"💰 Tarification",p:"5 000 FCFA"}],exercice:"Créer 1 logo complet.",revenu:"5 000–15 000 FCFA"},
+4:{title:"Shooting Photo IA",objectif:"Rendre une photo amateur professionnelle.",lessons:[{h:"📸 Photos moches",p:"Floues, sombres..."},{h:"✨ Remini",p:"Améliorer la netteté."},{h:"🖼️ PhotoRoom",p:"Supprimer le fond."},{h:"💼 Utilisation",p:"1 000 FCFA la retouche."}],exercice:"Retoucher 2 photos.",revenu:"1 000–2 000 FCFA"},
+5:{title:"Vidéo IA avec Avatar",objectif:"Créer une vidéo de 30 secondes.",lessons:[{h:"🎬 Structure",p:"Hook + Valeur + CTA."},{h:"🛠️ CapCut",p:"Nouveau projet..."},{h:"🎭 Avatar IA",p:"Présentateur virtuel."},{h:"💰 Tarification",p:"5 000 FCFA"}],exercice:"Créer 1 vidéo 30 sec.",revenu:"5 000–15 000 FCFA"},
+6:{title:"Musique avec Suno",objectif:"Créer une musique de fond.",lessons:[{h:"🎵 Suno",p:"Compose de la musique."},{h:"🛠️ Les étapes",p:"Aller sur suno.com..."},{h:"📝 Prompter Suno",prompt:"Style : Afrobeat..."},{h:"⚠️ Droit",p:"Gratuit = personnel."}],exercice:"Créer 1 musique.",revenu:"1 000–3 000 FCFA"},
+7:{title:"TikTok Rentable",objectif:"Monétisation TikTok.",lessons:[{h:"❌ La vérité",p:"Ne paie pas au Cameroun."},{h:"✅ Plateformes",p:"TamTam, Pixia One..."},{h:"🎯 Stratégie",p:"TikTok = Vitrine."},{h:"💼 Vendre",p:"Pack 5 vidéos = 20 000 FCFA"}],exercice:"Créer 1 vidéo TikTok.",revenu:"10 000–20 000 FCFA"},
+8:{title:"YouTube Vitrine",objectif:"Utiliser YouTube comme carte de visite.",lessons:[{h:"❌ Paiement",p:"Non."},{h:"🎯 Stratégie",p:"Vitrine pro."},{h:"🖼️ Miniature",p:"Visage en grand."},{h:"💰 Vendre",p:"Création chaîne : 25 000 FCFA"}],exercice:"Créer 1 miniature.",revenu:"2 000 FCFA"},
+9:{title:"Créer un PDF à vendre",objectif:"Produit digital à 5 000 FCFA.",lessons:[{h:"💡 Pourquoi",p:"Vendre 100 fois."},{h:"📝 Structure",p:"Couverture..."},{h:"🛠️ Canva",p:"Document A4."},{h:"💰 Vendre",p:"5 000 FCFA"}],exercice:"Créer 1 PDF 5 pages.",revenu:"5 000 FCFA"},
+10:{title:"Clients & Prix",objectif:"Argent régulier.",lessons:[{h:"📊 Grille",p:"Pack Boutique Pro..."},{h:"🔥 Pitch",p:"15 000–25 000 FCFA."},{h:"🎯 Clients",p:"Quartier..."},{h:"🗺️ Plan",p:"Phase 1, 2, 3..."},{h:"🧠 Règles",p:"Livre à temps."}],exercice:"Lister 10 clients.",revenu:"50 000 FCFA/mois"}
+},QUIZZES:{
+1:[{q:"PROMPT PRO ?",options:["Rôle + Tâche + Détails + Style + Format","Rien"],correct:0}],
+2:[{q:"Prix affiche ?",options:["500","1 000–3 000"],correct:1}],
+3:[{q:"Couleurs max ?",options:["1","2"],correct:1}],
+4:[{q:"Remini ?",options:["Netteté","Fond"],correct:0}],
+5:[{q:"Durée vidéo ?",options:["5 sec","30 sec"],correct:1}],
+6:[{q:"Suno ?",options:["Oui","Non, navigateur"],correct:1}],
+7:[{q:"TikTok paie ?",options:["Oui","Non"],correct:1}],
+8:[{q:"YouTube paie ?",options:["Oui","Non"],correct:1}],
+9:[{q:"Prix PDF ?",options:["1 000","5 000"],correct:1}],
+10:[{q:"Pack Boutique ?",options:["5 000","15 000–25 000"],correct:1}]
+}};
+
+/* =========================================================
+   STATE (GESTION DES DONNÉES)
+   ========================================================= */
+const State = (() => {
+  let d = null;
+  const def = () => ({
+    version: 9, updated_at: new Date().toISOString(),
+    settings: {
+      masterPasswordHash: null, coachName: 'Coach IA MASTER', coachWhatsApp: '', coachAvatar: '', 
+      packPrice: 20000, modulePrice: 5000, 
+      chariowPackUrl: '', chariowModuleUrl: '',
+      coachOrangeMoney: '', coachMtnMomo: '', coachPaymentName: '',
+      whatsappGroup: '', tiktok: '', youtube: '', facebook: '', instagram: '', telegram: ''
+    },
+    adminLog: [], learners: [], payments: [], messages: [], community: [], submissions: [], notes: {}, quizScores: {}, streak: {}, lastAttestation: 0, currentUser: null
+  });
+
+  return {
+    init: async () => {
+      St.load();
+      const remote = await St.loadFromCloud();
+      if (remote && remote.version === 9) { d = Object.assign(def(), remote); } 
+      else { const local = St._cache; d = (local && local.version === 9) ? Object.assign(def(), local) : def(); }
+      
+      // Migration de sécurité pour les anciens comptes
+      (d.learners || []).forEach(l => {
+        if (!('accessStatus' in l)) l.accessStatus = 'active';
+        if (l.accessStatus === 'pending') l.accessStatus = 'awaiting_payment';
+        if (!l.unlockedModules) l.unlockedModules = [];
+        if (l.hasFullAccess === undefined) l.hasFullAccess = false;
+      });
+      St.save(d);
+    },
+    get: () => d,
+    save: () => St.save(d),
+    reset: () => { d = def(); St.save(d); },
+    learner: id => d.learners.find(l => l.id === id),
+    currentLearner: () => d.currentUser?.role === 'learner' ? d.learners.find(l => l.id === d.currentUser.id) : null,
+    currentAdmin: () => d.currentUser?.role === 'admin' ? d.currentUser : null
+  };
+})();
+
+const Access = {
+  // Vérifie si le module est débloqué
+  isModuleUnlocked(l, k) {
+    if (!l || l.accessStatus !== 'active') return false;
+    if (l.hasFullAccess) return true;
+    return (l.unlockedModules || []).includes(Number(k));
+  },
+  activateFullPack(lid) {
+    const s = State.get(); const l = State.learner(lid); if(!l) return false;
+    l.accessStatus = 'active'; l.hasFullAccess = true; l.activatedAt = new Date().toISOString(); State.save(); return true;
+  },
+  unlockModule(lid, k) {
+    const s = State.get(); const l = State.learner(lid); if(!l) return false;
+    l.accessStatus = 'active';
+    if(!l.unlockedModules) l.unlockedModules = [];
+    if(!l.unlockedModules.includes(Number(k))) l.unlockedModules.push(Number(k));
+    l.activatedAt = new Date().toISOString(); State.save(); return true;
+  },
+  approvePayment(lid, type, moduleId) {
+    const s = State.get(); const l = State.learner(lid); if(!l) return false;
+    const proof = l.paymentProof || {};
+    const amount = Number(proof.amount) || (type === 'pack' ? s.settings.packPrice : s.settings.modulePrice);
+    
+    s.payments.push({ id: U.uid(), learnerId: lid, amount, method: proof.method || 'Mobile Money', type: type === 'pack' ? 'Pack Complet' : 'Module '+moduleId, ref: proof.ref || '', date: new Date().toISOString() });
+    l.amountPaid = (l.amountPaid || 0) + amount;
+    
+    if (type === 'pack') this.activateFullPack(lid);
+    else this.unlockModule(lid, moduleId);
+
+    s.messages.push({id: U.uid(), learnerId: lid, from: 'admin', text: `✅ Paiement validé !\n\nTon accès (${type === 'pack' ? 'Pack Complet' : 'Module '+moduleId}) est maintenant ACTIF.`, date: new Date().toISOString(), read: false});
+    State.save(); return true;
+  }
+};
+
+const Streak = {
+  update(id) { const s = State.get(); const r = s.streak[id] || {count: 0, lastDate: null}; const t = U.today(); if(r.lastDate === t) return r; const gap = r.lastDate ? Math.floor((new Date(t) - new Date(r.lastDate)) / 86400000) : 999; r.count = gap === 1 ? r.count + 1 : 1; r.lastDate = t; s.streak[id] = r; State.save(); return r; },
+  get: id => State.get().streak[id] || {count: 0, lastDate: null}
+};
+
+const Chariow = {
+  open(lid, type, moduleId) {
+    const s = State.get(); const l = State.learner(lid); if(!l) return;
+    const baseUrl = type === 'pack' ? s.settings.chariowPackUrl : s.settings.chariowModuleUrl;
+    
+    if(!baseUrl) return To.show('⚠️ Lien Chariow non configuré pour cette option', 'error');
+    
+    // Création du return_url avec les paramètres pour validation instantanée
+    const urlObj = new URL(window.location.href);
+    urlObj.searchParams.set('payment', 'success');
+    urlObj.searchParams.set('type', type);
+    if (moduleId) urlObj.searchParams.set('mid', moduleId);
+    urlObj.searchParams.set('lid', lid); // ID de l'apprenant pour éviter la fraude
+    
+    let url = baseUrl;
+    try { 
+      const u = new URL(url); 
+      u.searchParams.set('return_url', urlObj.toString()); 
+      url = u.toString(); 
+    } catch {}
+    
+    window.location.href = url;
+  },
+  
+  // Vérification au retour sur l'application
+  async checkReturn() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('payment') === 'success') {
+      const type = params.get('type');
+      const mid = params.get('mid');
+      const lid = params.get('lid');
+      
+      const s = State.get();
+      const l = State.learner(lid);
+      
+      if (l && l.accessStatus !== 'active') {
+        To.show('⏳ Validation du paiement Chariow...', 'info');
+        
+        // Simulation du temps de traitement du webhook Chariow
+        setTimeout(async () => {
+          if (type === 'pack') Access.activateFullPack(lid);
+          else if (type === 'module') Access.unlockModule(lid, mid);
+          
+          s.payments.push({ id: U.uid(), learnerId: lid, amount: type === 'pack' ? s.settings.packPrice : s.settings.modulePrice, method: 'Chariow', type: type === 'pack' ? 'Pack Complet (Chariow)' : 'Module '+mid+' (Chariow)', ref: 'AUTO-'+U.uid(), date: new Date().toISOString() });
+          if (l) l.amountPaid = (l.amountPaid || 0) + (type === 'pack' ? s.settings.packPrice : s.settings.modulePrice);
+          
+          State.save();
+          To.show('🎉 Paiement validé avec succès !', 'success');
+          Hp.ok();
+          
+          // Nettoyage de l'URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+          if (s.currentUser?.role === 'learner') LearnerUI.open();
+        }, 1500);
+      } else {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+  }
+};
+
+const Modules = {
+  isUnlocked(l, k) { return Access.isModuleUnlocked(l, k); },
+  next(l) { for(let k=1;k<=10;k++) { if(!l?.exercises?.[k]) return k; } return 10; },
+  unlockedCount(l) { let n=0; for(let k=1;k<=10;k++) { if(Access.isModuleUnlocked(l,k)) n++; } return n; }
+};
+
+/* =========================================================
+   AUTHENTIFICATION & ROUTER
+   ========================================================= */
+const Auth = {
+  attempts: {},
+  async adminLogin() {
+    const inp = document.getElementById('adminPwd'); const pwd = inp?.value || '';
+    if(!pwd) return To.show('⚠️ Mot de passe requis', 'error');
+    const s = State.get();
+    
+    if(!s.settings.masterPasswordHash) {
+      if(!Cr.isStrong(pwd)) return To.show('❌ 4+ caractères requis', 'error');
+      s.settings.masterPasswordHash = await Cr.hash(pwd); s.currentUser = {role:'admin', name:'Admin'}; State.save(); AdminUI.open(); return;
+    }
+    if(!(await Cr.verify(pwd, s.settings.masterPasswordHash))) return To.show('❌ Mot de passe incorrect', 'error');
+    
+    s.currentUser = {role:'admin', name:'Admin'}; State.save();
+    s.adminLog.unshift({who:'Admin', when:new Date().toISOString()});
+    State.save(); AdminUI.open();
+  },
+  
+  async learnerLogin() {
+    const idInput = document.getElementById('loginId').value.trim().toLowerCase();
+    const pwd = document.getElementById('loginPwd').value;
+    if(!idInput || !pwd) return To.show('⚠️ Identifiant et mot de passe requis', 'error');
+    
+    const s = State.get();
+    // Recherche par nom ou téléphone
+    const l = s.learners.find(x => x.name.toLowerCase() === idInput || x.phone.replace(/\D/g, '') === idInput.replace(/\D/g, ''));
+    
+    if(!l) return To.show('❌ Profil introuvable', 'error');
+    if(!(await Cr.verify(pwd, l.passwordHash))) return To.show('❌ Mot de passe incorrect', 'error');
+    
+    s.currentUser = {role:'learner', id:l.id}; State.save();
+    if(l.accessStatus !== 'active') { LearnerUI.openLocked(l.id); return; }
+    Streak.update(l.id); LearnerUI.open();
+  },
+  
+  async register() {
+    const name = document.getElementById('reg_name').value.trim();
+    const phone = document.getElementById('reg_phone').value.trim();
+    const pwd = document.getElementById('reg_pwd').value;
+    const pwd2 = document.getElementById('reg_pwd2').value;
+    
+    if(!name || name.length < 2) return To.show('⚠️ Nom invalide', 'error');
+    if(!phone || phone.replace(/\D/g, '').length < 8) return To.show('⚠️ Téléphone invalide', 'error');
+    if(!Cr.isStrong(pwd)) return To.show('❌ 4+ caractères requis', 'error');
+    if(pwd !== pwd2) return To.show('⚠️ Mots de passe différents', 'error');
+    
+    const s = State.get();
+    if(s.learners.some(l => l.phone.replace(/\D/g, '') === phone.replace(/\D/g, ''))) return To.show('⚠️ Téléphone déjà inscrit', 'error');
+    
+    const hash = await Cr.hash(pwd);
+    const learner = {id:U.uid(), name, phone, passwordHash:hash, totalPrice:s.settings.packPrice, amountPaid:0, exercises:{}, hasFullAccess:false, unlockedModules:[], dateStart:new Date().toISOString(), accessStatus:'awaiting_payment', whatsapp:phone, avatar:''};
+    
+    s.learners.push(learner);
+    s.currentUser = {role:'learner', id:learner.id}; State.save();
+    if (window.SupaSync) await SupaSync._pushToCloud(State.get());
+    
+    To.show('✅ Inscription réussie', 'success');
+    setTimeout(() => LearnerUI.openPayment(), 500);
+  },
+  
+  logout() { const s = State.get(); s.currentUser = null; State.save(); Router.go('s-login'); },
+  forgotPassword() {
+    Md.open(`<div class="modal-title">🔐 Mot de passe oublié<button class="modal-close" data-action="modal.close">✕</button></div><div class="info-box">Le coach réinitialisera ton mot de passe.</div><div class="form-group"><label class="form-label">Ton nom</label><input class="form-input" id="fp_name" placeholder="Ton nom complet"></div><div class="form-group"><label class="form-label">Ton téléphone</label><input class="form-input" id="fp_phone" placeholder="+237..."></div><button class="btn btn-vert btn-block" data-action="auth.sendForgot">📱 Contacter le coach</button>`);
+  },
+  sendForgot() {
+    const s = State.get(); const name = document.getElementById('fp_name').value.trim(); const phone = document.getElementById('fp_phone').value.trim();
+    if(!name || !phone) return To.show('⚠️ Champs requis', 'error');
+    const msg = `Bonjour Coach, je suis ${name} (${phone}). J'ai oublié mon mot de passe.`;
+    window.open(`https://wa.me/${s.settings.coachWhatsApp.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
+    Md.close();
+  }
+};
+
+const Router = {
+  go(sc) {
+    document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
+    const el = document.getElementById(sc); if(el) el.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+};
