@@ -1,0 +1,2553 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0a1f44">
+<title>IA MASTER Academy</title>
+<style>
+:root{--b:#0a1f44;--b2:#1e3a8a;--o:#f59e0b;--o2:#fbbf24;--v:#059669;--r:#dc2626;--bg:#f3f4f6;--c:#fff;--t:#1a1a1a;--m:#6b7280;--br:#e5e7eb;--pp:#9333ea}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--t);font-size:15px;line-height:1.5;min-height:100vh;padding-bottom:72px}
+#netBar{position:fixed;top:0;left:0;right:0;height:22px;line-height:22px;text-align:center;font-size:11px;font-weight:600;z-index:9999;background:#d1fae5;color:#065f46}
+#netBar.off{background:#fee2e2;color:#991b1b}
+body.learner-mode #netBar{display:none !important}
+body.learner-mode .screen{padding-top:0}
+body.learner-mode .topbar{top:0}
+.screen{display:none;min-height:100vh;padding-top:22px}.screen.active{display:block}
+.topbar{position:sticky;top:22px;background:var(--b);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:100}
+.topbar h1{font-size:15px;font-weight:800;flex:1}.topbar h1 span{color:var(--o2)}
+.btn-logout{background:rgba(255,255,255,.2);border:none;color:#fff;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+.view{display:none;padding:16px}.view.active{display:block}
+.navbar{position:fixed;bottom:0;left:0;right:0;background:var(--c);display:flex;border-top:1px solid var(--br);z-index:100;overflow-x:auto}
+.nav-item{flex:1;background:none;border:none;padding:8px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--m);font-size:9px;font-weight:600;cursor:pointer;font-family:inherit;position:relative;min-width:60px}
+.nav-icon{font-size:18px}.nav-item.active{color:var(--b2)}
+.nav-badge{position:absolute;top:2px;right:calc(50% - 20px);background:var(--r);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:10px;min-width:14px;text-align:center}
+.card{background:var(--c);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-title{font-size:12px;color:var(--m);font-weight:700;text-transform:uppercase;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat{background:var(--c);border-radius:14px;padding:14px}
+.stat-label{font-size:10px;color:var(--m);font-weight:600;text-transform:uppercase}
+.stat-value{font-size:20px;font-weight:800;color:var(--b);margin-top:4px}
+.stat.hl{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff}.stat.hl .stat-label{color:var(--o2)}.stat.hl .stat-value{color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.btn:active{opacity:.8}
+.btn-primary{background:var(--b);color:#fff}.btn-or{background:var(--o);color:#fff}.btn-vert{background:var(--v);color:#fff}.btn-rouge{background:var(--r);color:#fff}
+.btn-outline{background:transparent;border:2px solid var(--b);color:var(--b)}
+.btn-block{display:flex;width:100%}.btn-sm{padding:8px 12px;font-size:13px;border-radius:8px}
+.form-group{margin-bottom:14px}.form-label{font-size:13px;font-weight:600;display:block;margin-bottom:6px}
+.form-input,.form-textarea,.form-select{width:100%;padding:12px;border:2px solid var(--br);border-radius:10px;font-size:16px;font-family:inherit;background:var(--c);color:var(--t)}
+.form-input:focus,.form-textarea:focus,.form-select:focus{outline:none;border-color:var(--b2)}
+.form-textarea{resize:vertical;min-height:90px}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--o));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0;overflow:hidden;background-size:cover;background-position:center}
+.row{background:var(--c);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.row .info{flex:1;min-width:0}.row .info b{display:block;color:var(--b);font-size:15px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .info small{color:var(--m);font-size:12px}
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-vert{background:#d1fae5;color:var(--v)}.badge-or{background:#fef3c7;color:#92400e}
+.badge-gris{background:#e5e7eb;color:var(--m)}.badge-bleu{background:#dbeafe;color:var(--b2)}.badge-rouge{background:#fee2e2;color:var(--r)}
+.badge-violet{background:#f3e8ff;color:var(--pp)}
+.login-screen{min-height:100vh;background:linear-gradient(135deg,var(--b),var(--b2) 60%,var(--o));display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;color:#fff;text-align:center;padding-top:22px}
+.login-screen h1{font-size:38px;font-weight:900;margin-bottom:8px}.login-screen h1 span{color:var(--o2)}
+.login-screen .quote{font-size:14px;opacity:.9;margin-bottom:32px;font-style:italic;max-width:85%}
+.login-btn{background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;padding:16px 22px;border-radius:14px;width:100%;max-width:320px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;gap:12px;font-family:inherit;text-align:left}
+.login-btn .icon{font-size:26px}.login-btn .txt{flex:1}.login-btn .sub{font-size:11px;opacity:.8;font-weight:400;display:block}
+.mod-card{background:var(--c);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;display:flex;gap:12px;align-items:center;border-left:5px solid var(--o)}
+.mod-card.done{border-left-color:var(--v)}
+.mod-card.locked{opacity:.55;border-left-color:var(--m);background:#f9fafb}
+.mod-card.locked .num{background:var(--m)}
+.mod-card.locked h3{color:var(--m)}
+.mod-card .num{width:40px;height:40px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+.mod-card.done .num{background:var(--v)}
+.mod-card h3{font-size:14px;color:var(--b);margin-bottom:2px}.mod-card small{font-size:12px;color:var(--m)}
+.lesson{background:var(--c);border-radius:12px;padding:16px;margin-bottom:10px}
+.lesson h4{color:var(--b);font-size:14px;margin-bottom:8px;font-weight:800}
+.lesson p{font-size:14px;line-height:1.7;white-space:pre-line}
+.prompt-box{background:var(--b);color:#e0e7ff;padding:12px;border-radius:8px;font-family:Consolas,monospace;font-size:12px;margin:8px 0;line-height:1.6;white-space:pre-line}
+.exercise-box{background:#fef3c7;border-left:4px solid var(--o);padding:12px;border-radius:8px;margin:10px 0}
+.exercise-box b{color:#92400e;font-size:12px;text-transform:uppercase;display:block;margin-bottom:4px}
+.revenu-box{background:#d1fae5;border-left:4px solid var(--v);padding:12px;border-radius:8px;margin:10px 0;color:#065f46;font-weight:700;font-size:13px}
+.progress-bar{height:8px;background:var(--br);border-radius:4px;overflow:hidden;margin:8px 0}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--o),var(--v));border-radius:4px;transition:width .3s}
+.search-bar{position:relative;margin-bottom:12px}
+.search-bar input{width:100%;padding:12px 14px 12px 40px;border:2px solid transparent;background:var(--c);border-radius:12px;font-size:16px;font-family:inherit;color:var(--t)}
+.search-bar input:focus{outline:none;border-color:var(--b2)}
+.search-bar::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px}
+.msg{background:var(--c);border-radius:12px;padding:12px;margin-bottom:8px;max-width:85%}
+.msg-admin{background:#dbeafe;border-left:4px solid var(--b2);margin-right:auto;color:#1e3a8a}
+.msg-learner{background:#d1fae5;border-left:4px solid var(--v);margin-left:auto;color:#065f46}
+.msg-announcement{background:#fef3c7;border-left:4px solid var(--o);max-width:100%;color:#92400e}
+.msg-meta{font-size:11px;margin-bottom:4px;font-weight:600;opacity:.8}
+.msg-text{font-size:14px;line-height:1.5;white-space:pre-wrap}
+.empty{text-align:center;padding:40px 20px;color:var(--m)}.empty-icon{font-size:48px;margin-bottom:10px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.active{display:flex}
+.modal{background:var(--c);width:100%;max-width:500px;border-radius:20px 20px 0 0;padding:20px;max-height:90vh;overflow-y:auto;color:var(--t)}
+.modal-title{font-size:18px;font-weight:800;color:var(--b);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:var(--bg);border:none;width:32px;height:32px;border-radius:50%;font-size:18px;color:var(--m);cursor:pointer}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--b);color:#fff;padding:12px 20px;border-radius:30px;font-size:14px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300;max-width:90%;text-align:center}
+.toast.show{opacity:1}.toast.toast-success{background:var(--v)}.toast.toast-error{background:var(--r)}
+.flex{display:flex;gap:8px}.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}
+.text-muted{color:var(--m);font-size:13px}
+.back-btn{background:none;border:none;color:var(--b2);font-weight:700;padding:8px 0;cursor:pointer;font-size:14px;font-family:inherit;margin-bottom:8px}
+.warning-box{background:#fef3c7;border-left:4px solid var(--o);padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px;color:#92400e}
+.info-box{background:#dbeafe;border-left:4px solid var(--b2);padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px;color:#1e3a8a}
+.detail-header{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;padding:20px;border-radius:14px;margin-bottom:14px}
+.detail-header h2{font-size:20px;margin-bottom:4px}.detail-header p{color:var(--o2);font-size:13px;font-weight:600}
+.submission{background:var(--c);border-radius:12px;padding:14px;margin-bottom:10px;border-left:4px solid var(--o)}
+.submission.approved{border-left-color:var(--v)}.submission.rejected{border-left-color:var(--r)}
+.submission .s-head{display:flex;justify-content:space-between;margin-bottom:8px}
+.submission .s-content{font-size:14px;line-height:1.5;white-space:pre-wrap;padding:10px;background:var(--bg);border-radius:8px;margin:8px 0}
+.s-feedback{padding:10px;border-radius:8px;margin-top:8px;font-size:13px;background:#fef3c7;color:#92400e}
+.s-feedback.approved{background:#d1fae5;color:#065f46}
+.quiz-q{background:var(--c);border-radius:12px;padding:16px;margin-bottom:10px}
+.quiz-q h4{font-size:14px;color:var(--b);margin-bottom:10px}
+.quiz-opt{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;margin-bottom:6px;cursor:pointer;border:2px solid transparent}
+.quiz-opt.selected{border-color:var(--b2);background:#dbeafe;color:#1e3a8a}
+.quiz-opt.correct{border-color:var(--v);background:#d1fae5;color:#065f46}
+.quiz-opt.wrong{border-color:var(--r);background:#fee2e2;color:#991b1b}
+.quiz-opt .letter{width:26px;height:26px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0}
+.msg-input-bar{position:sticky;bottom:72px;background:var(--bg);padding:8px 0;display:flex;gap:8px;margin-top:8px}
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{padding:6px 12px;background:var(--bg);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid transparent}
+.chip.active{background:#dbeafe;color:var(--b2);border-color:var(--b2)}
+.list-box{max-height:400px;overflow-y:auto}
+.post-card{background:var(--c);border-radius:14px;padding:14px;margin-bottom:12px}
+.post-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.post-author{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+.post-content{font-size:14px;line-height:1.5;margin-bottom:10px;white-space:pre-wrap}
+.post-actions{display:flex;gap:16px;border-top:1px solid var(--br);padding-top:8px;margin-bottom:8px}
+.post-btn{background:none;border:none;font-size:13px;font-weight:600;color:var(--m);cursor:pointer;display:flex;align-items:center;gap:4px}
+.post-btn.liked{color:var(--r)}
+.replies-box{background:var(--bg);border-radius:8px;padding:10px;margin-top:8px}
+.reply{font-size:13px;margin-bottom:8px;padding-left:8px;border-left:2px solid var(--br)}
+.reply b{color:var(--b2)}
+.reply-input-box{display:flex;gap:6px;margin-top:8px}
+.reply-input-box input{flex:1;padding:8px;border-radius:6px;border:1px solid var(--br);font-size:13px}
+.ls-part-row{background:var(--bg);padding:10px;border-radius:8px;margin-bottom:6px}
+</style>
+</head>
+<body>
+<div id="netBar">● En ligne</div>
+
+<div class="screen active" id="s-login"><div class="login-screen"><h1>IA <span>MASTER</span></h1><p class="quote">« L'IA ne remplace pas l'Africain. Elle arme l'Africain. »</p>
+<button class="login-btn" data-action="go" data-screen="s-admin-login"><span class="icon">👨‍💼</span><div class="txt">Administrateur<span class="sub">Gestion & Coaching</span></div></button>
+<button class="login-btn" data-action="go" data-screen="s-learner-entry"><span class="icon">🎓</span><div class="txt">Apprenant<span class="sub">Mon espace</span></div></button>
+<div style="margin-top:20px;font-size:11px;opacity:.6">IA MASTER ACADEMY · v14.2 (Delta Stable)</div></div></div>
+
+<div class="screen" id="s-admin-login"><div class="login-screen" style="background:linear-gradient(135deg,var(--b),var(--b2))"><h1 style="font-size:22px">Accès Admin</h1><p style="font-size:12px;opacity:.8;margin-bottom:16px">Mot de passe ou code coach</p>
+<div style="width:100%;max-width:340px"><input id="adminPwd" type="password" placeholder="Mot de passe / PIN" style="width:100%;padding:14px;border-radius:10px;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);color:#fff;font-size:16px;margin-bottom:10px;outline:none"><button class="btn btn-or btn-block" data-action="auth.adminLogin">🔓 Se connecter</button></div>
+<button class="btn" data-action="go" data-screen="s-login" style="background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.4);margin-top:20px">← Retour</button></div></div>
+
+<div class="screen" id="s-learner-entry"><div class="login-screen"><h1 style="font-size:30px">🎓 Apprenant</h1><p class="quote">Bienvenue dans IA MASTER</p>
+<button class="login-btn" data-action="go" data-screen="s-learner-register"><span class="icon">✨</span><div class="txt">S'inscrire<span class="sub">Créer mon compte</span></div></button>
+<button class="login-btn" data-action="go" data-screen="s-learner-login"><span class="icon">🔑</span><div class="txt">Se connecter<span class="sub">J'ai un compte</span></div></button>
+<button class="btn" data-action="go" data-screen="s-login" style="background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.4);margin-top:16px">← Retour</button></div></div>
+
+<div class="screen" id="s-learner-login"><div class="login-screen">
+<h1 style="font-size:26px">🔑 Connexion</h1>
+<div style="width:100%;max-width:340px;text-align:left">
+<div class="form-group"><label class="form-label" style="color:#fff">Identifiant (Nom ou Téléphone)</label><input id="loginId" type="text" placeholder="Ex: Marie Dupont" style="width:100%;padding:14px;border-radius:10px;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);color:#fff;font-size:16px;outline:none"></div>
+<div class="form-group"><label class="form-label" style="color:#fff">Mot de passe / PIN</label><input id="loginPwd" type="password" placeholder="••••••" style="width:100%;padding:14px;border-radius:10px;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);color:#fff;font-size:16px;outline:none"></div>
+<button class="btn btn-or btn-block mt-12" data-action="auth.learnerLogin">🔓 Se connecter</button>
+<button class="btn mt-8" data-action="auth.forgotPassword" style="background:transparent;color:#fff;font-size:12px;opacity:.8;border:none">Mot de passe oublié ?</button>
+</div>
+<button class="btn" data-action="go" data-screen="s-learner-entry" style="background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.4);margin-top:20px">← Retour</button></div></div>
+
+<div class="screen" id="s-learner-register"><div class="topbar"><h1>✨ <span>Inscription</span></h1><button class="btn-logout" data-action="go" data-screen="s-learner-entry">Retour</button></div><div class="view active"><div class="card"><div class="card-title">Créer mon compte</div>
+<div class="info-box">🔐 Mot de passe : 6+ caractères avec lettre, chiffre et symbole.</div>
+<div class="form-group"><label class="form-label">Nom complet *</label><input class="form-input" id="reg_name" placeholder="Marie Dupont"></div>
+<div class="form-group"><label class="form-label">Téléphone WhatsApp *</label><input class="form-input" id="reg_phone" type="tel" placeholder="+237 6 XX XX XX XX"></div>
+<div class="form-group"><label class="form-label">Mot de passe *</label><input class="form-input" id="reg_pwd" type="password" placeholder="Ex: Passw0rd!"></div>
+<div class="form-group"><label class="form-label">Confirmer *</label><input class="form-input" id="reg_pwd2" type="password" placeholder="Retape"></div>
+<button class="btn btn-or btn-block" data-action="auth.register">✅ Créer mon compte</button></div></div></div>
+
+<div class="screen" id="s-admin"><div class="topbar"><h1>👨‍💼 <span id="adminWho">Admin</span></h1><button class="btn-logout" data-action="auth.logout">Déconnexion</button></div>
+<div id="adminViews">
+  <div class="view active" id="av-home"></div>
+  <div class="view" id="av-learners"></div>
+  <div class="view" id="av-detail"></div>
+  <div class="view" id="av-submissions"></div>
+  <div class="view" id="av-cms"></div>
+  <div class="view" id="av-messages"></div>
+  <div class="view" id="av-chat"></div>
+  <div class="view" id="av-community"></div>
+  <div class="view" id="av-payments"></div>
+  <div class="view" id="av-settings"></div>
+</div>
+<div class="navbar" id="adminNav">
+<button class="nav-item active" data-action="nav" data-screen="admin" data-tab="home"><span class="nav-icon">🏠</span>Accueil</button>
+<button class="nav-item" data-action="nav" data-screen="admin" data-tab="learners"><span class="nav-icon">👥</span>Apprenants</button>
+<button class="nav-item" data-action="nav" data-screen="admin" data-tab="submissions"><span class="nav-icon">📝</span>Rendus<span class="nav-badge" id="adminBadgeSub" style="display:none">0</span></button>
+<button class="nav-item" data-action="nav" data-screen="admin" data-tab="cms"><span class="nav-icon">📖</span>CMS</button>
+<button class="nav-item" data-action="nav" data-screen="admin" data-tab="messages"><span class="nav-icon">💬</span>Messages<span class="nav-badge" id="adminBadgeMsg" style="display:none">0</span></button>
+<button class="nav-item" data-action="nav" data-screen="admin" data-tab="community"><span class="nav-icon">🌍</span>Communauté</button>
+<button class="nav-item" data-action="nav" data-screen="admin" data-tab="payments"><span class="nav-icon">💰</span>Paiements</button>
+<button class="nav-item" data-action="nav" data-screen="admin" data-tab="settings"><span class="nav-icon">⚙️</span>Réglages</button>
+</div></div>
+
+<div class="screen" id="s-learner"><div class="topbar"><h1>🎓 <span id="learnerWho">Mon espace</span></h1><button class="btn-logout" data-action="auth.logout">Déconnexion</button></div>
+<div id="learnerViews">
+  <div class="view active" id="lv-home"></div>
+  <div class="view" id="lv-modules"></div>
+  <div class="view" id="lv-module-detail"></div>
+  <div class="view" id="lv-submissions"></div>
+  <div class="view" id="lv-messages"></div>
+  <div class="view" id="lv-community"></div>
+  <div class="view" id="lv-attestation"></div>
+  <div class="view" id="lv-profile"></div>
+</div>
+<div class="navbar">
+<button class="nav-item active" data-action="nav" data-screen="learner" data-tab="home"><span class="nav-icon">🏠</span>Accueil</button>
+<button class="nav-item" data-action="nav" data-screen="learner" data-tab="modules"><span class="nav-icon">📚</span>Modules</button>
+<button class="nav-item" data-action="nav" data-screen="learner" data-tab="submissions"><span class="nav-icon">📝</span>Rendus</button>
+<button class="nav-item" data-action="nav" data-screen="learner" data-tab="messages"><span class="nav-icon">💬</span>Coach<span class="nav-badge" id="learnerBadgeMsg" style="display:none">0</span></button>
+<button class="nav-item" data-action="nav" data-screen="learner" data-tab="community"><span class="nav-icon">🌍</span>Communauté</button>
+<button class="nav-item" data-action="nav" data-screen="learner" data-tab="profile"><span class="nav-icon">👤</span>Profil</button>
+</div></div>
+
+<a id="waFab" href="#" target="_blank" style="display:none;position:fixed;bottom:88px;right:16px;width:56px;height:56px;background:#25D366;color:#fff;border-radius:50%;align-items:center;justify-content:center;font-size:26px;text-decoration:none;box-shadow:0 4px 12px rgba(37,211,102,.4);z-index:150">💬</a>
+
+<div class="modal-bg" id="modalBg"><div class="modal" id="modalContent"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+const SUPABASE_URL = 'https://xmeqtsjgcivzarvkwcrg.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_yM8qSsStV4LL_KBnQ7RoXA_pkbZvwNs';
+
+const SupaSync = {
+  _saving: false,
+  async load() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/app_state?id=eq.main&select=data`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const rows = await res.json();
+      if (!rows.length || !rows[0].data || Object.keys(rows[0].data).length === 0) return null;
+      return rows[0].data;
+    } catch (e) { console.error('[Sync] load:', e); return null; }
+  },
+  async save(data) {
+    if (this._saving) return;
+    this._saving = true;
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/app_state`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates'
+        },
+        body: JSON.stringify({ id: 'main', data: data, updated_at: new Date().toISOString() })
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+    } catch (e) { console.error('[Sync] save:', e); }
+    finally { this._saving = false; }
+  },
+  async test() {
+    try {
+      const data = await this.load();
+      if (data === null) return { ok: true, msg: '✅ Connecté (base vide)' };
+      return { ok: true, msg: '✅ Connecté · ' + (data.learners?.length || 0) + ' apprenant(s)' };
+    } catch { return { ok: false, msg: '❌ Échec' }; }
+  }
+};
+window.SupaSync = SupaSync;
+
+const U = {
+  uid: () => Date.now().toString(36) + Math.random().toString(36).substr(2, 8),
+  esc: s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),
+  money: n => new Intl.NumberFormat('fr-FR').format(Number(n) || 0) + ' F',
+  date: i => { if (!i) return ''; try { return new Date(i).toLocaleDateString('fr-FR'); } catch { return ''; } },
+  dateTime: i => { if (!i) return ''; try { const d = new Date(i); return d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}); } catch { return ''; } },
+  today: () => new Date().toISOString().split('T')[0],
+  debounce: (f, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => f(...a), ms); }; },
+  avatar: (learner, extraStyle = '') => {
+    if (learner?.photo) return `<div class="avatar" style="background-image:url('${learner.photo}');${extraStyle}"></div>`;
+    return `<div class="avatar" ${extraStyle ? `style="${extraStyle}"` : ''}>${(learner?.name || '?').charAt(0).toUpperCase()}</div>`;
+  },
+  video: (url) => {
+    if (!url) return '';
+    const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{6,})/);
+    if (yt) return `<div style="position:relative;padding-bottom:56.25%;border-radius:10px;overflow:hidden;margin:10px 0;background:#000"><iframe src="https://www.youtube.com/embed/${yt[1]}" frameborder="0" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div>`;
+    const vm = url.match(/vimeo\.com\/(\d+)/);
+    if (vm) return `<div style="position:relative;padding-bottom:56.25%;border-radius:10px;overflow:hidden;margin:10px 0;background:#000"><iframe src="https://player.vimeo.com/video/${vm[1]}" frameborder="0" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div>`;
+    return `<video src="${U.esc(url)}" controls style="width:100%;border-radius:10px;margin:10px 0"></video>`;
+  }
+};
+
+/* ═══ CRYPTO — SALT INCHANGÉ (iamaster-v12) + multi-verify ═══ */
+const Cr = {
+  async hash(p, s = 'iamaster-v12') {
+    const d = new TextEncoder().encode(s + '::' + String(p));
+    const b = await crypto.subtle.digest('SHA-256', d);
+    return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
+  },
+  async verify(p, h) {
+    if (!h || typeof h !== 'string') return false;
+    for (const salt of ['iamaster-v12', 'iamaster-v13', 'iamaster-v14']) {
+      const x = await Cr.hash(p, salt);
+      if (x.length !== h.length) continue;
+      let d = 0;
+      for (let i = 0; i < x.length; i++) d |= x.charCodeAt(i) ^ h.charCodeAt(i);
+      if (d === 0) return true;
+    }
+    return false;
+  },
+  isStrong(p) { return typeof p === 'string' && p.length >= 6 && /[a-zA-Z]/.test(p) && /\d/.test(p) && /[^a-zA-Z\d]/.test(p); },
+  isPin(p) { return typeof p === 'string' && /^\d{4,6}$/.test(p); }
+};
+
+/* ═══ STORAGE — CLÉ PRINCIPALE iamaster_v12 (compat ascendante) ═══ */
+const St = {
+  KEY: 'iamaster_v12',
+  LEGACY_KEYS: ['iamaster_v12', 'iamaster_v13', 'iamaster_v14'],
+  _t: null, _d: false, _cache: null,
+  load: () => {
+    for (const k of St.LEGACY_KEYS) {
+      try {
+        const r = localStorage.getItem(k);
+        if (r) {
+          const obj = JSON.parse(r);
+          if (obj && typeof obj === 'object') {
+            St._cache = obj;
+            return St._cache;
+          }
+        }
+      } catch {}
+    }
+    return St._cache;
+  },
+  save: d => {
+    St._cache = d;
+    try {
+      localStorage.setItem(St.KEY, JSON.stringify(d));
+      // Nettoyer les anciennes clés pour éviter divergence
+      ['iamaster_v13', 'iamaster_v14'].forEach(k => {
+        if (k !== St.KEY) try { localStorage.removeItem(k); } catch {}
+      });
+    } catch {}
+    St._d = true;
+    if (St._t) return true;
+    St._t = setTimeout(() => {
+      try { if (window.SupaSync) SupaSync.save(d); } catch (e) { console.error(e); }
+      St._d = false; St._t = null;
+    }, 2000);
+    return true;
+  },
+  async loadFromCloud() {
+    if (!window.SupaSync) return null;
+    const r = await SupaSync.load();
+    if (r) { St._cache = r; try { localStorage.setItem(St.KEY, JSON.stringify(r)); } catch {} return r; }
+    return null;
+  },
+  flush: () => { if (St._d && St._t) { clearTimeout(St._t); St._t = null; if (window.SupaSync && St._cache) SupaSync.save(St._cache); } }
+};
+window.addEventListener('beforeunload', () => St.flush());
+window.addEventListener('pagehide', () => St.flush());
+
+const Nw = {
+  init() {
+    window.addEventListener('online', () => this.refresh());
+    window.addEventListener('offline', () => this.refresh());
+    this.refresh();
+  },
+  async refresh() {
+    const e = document.getElementById('netBar');
+    if (!e) return;
+    if (!navigator.onLine) { e.className = 'off'; e.textContent = '○ Hors ligne'; return; }
+    e.className = '';
+    const s = (typeof State !== 'undefined') ? State.get() : null;
+    const u = s?.currentUser;
+    if (u?.role === 'admin') {
+      try {
+        const data = await SupaSync.load();
+        const count = data?.learners?.length || 0;
+        e.textContent = `✅ Connecté • ${count} apprenant(s)`;
+      } catch { e.textContent = '● En ligne (sync en attente)'; }
+    } else {
+      e.textContent = '● En ligne';
+    }
+  }
+};
+
+const Hp = { tap: () => navigator.vibrate?.(10), ok: () => navigator.vibrate?.([10,50,10]), err: () => navigator.vibrate?.([100,50,100]) };
+const To = { show(m, t = 'info') { const e = document.getElementById('toast'); if (!e) return; e.textContent = m; e.className = 'toast show' + (t === 'success' ? ' toast-success' : t === 'error' ? ' toast-error' : ''); if (t === 'success') Hp.ok(); else if (t === 'error') Hp.err(); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove('show'), 2500); } };
+
+const Md = {
+  open(h) { document.getElementById('modalContent').innerHTML = h; document.getElementById('modalBg').classList.add('active'); },
+  close() { document.getElementById('modalBg').classList.remove('active'); }
+};
+
+const Dg = {
+  confirm(msg, onYes, opts = {}) {
+    const { title = 'Confirmer', yes = 'Confirmer', no = 'Annuler', danger = false } = opts;
+    Md.open(`<div class="modal-title">${U.esc(title)}<button class="modal-close" data-action="modal.close">✕</button></div>
+      <p style="font-size:14px;margin-bottom:16px;white-space:pre-line">${U.esc(msg)}</p>
+      <div class="flex"><button class="btn btn-outline btn-block" data-action="modal.close">${U.esc(no)}</button>
+      <button class="btn ${danger?'btn-rouge':'btn-primary'} btn-block" id="dgYes">${U.esc(yes)}</button></div>`);
+    document.getElementById('dgYes').onclick = () => { Md.close(); onYes(); };
+  },
+  prompt(msg, onYes, opts = {}) {
+    const { title = 'Saisir', placeholder = '', value = '', yes = 'Valider' } = opts;
+    Md.open(`<div class="modal-title">${U.esc(title)}<button class="modal-close" data-action="modal.close">✕</button></div>
+      <div class="form-group"><label class="form-label">${U.esc(msg)}</label>
+      <textarea class="form-textarea" id="dgInput" placeholder="${U.esc(placeholder)}">${U.esc(value)}</textarea></div>
+      <div class="flex"><button class="btn btn-outline btn-block" data-action="modal.close">Annuler</button>
+      <button class="btn btn-primary btn-block" id="dgYes">${U.esc(yes)}</button></div>`);
+    const inp = document.getElementById('dgInput'); inp.focus();
+    document.getElementById('dgYes').onclick = () => { const v = inp.value.trim(); Md.close(); onYes(v); };
+  }
+};
+
+const DefaultContent = {
+  MODULES: {
+    1: { title: "Maîtrise des Prompts", objectif: "Savoir parler à l'IA pour obtenir exactement ce que tu veux, du premier coup.", lessons: [
+      {h:"🤔 C'est quoi un prompt ?", p:"Un prompt, c'est la consigne que tu écris à l'IA. Imagine un assistant très intelligent mais qui ne te connaît pas : il ne devine rien, il fait exactement ce que tu lui dis.\n\nUn bon prompt = réponse utile. Un mauvais prompt = réponse à côté.\n\n👉 C'est LA compétence n°1. Si tu maîtrises ça, tout le reste devient facile."},
+      {h:"🏆 La formule PROMPT PRO", p:"RÔLE + TÂCHE + DÉTAILS + STYLE + FORMAT\n\n• RÔLE : Qui doit être l'IA ?\n• TÂCHE : Que doit-elle faire ?\n• DÉTAILS : Le contexte\n• STYLE : Le ton\n• FORMAT : La forme\n\nAvec ces 5 éléments, tu obtiens 90% du résultat dès le 1er essai."},
+      {h:"📝 Exemple concret", prompt:"RÔLE : Tu es un expert marketing digital.\nTÂCHE : Écris 5 slogans pour une boutique de vêtements.\nDÉTAILS : Douala, jeunes 18-30 ans, prix 5 000-25 000 FCFA.\nSTYLE : Jeune, dynamique, français simple.\nFORMAT : Liste numérotée."},
+      {h:"⚠️ Les 3 erreurs à éviter", p:"1. Prompt trop court → réponse vague\n2. Trop de demandes d'un coup → résultat brouillon\n3. Ne pas relire → publier une erreur"},
+      {h:"💰 Les 5 prompts qui rapportent", p:"• Slogan boutique : 500-1 000 FCFA\n• Description produit WhatsApp : 500-1 500 FCFA\n• Texte pub Facebook : 1 000-2 000 FCFA\n• Message de relance client : 500-1 000 FCFA\n• 10 idées TikTok : 2 000-3 000 FCFA\n\n👉 Pack 5 = 2 000-5 000 FCFA."}
+    ], exercice: "Écris 3 prompts complets avec la formule PROMPT PRO pour 3 commerces différents.", revenu: "500–2 000 FCFA par prompt · 2 000–5 000 FCFA par pack de 5" },
+    2: { title: "Affiches Pro + 1er Client", objectif: "Créer une affiche qui vend en 10 minutes, et la vendre dès aujourd'hui.", lessons: [
+      {h:"🎨 Pourquoi Canva est ton meilleur ami", p:"Canva = Photoshop pour les gens normaux.\n\n✅ Gratuit ✅ En français ✅ Sur téléphone"},
+      {h:"📱 Les 6 étapes", p:"1. Canva → « Post Instagram » (1080×1080)\n2. Modèle gratuit\n3. Remplace TOUT : nom, produit, prix, WhatsApp\n4. Change les couleurs\n5. Exporte en PNG"},
+      {h:"💡 Une affiche qui VEND", p:"• Nom en GRAND\n• Produit/service principal\n• Prix\n• WhatsApp CLICQUABLE\n• Une action\n• 2-3 couleurs max"},
+      {h:"🔥 Action commerciale (1er client)", p:"1. Choisis 1 commerçant\n2. Fais son affiche GRATUITEMENT\n3. Montre-lui\n4. S'il aime : 3 affiches = 2 000 FCFA\n\n⚡ 9 fois sur 10, il dit oui."},
+      {h:"💰 Grille de prix", p:"• 1 affiche : 1 000–1 500 FCFA\n• 3 affiches : 3 000 FCFA\n• Pack 5 : 5 000 FCFA\n• Abonnement mensuel : 8 000 FCFA"}
+    ], exercice: "Créer 3 affiches (restaurant, vêtements, coiffure). Envoyer les captures + nom du 1er commerçant.", revenu: "1 000–3 000 FCFA par affiche · 5 000 FCFA par pack" },
+    3: { title: "Logo Professionnel", objectif: "Créer un logo simple, propre et mémorable en 15 minutes.", lessons: [
+      {h:"🎯 C'est quoi un BON logo", p:"4 règles :\n1. SIMPLE (2 couleurs max)\n2. MÉMORABLE\n3. LISIBLE\n4. INTEMPOREL"},
+      {h:"🛠️ Les 5 étapes Canva", p:"1. Canva → « Logo »\n2. Filtre « Gratuit »\n3. Modèle adapté\n4. Remplace nom\n5. Exporte PNG fond transparent"},
+      {h:"🎨 Les 2 couleurs", p:"• Bleu → confiance\n• Rouge → énergie\n• Vert → naturel\n• Jaune → jeunesse\n• Noir → luxe"},
+      {h:"💰 Tarification", p:"• Logo simple : 5 000 FCFA\n• Logo + 2 variantes : 8 000 FCFA\n• Logo + charte : 15 000 FCFA"}
+    ], exercice: "Créer 1 logo complet pour un commerce réel.", revenu: "5 000–15 000 FCFA par logo" },
+    4: { title: "Shooting Photo IA", objectif: "Rendre une photo amateur professionnelle en 2 minutes.", lessons: [
+      {h:"📸 Pourquoi les photos sont moches", p:"Regarde les boutiques : floues, sombres, mauvais cadrage.\n\n👉 Avec 2 apps gratuites, tu passes en 2 min à une photo pro."},
+      {h:"✨ Remini : netteté magique", p:"1. Remini (gratuit)\n2. « Améliorer »\n3. Choisis photo\n4. IA travaille (10 sec)\n5. Sauvegarde"},
+      {h:"🖼️ PhotoRoom : fond propre", p:"1. PhotoRoom (gratuit)\n2. « Supprimer le fond »\n3. Détourage auto\n4. Fond au choix\n5. Ombre légère\n6. Exporte"},
+      {h:"💼 Utilisation commerciale", p:"• Retouche 1 photo : 1 000 FCFA\n• Pack 5 photos : 4 000 FCFA\n• Pack 10 + menu : 10 000 FCFA"}
+    ], exercice: "Retoucher 2 photos : 1 Remini + 1 PhotoRoom.", revenu: "1 000–2 000 FCFA par photo · 4 000 FCFA pack 5" },
+    5: { title: "Vidéo IA avec Avatar", objectif: "Créer une vidéo de 30 secondes qui présente un produit.", lessons: [
+      {h:"🎬 Structure d'une vidéo qui vend", p:"30 sec = 3 parties :\n0-3 sec : HOOK\n3-25 sec : VALEUR\n25-30 sec : CTA\n\n⚠️ 80% des vidéos échouent sur le hook."},
+      {h:"🛠️ Les 6 étapes CapCut", p:"1. CapCut\n2. Nouveau projet\n3. Visuel produit\n4. Texte animé\n5. Voix off\n6. Export 1080p"},
+      {h:"🎭 Avatar IA", p:"✅ Si tu ne veux pas montrer ton visage\n❌ Client local préfère VOIR le vrai vendeur\n\n💡 Voix OFF réelle + vidéo produit = meilleur"},
+      {h:"💰 Tarification", p:"• Vidéo 30 sec : 5 000 FCFA\n• + voix off : 8 000 FCFA\n• Vidéo 60 sec : 10 000-15 000 FCFA\n• Pack 5 : 30 000 FCFA"}
+    ], exercice: "Créer 1 vidéo 30 sec avec hook + valeur + CTA.", revenu: "5 000–15 000 FCFA par vidéo" },
+    6: { title: "Musique avec Suno", objectif: "Créer une musique de fond, un jingle ou un son de pub en 5 minutes.", lessons: [
+      {h:"🎵 C'est quoi Suno", p:"Suno = IA qui compose de la musique.\n\n• Musique de fond vidéo\n• Jingle radio\n• Son d'intro TikTok"},
+      {h:"🛠️ Les 6 étapes", p:"1. suno.com\n2. Compte gratuit\n3. « Create »\n4. Décris\n5. Durée\n6. Télécharge\n\n🎁 50 crédits/jour"},
+      {h:"📝 Comment prompter Suno", prompt:"Style : Afrobeat moderne, ambiance joyeuse\nTempo : 100 BPM\nInstruments : percussion, basse, synthé\nDurée : 30 secondes\nUsage : jingle pub boutique Douala"},
+      {h:"⚠️ DROIT COMMERCIAL", p:"🔥 Gratuit = usage PERSONNEL\n• COMMERCIAL = plan payant\n• Pro = ≈10 $/mois"}
+    ], exercice: "Créer 1 musique 30 sec.", revenu: "1 000–3 000 FCFA par musique" },
+    7: { title: "TikTok Rentable", objectif: "Comprendre la vraie monétisation TikTok et les alternatives qui paient.", lessons: [
+      {h:"❌ La vérité", p:"TikTok NE PAIE PAS les créateurs camerounais par les vues.\n\nCreator Fund = USA/UK/DE/FR/BR\n\n👉 TikTok = vitrine. Monétise autrement."},
+      {h:"✅ Plateformes qui PAIENT", p:"1. TAMTAM (recommandé) : 400-1 200 FCFA/1000 vues\n2. PIXIA ONE (Douala)\n3. ADINFLUENCE\n4. UGC : 30 000-180 000 FCFA/vidéo"},
+      {h:"🎯 Stratégie", p:"1. TikTok = visibilité\n2. TamTam = salaire\n3. Clients locaux = vrai revenu"},
+      {h:"💼 Vendre TikTok", p:"« Je crée 5 vidéos TikTok pour ta boutique pour 20 000 FCFA. »\n\n⚡ 2 clients/mois = 40 000 FCFA."}
+    ], exercice: "Créer 1 vidéo TikTok 30 sec.", revenu: "10 000–20 000 FCFA / pack 5 vidéos" },
+    8: { title: "YouTube Vitrine", objectif: "Utiliser YouTube comme carte de visite professionnelle.", lessons: [
+      {h:"❌ YouTube paie-t-il ?", p:"Non, pas encore au Cameroun.\n\n👉 MAIS outil n°1 pour :\n• Se positionner en expert\n• Trouver des clients\n• SEO Google"},
+      {h:"🎯 Stratégie", p:"1. VITRINE pro\n2. CRÉDIBILITÉ\n3. SEO\n4. TamTam paie aussi les vues YouTube"},
+      {h:"🖼️ Miniature qui clic", p:"1280×720 px\n1. Visage/objet GRAND (50%)\n2. Texte COURT (3-4 mots)\n3. Couleurs CONTRASTÉES"},
+      {h:"💰 Vendre du YouTube", p:"• Création chaîne : 25 000 FCFA\n• Miniature : 2 000 FCFA\n• Script vidéo 5 min : 5 000 FCFA\n• Pack 10 miniatures : 15 000 FCFA"}
+    ], exercice: "Créer 1 miniature YouTube (1280×720).", revenu: "2 000 FCFA / miniature · 25 000 FCFA création chaîne" },
+    9: { title: "Créer un PDF à vendre", objectif: "Transformer ton savoir en produit digital à 5 000 FCFA, vendable à l'infini.", lessons: [
+      {h:"💡 Pourquoi un PDF", p:"Tu le crées UNE fois, tu le vends 100 fois.\n\nExemples :\n• « 30 prompts IA »\n• « Guide TikTok »\n• « 10 modèles Canva »\n\nPrix : 5 000 FCFA. 10 ventes = 50 000 FCFA."},
+      {h:"📝 Structure", p:"1. COUVERTURE\n2. SOMMAIRE\n3. INTRO\n4. CONTENU\n5. CONCLUSION\n6. BONUS\n\n⚡ 5-10 pages suffisent."},
+      {h:"🛠️ Canva", p:"1. « Document A4 »\n2. Modèle « Guide »\n3. Couverture\n4. Remplis\n5. Exporte PDF"},
+      {h:"💰 Vendre", p:"Où :\n• WhatsApp\n• Facebook\n• TikTok\n• TamTam\n\nPrix : 5 000-15 000 FCFA"}
+    ], exercice: "Créer 1 PDF 5 pages.", revenu: "5 000 FCFA par vente · passif à vie" },
+    10: { title: "Clients & Prix", objectif: "Transformer tes compétences en argent régulier.", lessons: [
+      {h:"📊 Grille complète", p:"AFFICHES : 1 = 1 500-3 000 · Pack 5 = 8 000\n\nLOGOS : 5 000 · +variantes 8 000\n\nPHOTO : 1 500 · Pack 5 = 4 000\n\nVIDÉO : 30s 5 000-8 000 · Pack 5 = 20 000\n\nGROS PACKS :\n• Pack Boutique Pro : 15 000-25 000\n• CM IA : 30 000-50 000/mois"},
+      {h:"🔥 Pack Boutique Pro", p:"1 logo + 3 affiches + 1 photo = 15 000-25 000 FCFA\n\nPitch : « Je propose un pack : logo + 3 affiches + 1 photo. Livraison 48h. »\n\n⚡ 2 packs/mois = 40 000 FCFA minimum."},
+      {h:"🎯 10 clients en 48h", p:"1. TON QUARTIER\n2. WHATSAPP\n3. GROUPES FACEBOOK\n4. TAMTAM\n5. PIXIA ONE\n\n⚠️ RÈGLE DES 3 : 10 contacts → 3 réponses → 1 achète."},
+      {h:"🗺️ Plan 6 mois", p:"PHASE 1 (M1-2) : 50 000-100 000 FCFA\nPHASE 2 (M3-4) : 90 000-250 000/mois\nPHASE 3 (M5-6) : +100 000/mois\nPHASE 4 (M6-12) : +1M/mois"},
+      {h:"🧠 3 règles d'or", p:"1. LIVRE À TEMPS\n2. DEMANDE UN AVIS\n3. NE BAISSE JAMAIS TES PRIX"}
+    ], exercice: "Lister 10 clients potentiels + envoyer le pitch à 3.", revenu: "50 000 FCFA/mois minimum · 1M+ FCFA/mois à terme" }
+  },
+  QUIZZES: {
+    1: [{q:"Que signifie PROMPT PRO ?", options:["Rôle + Tâche + Détails + Style + Format","Rôle + Texte + Délai","Rien"], correct:0},{q:"Rôle du RÔLE ?", options:["Qui doit être l'IA","Langue","Durée"], correct:0},{q:"Erreur débutant ?", options:["Prompts courts/vagues","Trop de mots","En français"], correct:0},{q:"Élément qui définit la forme ?", options:["STYLE","FORMAT","TÂCHE"], correct:1},{q:"Pack 5 prompts ?", options:["500 FCFA","2 000–5 000 FCFA","50 000"], correct:1}],
+    2: [{q:"Prix 1 affiche ?", options:["500–800","1 000–3 000","10 000+"], correct:1},{q:"Meilleur outil gratuit ?", options:["Photoshop","Canva","Illustrator"], correct:1},{q:"Taille post Instagram ?", options:["800×600","1080×1080","2000×2000"], correct:1},{q:"Règle n°1 affiche ?", options:["Beaucoup de texte","Peu de texte + action","Images seules"], correct:1},{q:"1er client ?", options:["Payer d'abord","Faire gratuit puis proposer","Attendre"], correct:1}],
+    3: [{q:"Couleurs max logo ?", options:["1","2","5"], correct:1},{q:"Format export ?", options:["PNG transparent","JPG","PDF N&B"], correct:0},{q:"Prix logo simple ?", options:["500","5 000–15 000","100 000+"], correct:1},{q:"Bon logo doit être…", options:["Détaillé","Simple et mémorable","Noir"], correct:1},{q:"Pourquoi 2 propositions ?", options:["Gagner temps","Client choisit","Stresser"], correct:1}],
+    4: [{q:"Remini sert à ?", options:["Supprimer fond","Améliorer netteté","Vidéo"], correct:1},{q:"PhotoRoom sert à ?", options:["Netteté","Supprimer fond","Écrire"], correct:1},{q:"Prix photo ?", options:["100","1 000–2 000","10 000"], correct:1},{q:"Pourquoi retoucher ?", options:["Décorer","Client commande plus","Style"], correct:1},{q:"Photos pack resto ?", options:["1","5","50"], correct:1}],
+    5: [{q:"Durée pub vidéo ?", options:["5 sec","30 sec","5 min"], correct:1},{q:"Outil vidéo 30s ?", options:["Suno","CapCut","PhotoRoom"], correct:1},{q:"Prix vidéo 30s ?", options:["1 000","5 000–8 000","50 000"], correct:1},{q:"Contenu qui vend ?", options:["Musique","Hook + valeur + CTA","Prix"], correct:1},{q:"Export pro ?", options:["480p","720p","1080p"], correct:2}],
+    6: [{q:"Suno app Android ?", options:["Oui","Non, navigateur","Beta"], correct:1},{q:"Crédits/jour ?", options:["5","50","500"], correct:1},{q:"Plan commercial ?", options:["Gratuit","≈10 $/mois","100 $/mois"], correct:1},{q:"Prix musique ?", options:["100","1 000–3 000","20 000"], correct:1},{q:"Gratuit pour client ?", options:["Oui","Non, plan payant","Oui si court"], correct:1}],
+    7: [{q:"TikTok paie vues CM ?", options:["Oui","Non","1000+"], correct:1},{q:"Plateforme qui paie ?", options:["Instagram","TamTam","YouTube"], correct:1},{q:"TamTam 1000 vues ?", options:["10","400–1 200","10 000"], correct:1},{q:"Mission UGC ?", options:["1 000","30 000–180 000","500"], correct:1},{q:"Meilleur usage TikTok ?", options:["Attendre revenus","Vitrine + TamTam","Acheter vues"], correct:1}],
+    8: [{q:"YouTube paie CM ?", options:["Oui","Non","Grosses chaînes"], correct:1},{q:"Usage YouTube ?", options:["Attendre","Vitrine pro","Acheter vues"], correct:1},{q:"Taille miniature ?", options:["800×600","1280×720","2000×2000"], correct:1},{q:"Pack 10 miniatures ?", options:["5 000","15 000","100 000"], correct:1},{q:"TamTam paie vues YT ?", options:["Non","Oui","Parfois"], correct:1}],
+    9: [{q:"Prix PDF 5 pages ?", options:["1 000","5 000","20 000"], correct:1},{q:"Pages min PDF ?", options:["1","5–10","100"], correct:1},{q:"Outil PDF ?", options:["Word","Canva","Paint"], correct:1},{q:"Où vendre PDF ?", options:["Nulle part","WhatsApp/FB/TikTok","Librairie"], correct:1},{q:"Sujet PDF ?", options:["Roman","Guide pratique","Poésie"], correct:1}],
+    10: [{q:"Pack Boutique Pro ?", options:["5–10 000","15 000–25 000","100 000+"], correct:1},{q:"Community Manager IA ?", options:["5 000","30 000–50 000","1 000"], correct:1},{q:"Où trouver clients ?", options:["Étranger","Quartier + WhatsApp","Attendre"], correct:1},{q:"Règle des 3 ?", options:["3 clients","10→3→1","3 prix"], correct:1},{q:"Clients 48h ?", options:["1","10","1000"], correct:1}]
+  }
+};
+
+/* ═══ STATE — accepte v12/v13/v14, force structure v14 ═══ */
+const State = (() => {
+  let d = null;
+  const def = () => ({
+    version: 14,
+    settings: {
+      masterPasswordHash: null,
+      coachName: 'Coach IA MASTER',
+      coachWhatsApp: '',
+      packPrice: 20000,
+      modulePrice: 5000,
+      chariowPackUrl: '',
+      chariowModuleUrl: '',
+      paymentReturnUrl: '',
+      whatsappGroup: '',
+      whatsappChannel: '',
+      tiktok: '', youtube: '', facebook: '', instagram: '', telegram: '',
+      coachPaymentName: '', coachOrangeMoney: '', coachMtnMomo: '',
+      marketplaceAutoApprove: false
+    },
+    modules: null, quizzes: null,
+    coAdmins: [], adminLog: [],
+    learners: [], payments: [], messages: [], community: [], marketplace: [],
+    submissions: [], quizScores: {}, streak: {}, currentUser: null
+  });
+
+  const normalizeLearner = l => {
+    if (!l || typeof l !== 'object') return;
+    if (!('accessStatus' in l)) l.accessStatus = 'active';
+    if (l.accessStatus === 'pending') l.accessStatus = 'awaiting_payment';
+    if (!l.unlockedModules) l.unlockedModules = [];
+    if (l.hasFullAccess === undefined) l.hasFullAccess = false;
+    if (!l.exercises) l.exercises = {};
+    if (!l.amountPaid) l.amountPaid = 0;
+    if (!l.photo) l.photo = null;
+  };
+
+  const normalize = (data) => {
+    if (!data || typeof data !== 'object') data = def();
+    const base = def();
+    Object.keys(base).forEach(k => { if (data[k] === undefined) data[k] = base[k]; });
+    if (!data.settings) data.settings = base.settings;
+    Object.keys(base.settings).forEach(k => { if (data.settings[k] === undefined) data.settings[k] = base.settings[k]; });
+    if (!data.modules) data.modules = JSON.parse(JSON.stringify(DefaultContent.MODULES));
+    if (!data.quizzes) data.quizzes = JSON.parse(JSON.stringify(DefaultContent.QUIZZES));
+    if (!Array.isArray(data.learners)) data.learners = [];
+    data.learners.forEach(normalizeLearner);
+    ['community','marketplace','coAdmins','payments','messages','submissions','adminLog'].forEach(k => { if (!Array.isArray(data[k])) data[k] = []; });
+    if (!data.quizScores || typeof data.quizScores !== 'object') data.quizScores = {};
+    if (!data.streak || typeof data.streak !== 'object') data.streak = {};
+    if (typeof data.settings.marketplaceAutoApprove !== 'boolean') data.settings.marketplaceAutoApprove = false;
+    data.version = 14;
+    return data;
+  };
+
+  return {
+    init: async () => {
+      const sv = St.load();
+      d = normalize(sv ? Object.assign(def(), sv) : def());
+      St.save(d);
+      try {
+        const remote = await St.loadFromCloud();
+        if (remote) {
+          d = normalize(Object.assign(def(), remote));
+          St._cache = d;
+          try { localStorage.setItem(St.KEY, JSON.stringify(d)); } catch {}
+        }
+      } catch (e) { console.warn('Cloud load:', e); }
+    },
+    get: () => d,
+    save: () => St.save(d),
+    reset: () => { d = normalize(def()); St.save(d); },
+    learner: id => d.learners.find(l => l.id === id),
+    coAdmin: id => d.coAdmins.find(c => c.id === id),
+    currentLearner: () => d.currentUser?.role === 'learner' ? d.learners.find(l => l.id === d.currentUser.id) : null,
+    currentAdmin: () => d.currentUser?.role === 'admin' ? d.currentUser : null,
+    isOwner: () => d.currentUser?.role === 'admin' && d.currentUser?.type === 'owner',
+    currentCoAdmin: () => d.currentUser?.role === 'admin' && d.currentUser?.type === 'coach' ? d.coAdmins.find(c => c.id === d.currentUser.id) : null
+  };
+})();
+
+const MyData = {
+  stats() {
+    const l = State.currentLearner();
+    if (!l) return null;
+    const s = State.get();
+    return {
+      modulesDone: Object.values(l.exercises || {}).filter(Boolean).length,
+      modulesTotal: Object.keys(s.modules).length,
+      amountPaid: l.amountPaid || 0,
+      streak: Streak.get(l.id).count,
+      accessStatus: l.accessStatus,
+      hasFullAccess: l.hasFullAccess
+    };
+  }
+};
+
+const Access = {
+  isActive: l => l?.accessStatus === 'active' || l?.hasFullAccess,
+  isModuleUnlocked(l, k) {
+    if (!l) return false;
+    if (l.hasFullAccess) return true;
+    return (l.unlockedModules || []).includes(Number(k));
+  },
+  approvePayment(lid, type, mid, method='Mobile Money', customAmount=null) {
+    const s = State.get();
+    const l = State.learner(lid);
+    if (!l) return false;
+    const proof = l.paymentProof || {};
+    let amount = customAmount || 0;
+    if (type === 'pack') {
+      if (!amount) amount = Number(proof.amount) || s.settings.packPrice || 20000;
+      l.hasFullAccess = true;
+      l.accessStatus = 'active';
+    } else {
+      if (!amount) amount = Number(proof.amount) || s.settings.modulePrice || 5000;
+      if (!l.unlockedModules) l.unlockedModules = [];
+      if (!l.unlockedModules.includes(Number(mid))) l.unlockedModules.push(Number(mid));
+      l.accessStatus = 'active';
+    }
+    s.payments.push({
+      id: U.uid(), learnerId: lid, amount,
+      method: method || proof.method || 'Mobile Money',
+      type: type === 'pack' ? 'Pack Complet' : 'Module ' + mid,
+      ref: proof.ref || 'MANUEL', date: new Date().toISOString()
+    });
+    l.amountPaid = (l.amountPaid || 0) + amount;
+    l.paymentApprovedAt = new Date().toISOString();
+    delete l.paymentProof;
+    s.messages.push({
+      id: U.uid(), learnerId: lid, from: 'admin',
+      text: `✅ Paiement validé !\n\nTon accès (${type === 'pack' ? 'Pack Complet' : 'Module ' + mid}) est maintenant ACTIF.\nMontant : ${U.money(amount)}.`,
+      date: new Date().toISOString(), read: false
+    });
+    State.save();
+    Nw.refresh();
+    return true;
+  },
+  rejectPayment(lid, reason) {
+    const s = State.get();
+    const l = State.learner(lid);
+    if (!l) return false;
+    l.accessStatus = 'awaiting_payment';
+    l.paymentRejected = { reason: reason || '', date: new Date().toISOString() };
+    delete l.paymentProof;
+    s.messages.push({
+      id: U.uid(), learnerId: lid, from: 'admin',
+      text: `❌ Paiement non validé\n\nMotif : ${reason || 'Référence introuvable'}\n\nVérifie et renvoie ta preuve.`,
+      date: new Date().toISOString(), read: false
+    });
+    State.save();
+    return false;
+  },
+  activateManually(lid) {
+    const l = State.learner(lid);
+    if (!l) return false;
+    l.hasFullAccess = true;
+    l.accessStatus = 'active';
+    l.activatedAt = new Date().toISOString();
+    State.save(); Nw.refresh(); return true;
+  },
+  deactivate(lid) {
+    const l = State.learner(lid);
+    if (!l) return false;
+    l.hasFullAccess = false;
+    l.unlockedModules = [];
+    l.accessStatus = 'awaiting_payment';
+    delete l.activatedAt;
+    State.save(); Nw.refresh(); return true;
+  },
+  toggleModule(lid, k) {
+    const l = State.learner(lid);
+    if (!l) return false;
+    if (l.hasFullAccess) return false;
+    if (!l.unlockedModules) l.unlockedModules = [];
+    const kn = Number(k);
+    if (l.unlockedModules.includes(kn)) l.unlockedModules = l.unlockedModules.filter(x => x !== kn);
+    else l.unlockedModules.push(kn);
+    State.save(); return true;
+  }
+};
+
+const Streak = {
+  update(id) {
+    const s = State.get();
+    const r = s.streak[id] || { count: 0, lastDate: null };
+    const t = U.today();
+    if (r.lastDate === t) return r;
+    const gap = r.lastDate ? Math.floor((new Date(t) - new Date(r.lastDate)) / 86400000) : 999;
+    r.count = gap === 1 ? r.count + 1 : 1;
+    r.lastDate = t;
+    s.streak[id] = r;
+    State.save();
+    return r;
+  },
+  get: id => State.get().streak[id] || { count: 0, lastDate: null }
+};
+
+const Pay = {
+  open(type, mid) {
+    const s = State.get();
+    const l = State.currentLearner();
+    if (!l) return To.show('⚠️ Non connecté', 'error');
+    const base = type === 'pack' ? s.settings.chariowPackUrl : s.settings.chariowModuleUrl;
+    if (!base) return To.show('⚠️ Lien de paiement non configuré. Contactez le coach.', 'error');
+    let returnUrl = s.settings.paymentReturnUrl || (window.location.origin + window.location.pathname);
+    try {
+      const u = new URL(base);
+      u.searchParams.set('return_url', returnUrl);
+      u.searchParams.set('type', type);
+      if (mid) u.searchParams.set('mid', mid);
+      u.searchParams.set('lid', l.id);
+      window.location.href = u.toString();
+    } catch { window.location.href = base; }
+  },
+  checkReturn() {
+    const p = new URLSearchParams(window.location.search);
+    if (p.get('payment') !== 'success') return;
+    const type = p.get('type'), mid = p.get('mid'), lid = p.get('lid');
+    const l = State.learner(lid);
+    if (!l) { window.history.replaceState({}, '', window.location.pathname); return; }
+    let shouldProcess = false;
+    if (type === 'pack' && !l.hasFullAccess) shouldProcess = true;
+    if (type === 'module' && !(l.unlockedModules || []).includes(Number(mid))) shouldProcess = true;
+    if (shouldProcess) {
+      setTimeout(() => {
+        Access.approvePayment(lid, type, mid, 'Chariow');
+        To.show('🎉 Paiement validé !', 'success');
+        window.history.replaceState({}, '', window.location.pathname);
+        if (State.get().currentUser?.role === 'learner') LearnerUI.open();
+      }, 1200);
+    } else {
+      window.history.replaceState({}, '', window.location.pathname);
+      if (l.hasFullAccess) To.show('✅ Accès déjà complet', 'success');
+    }
+  }
+};
+
+const Quiz = {
+  start(mid) {
+    const l = State.currentLearner();
+    if (!l) return;
+    const qs = State.get().quizzes[mid] || [];
+    if (!qs.length) return To.show('Pas de quiz');
+    const prev = State.get().quizScores[l.id]?.[mid];
+    document.getElementById('lv-module-detail').innerHTML = `
+      <button class="back-btn" data-action="learner.go" data-tab="modules">← Retour</button>
+      <div class="detail-header"><h2>Quiz · Module ${mid}</h2><p>${qs.length} questions</p></div>
+      ${prev ? `<div class="info-box">Meilleur score : ${prev.score}/${prev.total}</div>` : ''}
+      <div id="quizBox">${qs.map((q, i) => `
+        <div class="quiz-q" data-q="${i}">
+          <h4>${i+1}. ${U.esc(q.q)}</h4>
+          ${q.options.map((o, j) => `<div class="quiz-opt" data-action="quiz.select" data-q="${i}" data-o="${j}"><span class="letter">${String.fromCharCode(65+j)}</span><span>${U.esc(o)}</span></div>`).join('')}
+        </div>`).join('')}</div>
+      <button class="btn btn-or btn-block mt-12" data-action="quiz.submit" data-module="${mid}">✅ Valider</button>`;
+    LearnerUI.showTab('module-detail');
+  },
+  select(qIdx, oIdx, el) {
+    el.parentElement.querySelectorAll('.quiz-opt').forEach(x => x.classList.remove('selected'));
+    el.classList.add('selected');
+    el.parentElement.dataset.answer = oIdx;
+  },
+  submit(mid) {
+    const l = State.currentLearner();
+    if (!l) return;
+    const qs = State.get().quizzes[mid] || [];
+    let score = 0;
+    document.querySelectorAll('.quiz-q').forEach((qEl, qi) => {
+      const ans = Number(qEl.dataset.answer);
+      const c = qs[qi].correct;
+      qEl.querySelectorAll('.quiz-opt').forEach((o, oi) => {
+        if (oi === c) o.classList.add('correct');
+        else if (oi === ans) o.classList.add('wrong');
+      });
+      if (ans === c) score++;
+    });
+    const s = State.get();
+    if (!s.quizScores[l.id]) s.quizScores[l.id] = {};
+    s.quizScores[l.id][mid] = { score, total: qs.length, date: new Date().toISOString() };
+    State.save();
+    To.show(`🎯 ${score}/${qs.length}`, score === qs.length ? 'success' : 'info');
+    const btn = document.querySelector('[data-action="quiz.submit"]');
+    if (btn) btn.outerHTML = `<div class="flex mt-12">
+      <button class="btn btn-outline btn-block" data-action="learner.go" data-tab="modules">← Modules</button>
+      <button class="btn btn-or btn-block" data-action="quiz.start" data-module="${mid}">🔄 Refaire</button></div>`;
+  }
+};
+
+const Auth = {
+  attempts: {},
+  async adminLogin() {
+    const inp = document.getElementById('adminPwd');
+    const pwd = inp?.value || '';
+    if (!pwd) return To.show('⚠️ Mot de passe requis', 'error');
+    const now = Date.now();
+    const a = this.attempts.admin || { count: 0, until: 0 };
+    if (now < a.until) return To.show(`⏱ Attendez ${Math.ceil((a.until - now) / 1000)}s`, 'error');
+    const s = State.get();
+    if (!s.settings.masterPasswordHash) {
+      if (!Cr.isStrong(pwd)) return To.show('❌ 6+ car. lettre + chiffre + symbole', 'error');
+      s.settings.masterPasswordHash = await Cr.hash(pwd);
+      State.save();
+      To.show('✅ Mot de passe admin défini', 'success');
+      s.currentUser = { role: 'admin', type: 'owner', name: 'Admin' };
+      State.save();
+      AdminUI.open();
+      return;
+    }
+    if (await Cr.verify(pwd, s.settings.masterPasswordHash)) {
+      s.currentUser = { role: 'admin', type: 'owner', name: 'Admin' };
+      s.adminLog.unshift({ who: 'Admin', type: 'owner', when: new Date().toISOString() });
+      if (s.adminLog.length > 100) s.adminLog = s.adminLog.slice(0, 100);
+      State.save();
+      this.attempts.admin = { count: 0, until: 0 };
+      AdminUI.open();
+      return;
+    }
+    let foundCoAdmin = null;
+    for (const c of s.coAdmins) {
+      if (!c.active || !c.pinHash) continue;
+      if (await Cr.verify(pwd, c.pinHash)) { foundCoAdmin = c; break; }
+    }
+    if (foundCoAdmin) {
+      s.currentUser = { role: 'admin', type: 'coach', id: foundCoAdmin.id, name: foundCoAdmin.name };
+      foundCoAdmin.lastLogin = new Date().toISOString();
+      State.save();
+      To.show(`👋 Bienvenue ${foundCoAdmin.name}`, 'success');
+      this.attempts.admin = { count: 0, until: 0 };
+      AdminUI.open();
+      return;
+    }
+    a.count = (a.count || 0) + 1;
+    if (a.count >= 5) { a.count = 0; a.until = now + 120000; To.show('⚠️ 5 échecs. 2 min', 'error'); }
+    else To.show('❌ Mot de passe incorrect', 'error');
+    this.attempts.admin = a;
+  },
+  async learnerLogin() {
+    const idInput = document.getElementById('loginId').value.trim().toLowerCase();
+    const pwd = document.getElementById('loginPwd').value;
+    if (!idInput || !pwd) return To.show('⚠️ Identifiant et mot de passe requis', 'error');
+    const s = State.get();
+    const l = s.learners.find(x =>
+      (x.name || '').toLowerCase() === idInput ||
+      (x.phone && x.phone.replace(/\D/g, '') === idInput.replace(/\D/g, ''))
+    );
+    if (!l) return To.show('❌ Profil introuvable', 'error');
+    if (!l.passwordHash) return To.show('❌ Compte sans mot de passe', 'error');
+    if (!(await Cr.verify(pwd, l.passwordHash))) return To.show('❌ Mot de passe incorrect', 'error');
+    s.currentUser = { role: 'learner', id: l.id };
+    State.save();
+    Streak.update(l.id);
+    LearnerUI.open();
+  },
+  async register() {
+    const name = document.getElementById('reg_name').value.trim();
+    const phone = document.getElementById('reg_phone').value.trim();
+    const pwd = document.getElementById('reg_pwd').value;
+    const pwd2 = document.getElementById('reg_pwd2').value;
+    if (!name || name.length < 2) return To.show('⚠️ Nom invalide', 'error');
+    if (!phone || phone.replace(/\D/g, '').length < 8) return To.show('⚠️ Téléphone invalide', 'error');
+    if (!Cr.isStrong(pwd)) return To.show('❌ 6+ car. + lettre + chiffre + symbole', 'error');
+    if (pwd !== pwd2) return To.show('⚠️ Mots de passe différents', 'error');
+    const s = State.get();
+    if (s.learners.some(l => (l.phone || '').replace(/\D/g, '') === phone.replace(/\D/g, '')))
+      return To.show('⚠️ Téléphone déjà inscrit', 'error');
+    const hash = await Cr.hash(pwd);
+    const learner = {
+      id: U.uid(), name, phone, passwordHash: hash,
+      amountPaid: 0, exercises: {}, unlockedModules: [],
+      hasFullAccess: false, attestationNum: null,
+      dateStart: new Date().toISOString(),
+      accessStatus: 'awaiting_payment', whatsapp: phone,
+      photo: null
+    };
+    s.learners.push(learner);
+    s.messages.push({
+      id: U.uid(), learnerId: learner.id, from: 'admin',
+      text: `Bienvenue ${name} ! 🎓\n\nTon espace est prêt. Explore le programme et débloque tes modules pour commencer.`,
+      date: new Date().toISOString(), read: false
+    });
+    s.currentUser = { role: 'learner', id: learner.id };
+    State.save();
+    To.show('✅ Inscription réussie', 'success');
+    setTimeout(() => LearnerUI.open(), 400);
+  },
+  logout() {
+    const s = State.get();
+    s.currentUser = null;
+    State.save();
+    document.body.classList.remove('learner-mode');
+    const fab = document.getElementById('waFab');
+    if (fab) fab.style.display = 'none';
+    Nw.refresh();
+    Router.go('s-login');
+  },
+  forgotPassword() {
+    Md.open(`<div class="modal-title">🔐 Mot de passe oublié<button class="modal-close" data-action="modal.close">✕</button></div>
+      <div class="info-box">Le coach est le seul à pouvoir réinitialiser ton mot de passe.</div>
+      <div class="form-group"><label class="form-label">Ton nom</label><input class="form-input" id="fp_name" placeholder="Ton nom complet"></div>
+      <div class="form-group"><label class="form-label">Ton téléphone WhatsApp</label><input class="form-input" id="fp_phone" placeholder="+237..."></div>
+      <button class="btn btn-vert btn-block" data-action="auth.sendForgot">📱 Contacter le coach</button>`);
+  },
+  sendForgot() {
+    const s = State.get();
+    const name = document.getElementById('fp_name').value.trim();
+    const phone = document.getElementById('fp_phone').value.trim();
+    if (!name || !phone) return To.show('⚠️ Nom et téléphone requis', 'error');
+    const coach = s.settings.coachWhatsApp || '';
+    if (!coach) return To.show('⚠️ Coach non configuré', 'error');
+    const msg = `Bonjour Coach IA MASTER,\n\nJe suis ${name} (${phone}). J'ai oublié mon mot de passe.\n\nMerci !`;
+    window.open(`https://wa.me/${coach.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
+    Md.close();
+    To.show('📱 WhatsApp ouvert', 'success');
+  }
+};
+
+const Router = {
+  go(sc) {
+    const u = State.get()?.currentUser;
+    if (sc === 's-admin') {
+      if (u?.role !== 'admin') { To.show('❌ Accès refusé', 'error'); return; }
+      document.body.classList.remove('learner-mode');
+      const fab = document.getElementById('waFab');
+      if (fab) fab.style.display = 'none';
+    }
+    if (sc === 's-learner') {
+      if (u?.role !== 'learner') { To.show('❌ Accès refusé', 'error'); return; }
+      document.body.classList.add('learner-mode');
+    }
+    document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
+    const el = document.getElementById(sc);
+    if (el) el.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+};
+
+const AdminUI = {
+  currentTab: 'home',
+  _currentFilter: 'all',
+  _currentChatId: null,
+  _commTab: 'feed',
+
+  open() {
+    const u = State.currentAdmin();
+    if (!u) return Auth.logout();
+    document.body.classList.remove('learner-mode');
+    const fab = document.getElementById('waFab');
+    if (fab) fab.style.display = 'none';
+    document.getElementById('adminWho').textContent = u.name || 'Admin';
+    const nav = document.getElementById('adminNav');
+    if (nav) {
+      const isOwner = State.isOwner();
+      nav.querySelectorAll('.nav-item').forEach(it => {
+        const tab = it.dataset.tab;
+        it.style.display = (!isOwner && ['learners','payments','settings'].includes(tab)) ? 'none' : '';
+      });
+    }
+    Router.go('s-admin');
+    this.go('home');
+    Nw.refresh();
+  },
+
+  go(tab) {
+    this.currentTab = tab;
+    document.querySelectorAll('#s-admin .view').forEach(v => v.classList.remove('active'));
+    const v = document.getElementById('av-' + tab);
+    if (v) v.classList.add('active');
+    document.querySelectorAll('#s-admin .nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('#s-admin .nav-item').forEach(n => { if (n.dataset.tab === tab) n.classList.add('active'); });
+    window.scrollTo(0, 0);
+    this.renderTab(tab);
+    this.updateBadges();
+  },
+
+  renderTab(t) {
+    const r = {
+      home: () => this.renderHome(),
+      learners: () => this.renderLearners(),
+      submissions: () => this.renderSubmissions(),
+      cms: () => this.renderCMS(),
+      messages: () => this.renderMessages(),
+      community: () => this.renderCommunity(),
+      payments: () => this.renderPayments(),
+      settings: () => this.renderSettings(),
+      detail: () => {}, chat: () => {}
+    };
+    try { r[t]?.(); } catch (e) { console.error('renderTab', t, e); }
+  },
+
+  updateBadges() {
+    const s = State.get();
+    const isOwner = State.isOwner();
+    const coach = State.currentCoAdmin();
+    const myModules = coach ? coach.moduleIds || [] : Object.keys(s.modules).map(Number);
+    const subs = s.submissions.filter(x => x.status === 'pending' && (isOwner || myModules.includes(x.moduleId))).length;
+    const unread = s.messages.filter(m => m.from === 'learner' && !m.read).length;
+    const bS = document.getElementById('adminBadgeSub');
+    const bM = document.getElementById('adminBadgeMsg');
+    if (bS) { bS.textContent = subs; bS.style.display = subs > 0 ? 'block' : 'none'; }
+    if (bM) { bM.textContent = unread; bM.style.display = unread > 0 ? 'block' : 'none'; }
+  },
+
+  renderHome() {
+    const s = State.get();
+    const isOwner = State.isOwner();
+    const rev = s.payments.reduce((a, p) => a + (Number(p.amount) || 0), 0);
+    const paidLearners = s.learners.filter(l => l.hasFullAccess || (l.unlockedModules && l.unlockedModules.length > 0)).length;
+    const convRate = s.learners.length > 0 ? Math.round((paidLearners / s.learners.length) * 100) : 0;
+    const packRev = s.payments.filter(p => p.type === 'Pack Complet').reduce((a, p) => a + (Number(p.amount) || 0), 0);
+    const modRev = s.payments.filter(p => p.type !== 'Pack Complet').reduce((a, p) => a + (Number(p.amount) || 0), 0);
+    const pendingPmts = s.learners.filter(l => l.accessStatus === 'payment_submitted');
+
+    document.getElementById('av-home').innerHTML = `
+      <div class="stats">
+        <div class="stat hl"><div class="stat-label">Apprenants</div><div class="stat-value">${s.learners.length}</div></div>
+        ${isOwner ? `<div class="stat hl"><div class="stat-label">Revenus</div><div class="stat-value">${U.money(rev)}</div></div>` : `<div class="stat hl"><div class="stat-label">Co-Admin</div><div class="stat-value" style="font-size:14px">${U.esc(State.currentCoAdmin()?.name || '')}</div></div>`}
+        <div class="stat"><div class="stat-label">Conversion</div><div class="stat-value">${convRate}%</div></div>
+        <div class="stat"><div class="stat-label">À valider</div><div class="stat-value">${pendingPmts.length}</div></div>
+      </div>
+      ${isOwner ? `<div class="card"><div class="card-title">📊 Répartition des Revenus</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px"><span>Packs Complets</span><b style="color:var(--v)">${U.money(packRev)}</b></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px"><span>Modules à l'unité</span><b style="color:var(--o)">${U.money(modRev)}</b></div></div>` : ''}
+      ${pendingPmts.length && isOwner ? `<div class="card" style="border-left:4px solid var(--o);background:#fffbeb">
+        <div class="card-title">💳 Paiements à valider (${pendingPmts.length})</div>
+        ${pendingPmts.slice(0, 3).map(l => `<div class="row" data-action="admin.go" data-tab="payments">
+          <div class="avatar" style="background:var(--o)">${(l.name || '?').charAt(0)}</div>
+          <div class="info"><b>${U.esc(l.name)}</b><small>${U.money(l.paymentProof?.amount || 0)} · ${l.paymentProof?.type === 'pack' ? 'Pack' : 'Module'}</small></div>
+          <span class="badge badge-or">Voir</span></div>`).join('')}
+        <button class="btn btn-vert btn-block mt-8" data-action="admin.go" data-tab="payments">💳 Tout voir</button></div>` : ''}
+      <div class="card"><div class="card-title">📜 Activité récente</div>
+        ${s.payments.slice(-5).reverse().map(p => {
+          const l = State.learner(p.learnerId);
+          return `<div style="padding:8px 0;border-bottom:1px solid var(--br);font-size:13px"><b>${U.esc(l?.name || '?')}</b> a acheté <span style="color:var(--v)">${U.esc(p.type)}</span></div>`;
+        }).join('') || '<p class="text-muted">Aucune activité</p>'}</div>`;
+  },
+
+  renderLearners() {
+    document.getElementById('av-learners').innerHTML = `
+      <div class="search-bar"><input type="search" id="adminSearch" placeholder="Rechercher un apprenant..." data-input="admin-search"></div>
+      <div class="chip-row">
+        <div class="chip ${this._currentFilter==='all'?'active':''}" data-action="admin.filter" data-filter="all">Tous</div>
+        <div class="chip ${this._currentFilter==='active'?'active':''}" data-action="admin.filter" data-filter="active">Actifs</div>
+        <div class="chip ${this._currentFilter==='free'?'active':''}" data-action="admin.filter" data-filter="free">Gratuits</div>
+      </div>
+      <div id="adminLearnersList">${this.learnersHTML('', this._currentFilter)}</div>`;
+  },
+
+  learnersHTML(q, filter = 'all') {
+    const s = State.get();
+    q = (q || '').toLowerCase();
+    let list = s.learners.filter(l => (l.name || '').toLowerCase().includes(q) || (l.phone || '').includes(q));
+    if (filter === 'active') list = list.filter(l => l.hasFullAccess || (l.unlockedModules && l.unlockedModules.length > 0));
+    if (filter === 'free') list = list.filter(l => !l.hasFullAccess && (!l.unlockedModules || l.unlockedModules.length === 0));
+    if (!list.length) return '<div class="empty"><div class="empty-icon">👥</div><p>Aucun apprenant</p></div>';
+    return list.map(l => {
+      const done = Object.values(l.exercises || {}).filter(Boolean).length;
+      const unread = s.messages.filter(m => m.learnerId === l.id && m.from === 'learner' && !m.read).length;
+      const badge = l.hasFullAccess ? 'badge-vert' : (l.unlockedModules?.length > 0 ? 'badge-or' : 'badge-gris');
+      const badgeTxt = l.hasFullAccess ? 'Pack' : (l.unlockedModules?.length > 0 ? l.unlockedModules.length + ' mod.' : 'Gratuit');
+      return `<div class="row" data-action="admin.openDetail" data-id="${l.id}">
+        ${U.avatar(l)}
+        <div class="info"><b>${U.esc(l.name)} ${unread ? `<span class="badge badge-rouge">${unread}</span>` : ''}</b><small>${done}/${Object.keys(s.modules).length} · ${U.money(l.amountPaid)}</small></div>
+        <span class="badge ${badge}">${badgeTxt}</span></div>`;
+    }).join('');
+  },
+
+  filterLearners(filter) {
+    this._currentFilter = filter;
+    document.querySelectorAll('[data-action="admin.filter"]').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll(`[data-action="admin.filter"][data-filter="${filter}"]`).forEach(c => c.classList.add('active'));
+    const q = document.getElementById('adminSearch')?.value || '';
+    document.getElementById('adminLearnersList').innerHTML = this.learnersHTML(q, filter);
+  },
+
+  openDetail(id) {
+    const s = State.get();
+    const l = State.learner(id);
+    if (!l) return;
+    const done = Object.values(l.exercises || {}).filter(Boolean).length;
+    const pays = s.payments.filter(p => p.learnerId === id);
+    const moduleKeys = Object.keys(s.modules).map(Number).sort((a,b)=>a-b);
+
+    document.getElementById('av-detail').innerHTML = `
+      <button class="back-btn" data-action="admin.go" data-tab="learners">← Retour</button>
+      <div class="detail-header" style="display:flex;align-items:center;gap:12px">
+        ${U.avatar(l, 'width:56px;height:56px;font-size:22px')}
+        <div><h2 style="font-size:18px">${U.esc(l.name)}</h2><p>${U.esc(l.phone || '')}</p>
+        <div style="margin-top:4px;font-size:12px;opacity:.9">Inscrit le ${U.date(l.dateStart)}</div></div>
+      </div>
+      <div class="card"><div class="card-title">🔐 Accès Global</div>
+        <div class="flex mb-8">
+          <button class="btn btn-vert btn-block" data-action="admin.activateLearner" data-id="${l.id}">🎁 Activer Pack</button>
+          <button class="btn btn-rouge btn-block" data-action="admin.deactivateLearner" data-id="${l.id}">🔒 Révoquer</button>
+        </div></div>
+      <div class="card"><div class="card-title">📚 Modules (${done}/${moduleKeys.length})</div>
+        ${moduleKeys.map(k => {
+          const isUnlocked = l.hasFullAccess || (l.unlockedModules || []).includes(k);
+          const isDone = l.exercises?.[k];
+          return `<div class="row" style="cursor:default;padding:10px">
+            <div class="avatar" style="background:${isDone?'var(--v)':isUnlocked?'var(--b)':'var(--m)'}">${isDone ? '✓' : isUnlocked ? '🔓' : '🔒'}</div>
+            <div class="info"><b>Module ${k}</b><small>${U.esc(s.modules[k].title)}</small></div>
+            <div class="flex">
+              <button class="btn btn-sm ${isUnlocked?'btn-rouge':'btn-or'}" data-action="admin.toggleUnlock" data-id="${l.id}" data-k="${k}">${isUnlocked ? 'Lock' : 'Unlock'}</button>
+              <button class="btn btn-sm ${isDone?'btn-outline':'btn-vert'}" data-action="admin.toggleModuleDone" data-id="${l.id}" data-k="${k}" ${!isUnlocked?'disabled style="opacity:.5"':''}>${isDone ? 'Annuler' : 'Valider'}</button>
+            </div></div>`;
+        }).join('')}</div>
+      <div class="card"><div class="card-title">💳 Paiements (${U.money(l.amountPaid)})</div>
+        ${pays.map(p => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--br)">
+          <span style="font-size:13px">${U.date(p.date)} · ${U.esc(p.type)}</span>
+          <b style="color:var(--v)">${U.money(p.amount)}</b></div>`).join('') || '<p class="text-muted">Aucun paiement</p>'}</div>`;
+    this.go('detail');
+  },
+
+  toggleUnlock(id, k) {
+    const l = State.learner(id);
+    if (!l) return;
+    if (l.hasFullAccess) return To.show('Désactivez le pack complet d\'abord', 'error');
+    Access.toggleModule(id, k);
+    this.openDetail(id);
+  },
+
+  toggleModuleDone(id, k) {
+    const l = State.learner(id);
+    if (!l) return;
+    l.exercises = l.exercises || {};
+    l.exercises[k] = !l.exercises[k];
+    State.save();
+    this.openDetail(id);
+  },
+
+  activateLearner(id) {
+    Dg.confirm('Activer le Pack Complet ?', () => {
+      Access.activateManually(id);
+      To.show('✅ Activé', 'success');
+      this.openDetail(id);
+    }, { title: 'Activer', yes: 'Activer' });
+  },
+
+  deactivateLearner(id) {
+    Dg.confirm('Révoquer TOUS les accès ?', () => {
+      Access.deactivate(id);
+      To.show('✅ Révoqué', 'success');
+      this.openDetail(id);
+    }, { title: 'Révoquer', yes: 'Révoquer', danger: true });
+  },
+
+  renderCMS() {
+    const s = State.get();
+    const isOwner = State.isOwner();
+    const coach = State.currentCoAdmin();
+    const myModules = coach ? coach.moduleIds || [] : Object.keys(s.modules).map(Number);
+    const moduleKeys = Object.keys(s.modules).map(Number).sort((a,b)=>a-b).filter(k => isOwner || myModules.includes(k));
+
+    document.getElementById('av-cms').innerHTML = `
+      <div class="info-box">📚 Gérez le programme. Créez des modules, ajoutez ou modifiez des leçons (avec sous-parties et vidéos).</div>
+      <button class="btn btn-vert btn-block mb-12" data-action="admin.newModule">➕ Créer un nouveau module</button>
+      ${moduleKeys.map(k => {
+        const m = s.modules[k];
+        return `<div class="card" style="border-left:4px solid var(--b2)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div><b style="color:var(--b)">Module ${k} · ${U.esc(m.title)}</b><br><small class="text-muted">${m.lessons.length} leçons</small></div>
+            <div class="flex">
+              <button class="btn btn-sm btn-outline" data-action="admin.editModuleMeta" data-mid="${k}">✎ Titre</button>
+              <button class="btn btn-sm btn-rouge" data-action="admin.delModule" data-mid="${k}">🗑️</button>
+            </div>
+          </div>
+          <div style="background:var(--bg);border-radius:8px;padding:10px;margin-bottom:8px">
+            ${m.lessons.map((ls, idx) => `
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--br)">
+                <div style="font-size:13px;flex:1"><b>Leçon ${idx+1} :</b> ${U.esc(ls.h)} ${ls.video ? '🎬' : ''} ${ls.parts ? '📑' : ''}</div>
+                <div class="flex">
+                  <button class="btn btn-sm btn-outline" data-action="admin.editLesson" data-mid="${k}" data-idx="${idx}" style="padding:2px 6px;font-size:11px">✎</button>
+                  <button class="btn btn-sm btn-rouge" data-action="admin.delLesson" data-mid="${k}" data-idx="${idx}" style="padding:2px 6px;font-size:11px">✕</button>
+                </div>
+              </div>`).join('')}
+          </div>
+          <button class="btn btn-sm btn-or btn-block" data-action="admin.addLesson" data-mid="${k}">➕ Ajouter une leçon</button>
+        </div>`;
+      }).join('')}`;
+  },
+
+  newModule() {
+    Md.open(`<div class="modal-title">➕ Nouveau Module<button class="modal-close" data-action="modal.close">✕</button></div>
+      <div class="form-group"><label class="form-label">Titre du module *</label><input class="form-input" id="mod_title" placeholder="Ex: Maîtriser Midjourney"></div>
+      <div class="form-group"><label class="form-label">Objectif</label><textarea class="form-textarea" id="mod_obj" placeholder="But du module..."></textarea></div>
+      <button class="btn btn-vert btn-block" data-action="admin.saveNewModule">💾 Créer le module</button>`);
+  },
+
+  saveNewModule() {
+    const title = document.getElementById('mod_title').value.trim();
+    const obj = document.getElementById('mod_obj').value.trim();
+    if (!title) return To.show('⚠️ Titre requis', 'error');
+    const s = State.get();
+    const keys = Object.keys(s.modules).map(Number);
+    const newId = keys.length ? Math.max(...keys) + 1 : 1;
+    s.modules[newId] = { title, objectif: obj, lessons: [], exercice: "", revenu: "" };
+    State.save();
+    Md.close();
+    To.show('✅ Module créé', 'success');
+    this.renderCMS();
+  },
+
+  editModuleMeta(mid) {
+    const s = State.get();
+    const m = s.modules[mid];
+    if(!m) return;
+    Md.open(`<div class="modal-title">✎ Éditer Module ${mid}<button class="modal-close" data-action="modal.close">✕</button></div>
+      <div class="form-group"><label class="form-label">Titre *</label><input class="form-input" id="mod_title" value="${U.esc(m.title)}"></div>
+      <div class="form-group"><label class="form-label">Objectif</label><textarea class="form-textarea" id="mod_obj">${U.esc(m.objectif||'')}</textarea></div>
+      <div class="form-group"><label class="form-label">Exercice Pratique</label><textarea class="form-textarea" id="mod_exo">${U.esc(m.exercice||'')}</textarea></div>
+      <div class="form-group"><label class="form-label">Monétisation</label><input class="form-input" id="mod_rev" value="${U.esc(m.revenu||'')}"></div>
+      <button class="btn btn-vert btn-block" data-action="admin.saveModuleMeta" data-mid="${mid}">💾 Enregistrer</button>`);
+  },
+
+  saveModuleMeta(mid) {
+    const s = State.get();
+    const m = s.modules[mid];
+    if(!m) return;
+    m.title = document.getElementById('mod_title').value.trim() || m.title;
+    m.objectif = document.getElementById('mod_obj').value.trim();
+    m.exercice = document.getElementById('mod_exo').value.trim();
+    m.revenu = document.getElementById('mod_rev').value.trim();
+    State.save();
+    Md.close();
+    To.show('✅ Module mis à jour', 'success');
+    this.renderCMS();
+  },
+
+  delModule(mid) {
+    Dg.confirm(`Supprimer le module ${mid} et toutes ses leçons ?`, () => {
+      const s = State.get();
+      delete s.modules[mid];
+      State.save();
+      To.show('🗑️ Module supprimé', 'success');
+      this.renderCMS();
+    }, { danger: true, yes: 'Supprimer' });
+  },
+
+  _addPartRow(title = '', content = '', prompt = '') {
+    const c = document.getElementById('ls_parts');
+    if (!c) return;
+    const row = document.createElement('div');
+    row.className = 'ls-part-row';
+    row.innerHTML = `
+      <input class="form-input mb-8" placeholder="Titre sous-partie (ex: ① Introduction)" data-part="title" style="font-size:14px" value="${U.esc(title)}">
+      <textarea class="form-textarea mb-8" placeholder="Contenu de la sous-partie..." data-part="content" style="min-height:70px;font-size:14px">${U.esc(content)}</textarea>
+      <input class="form-input mb-8" placeholder="Prompt (optionnel)" data-part="prompt" style="font-size:13px" value="${U.esc(prompt)}">
+      <button type="button" class="btn btn-sm btn-rouge" onclick="this.closest('.ls-part-row').remove()">✕ Retirer</button>`;
+    c.appendChild(row);
+  },
+
+  addLesson(mid) {
+    Md.open(`<div class="modal-title">➕ Nouvelle leçon · Module ${mid}<button class="modal-close" data-action="modal.close">✕</button></div>
+      <div class="form-group"><label class="form-label">Titre de la leçon *</label><input class="form-input" id="ls_title" placeholder="Ex: Le secret des prompts"></div>
+      <div class="form-group"><label class="form-label">🎬 Lien vidéo (YouTube, Vimeo ou MP4)</label><input class="form-input" id="ls_video" placeholder="https://youtu.be/... ou https://...mp4"></div>
+      <div class="form-group"><label class="form-label">Contenu principal</label><textarea class="form-textarea" id="ls_content" placeholder="Texte principal (optionnel si sous-parties)" style="min-height:100px"></textarea></div>
+      <div class="form-group"><label class="form-label">Prompt à copier (optionnel)</label><textarea class="form-textarea" id="ls_prompt" placeholder="Bloc prompt monospace"></textarea></div>
+      <div class="form-group">
+        <label class="form-label">📑 Sous-parties</label>
+        <div id="ls_parts"></div>
+        <button type="button" class="btn btn-sm btn-outline btn-block mt-8" onclick="AdminUI._addPartRow()">➕ Ajouter une sous-partie</button>
+      </div>
+      <button class="btn btn-vert btn-block" data-action="admin.saveNewLesson" data-mid="${mid}">💾 Ajouter la leçon</button>`);
+  },
+
+  saveNewLesson(mid) {
+    const title = document.getElementById('ls_title').value.trim();
+    const video = document.getElementById('ls_video').value.trim();
+    const content = document.getElementById('ls_content').value.trim();
+    const prompt = document.getElementById('ls_prompt').value.trim();
+    if (!title) return To.show('⚠️ Titre requis', 'error');
+    const parts = Array.from(document.querySelectorAll('.ls-part-row')).map(r => ({
+      title: r.querySelector('[data-part="title"]').value.trim(),
+      content: r.querySelector('[data-part="content"]').value.trim(),
+      prompt: r.querySelector('[data-part="prompt"]').value.trim() || undefined
+    })).filter(p => p.title || p.content);
+    const s = State.get();
+    const m = s.modules[mid];
+    if (!m) return;
+    m.lessons.push({
+      h: title,
+      p: content || undefined,
+      prompt: prompt || undefined,
+      video: video || undefined,
+      parts: parts.length ? parts : undefined
+    });
+    State.save();
+    Md.close();
+    To.show('✅ Leçon ajoutée', 'success');
+    this.renderCMS();
+  },
+
+  editLesson(mid, idx) {
+    const s = State.get();
+    const m = s.modules[mid];
+    if(!m || !m.lessons[idx]) return;
+    const ls = m.lessons[idx];
+    Md.open(`<div class="modal-title">✎ Leçon ${Number(idx)+1}<button class="modal-close" data-action="modal.close">✕</button></div>
+      <div class="form-group"><label class="form-label">Titre *</label><input class="form-input" id="ls_title" value="${U.esc(ls.h)}"></div>
+      <div class="form-group"><label class="form-label">🎬 Vidéo</label><input class="form-input" id="ls_video" value="${U.esc(ls.video||'')}"></div>
+      <div class="form-group"><label class="form-label">Contenu principal</label><textarea class="form-textarea" id="ls_content" style="min-height:100px">${U.esc(ls.p||'')}</textarea></div>
+      <div class="form-group"><label class="form-label">Prompt</label><textarea class="form-textarea" id="ls_prompt">${U.esc(ls.prompt||'')}</textarea></div>
+      <div class="form-group">
+        <label class="form-label">📑 Sous-parties</label>
+        <div id="ls_parts"></div>
+        <button type="button" class="btn btn-sm btn-outline btn-block mt-8" onclick="AdminUI._addPartRow()">➕ Ajouter</button>
+      </div>
+      <button class="btn btn-vert btn-block" data-action="admin.saveLessonEdit" data-mid="${mid}" data-idx="${idx}">💾 Enregistrer</button>`);
+    (ls.parts || []).forEach(p => this._addPartRow(p.title, p.content, p.prompt));
+  },
+
+  saveLessonEdit(mid, idx) {
+    const s = State.get();
+    const m = s.modules[mid];
+    if(!m || !m.lessons[idx]) return;
+    const parts = Array.from(document.querySelectorAll('.ls-part-row')).map(r => ({
+      title: r.querySelector('[data-part="title"]').value.trim(),
+      content: r.querySelector('[data-part="content"]').value.trim(),
+      prompt: r.querySelector('[data-part="prompt"]').value.trim() || undefined
+    })).filter(p => p.title || p.content);
+    m.lessons[idx] = {
+      h: document.getElementById('ls_title').value.trim(),
+      p: document.getElementById('ls_content').value.trim() || undefined,
+      prompt: document.getElementById('ls_prompt').value.trim() || undefined,
+      video: document.getElementById('ls_video').value.trim() || undefined,
+      parts: parts.length ? parts : undefined
+    };
+    State.save();
+    Md.close();
+    To.show('✅ Leçon mise à jour', 'success');
+    this.renderCMS();
+  },
+
+  delLesson(mid, idx) {
+    Dg.confirm('Supprimer cette leçon ?', () => {
+      const s = State.get();
+      const m = s.modules[mid];
+      if(!m) return;
+      m.lessons.splice(idx, 1);
+      State.save();
+      this.renderCMS();
+    }, { danger: true, yes: 'Supprimer' });
+  },
+
+  renderSubmissions() {
+    const s = State.get();
+    const isOwner = State.isOwner();
+    const coach = State.currentCoAdmin();
+    const myModules = coach ? coach.moduleIds || [] : Object.keys(s.modules).map(Number);
+    let subs = [...s.submissions].sort((a, b) => new Date(b.date) - new Date(a.date));
+    if (!isOwner) subs = subs.filter(x => myModules.includes(x.moduleId));
+    document.getElementById('av-submissions').innerHTML = subs.length ? subs.map(x => {
+      const l = State.learner(x.learnerId);
+      return `<div class="submission ${x.status}">
+        <div class="s-head"><div><b>${U.esc(l?.name || '?')}</b><br><small class="text-muted">M${x.moduleId} · ${U.dateTime(x.date)}</small></div>
+        <span class="badge ${x.status === 'approved' ? 'badge-vert' : x.status === 'rejected' ? 'badge-rouge' : 'badge-or'}">${x.status}</span></div>
+        <div class="s-content">${U.esc(x.text)}</div>
+        ${x.feedback ? `<div class="s-feedback ${x.status==='approved'?'approved':''}">${U.esc(x.feedback)}</div>` : ''}
+        ${x.status === 'pending' ? `<div class="flex mt-12">
+          <button class="btn btn-vert btn-block btn-sm" data-action="admin.approveSub" data-id="${x.id}">✅ Approuver</button>
+          <button class="btn btn-rouge btn-block btn-sm" data-action="admin.rejectSub" data-id="${x.id}">✕ Refuser</button></div>` : ''}</div>`;
+    }).join('') : '<div class="empty"><div class="empty-icon">📝</div><p>Aucun rendu</p></div>';
+  },
+
+  approveSub(id) {
+    const s = State.get();
+    const x = s.submissions.find(v => v.id === id);
+    if (!x) return;
+    x.status = 'approved';
+    const l = State.learner(x.learnerId);
+    if (l) { l.exercises = l.exercises || {}; l.exercises[x.moduleId] = true; }
+    State.save();
+    To.show('✅ Validé', 'success');
+    this.renderSubmissions();
+  },
+
+  rejectSub(id) {
+    Dg.prompt('Motif du rejet :', (fb) => {
+      const s = State.get();
+      const x = s.submissions.find(v => v.id === id);
+      if (!x) return;
+      x.status = 'rejected';
+      x.feedback = fb;
+      State.save();
+      this.renderSubmissions();
+    }, { title: 'Rejeter' });
+  },
+
+  renderMessages() {
+    const s = State.get();
+    const learnersWithMsgs = s.learners.map(l => {
+      const msgs = s.messages.filter(m => m.learnerId === l.id);
+      const unread = msgs.filter(m => m.from === 'learner' && !m.read).length;
+      const last = msgs.length ? msgs[msgs.length - 1] : null;
+      return { learner: l, unread, last };
+    }).sort((a, b) => {
+      if (a.unread !== b.unread) return b.unread - a.unread;
+      return new Date(b.last?.date || 0) - new Date(a.last?.date || 0);
+    });
+    document.getElementById('av-messages').innerHTML = `
+      <div class="card"><div class="card-title">📢 Annonce à tous</div>
+        <div class="form-group"><textarea class="form-textarea" id="ann_text" placeholder="Écrire une annonce..." style="min-height:70px"></textarea></div>
+        <button class="btn btn-primary btn-block" data-action="admin.sendAnnouncement">📢 Envoyer</button>
+      </div>
+      <div class="card-title" style="margin-top:16px">💬 Conversations</div>
+      ${learnersWithMsgs.length ? learnersWithMsgs.map(({learner, unread, last}) => `
+        <div class="row" data-action="admin.openChat" data-id="${learner.id}">
+          ${U.avatar(learner)}
+          <div class="info"><b>${U.esc(learner.name)} ${unread ? `<span class="badge badge-rouge">${unread}</span>` : ''}</b>
+          <small>${last ? U.esc((last.from === 'admin' ? '👨‍💼 ' : '') + (last.text||'').substring(0,40)) : 'Aucun message'}</small></div>
+          <span style="color:var(--m)">›</span>
+        </div>`).join('') : '<div class="empty"><p>Aucun message</p></div>'}`;
+  },
+
+  sendAnnouncement() {
+    const txt = document.getElementById('ann_text').value.trim();
+    if (!txt) return To.show('⚠️ Message vide', 'error');
+    const s = State.get();
+    s.messages.push({
+      id: U.uid(), learnerId: null, from: 'admin',
+      text: txt, date: new Date().toISOString(), read: false
+    });
+    State.save();
+    To.show('📢 Annonce envoyée', 'success');
+    this.renderMessages();
+  },
+
+  openChat(id) {
+    this._currentChatId = id;
+    const s = State.get();
+    const l = State.learner(id);
+    if (!l) return;
+    const msgs = s.messages.filter(m => m.learnerId === id).sort((a, b) => new Date(a.date) - new Date(b.date));
+    s.messages.forEach(m => { if (m.learnerId === id && m.from === 'learner') m.read = true; });
+    State.save();
+    document.getElementById('av-chat').innerHTML = `
+      <button class="back-btn" data-action="admin.go" data-tab="messages">← Retour</button>
+      <div class="detail-header" style="display:flex;align-items:center;gap:12px">
+        ${U.avatar(l, 'width:48px;height:48px;font-size:20px')}
+        <div><h2 style="font-size:17px">${U.esc(l.name)}</h2><p>${U.esc(l.phone || '')}</p></div>
+      </div>
+      <div class="card list-box" id="adminChatList">
+        ${msgs.length ? msgs.map(m => `<div class="msg ${m.from === 'admin' ? 'msg-admin' : 'msg-learner'}">
+          <div class="msg-meta">${m.from === 'admin' ? '👨‍💼 Admin' : '🎓 ' + U.esc(l.name)} · ${U.dateTime(m.date)}</div>
+          <div class="msg-text">${U.esc(m.text)}</div></div>`).join('') : '<p class="text-muted">Aucun message</p>'}
+      </div>
+      <div class="msg-input-bar" style="bottom:0;position:sticky">
+        <input class="form-input" id="adminChatInput" placeholder="Répondre..." style="flex:1">
+        <button class="btn btn-primary" data-action="admin.sendChat">➤</button>
+      </div>`;
+    this.go('chat');
+    setTimeout(() => {
+      const list = document.getElementById('adminChatList');
+      if (list) list.scrollTop = list.scrollHeight;
+    }, 50);
+  },
+
+  sendChat() {
+    const id = this._currentChatId;
+    const l = State.learner(id);
+    if (!l) return;
+    const inp = document.getElementById('adminChatInput');
+    const txt = inp?.value.trim();
+    if (!txt) return;
+    const s = State.get();
+    s.messages.push({
+      id: U.uid(), learnerId: id, from: 'admin',
+      text: txt, date: new Date().toISOString(), read: false
+    });
+    State.save();
+    this.openChat(id);
+  },
+
+  commTab(tab) { this._commTab = tab; this.renderCommunity(); },
+
+  renderCommunity() {
+    const isFeed = this._commTab === 'feed';
+    document.getElementById('av-community').innerHTML = `
+      <div class="chip-row">
+        <div class="chip ${isFeed?'active':''}" data-action="admin.commTab" data-tab="feed">📰 Fil d'actualité</div>
+        <div class="chip ${!isFeed?'active':''}" data-action="admin.commTab" data-tab="market">🛒 Marketplace</div>
+      </div>
+      ${isFeed ? this._renderFeed() : this._renderMarket()}`;
+  },
+
+  _renderFeed() {
+    const s = State.get();
+    const posts = [...s.community].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const me = State.currentAdmin()?.name || 'Admin';
+    return `
+      <div class="card"><div class="card-title">📢 Publier</div>
+        <textarea class="form-textarea" id="comm_text" placeholder="Annonce, astuce, actualité..." style="min-height:70px"></textarea>
+        <button class="btn btn-primary btn-block mt-8" data-action="admin.sendCommunity">📤 Publier</button>
+      </div>
+      ${posts.length ? posts.map(m => {
+        const isLiked = (m.likes || []).includes(me);
+        return `<div class="post-card">
+          <div class="post-head">
+            <div class="post-author">
+              <div class="avatar" style="width:32px;height:32px;font-size:14px">${U.esc(m.name).charAt(0)}</div>
+              ${U.esc(m.name)}
+              ${m.from === 'coach' ? '<span class="badge badge-bleu" style="font-size:9px;margin-left:4px">COACH</span>' : ''}
+            </div>
+            <small class="text-muted">${U.dateTime(m.date)}</small>
+          </div>
+          <div class="post-content">${U.esc(m.text)}</div>
+          <div class="post-actions">
+            <button class="post-btn ${isLiked?'liked':''}" data-action="community.like" data-id="${m.id}" data-author="${U.esc(me)}">❤️ ${(m.likes||[]).length}</button>
+            <button class="post-btn" data-action="community.toggleReply" data-id="${m.id}">💬 ${(m.replies||[]).length}</button>
+            <button class="post-btn" data-action="admin.delCommunity" data-id="${m.id}" style="margin-left:auto;color:var(--r)">🗑️</button>
+          </div>
+          ${(m.replies && m.replies.length) ? `<div class="replies-box">
+            ${m.replies.map(r => `<div class="reply"><b>${U.esc(r.name)}</b> <small class="text-muted">${U.date(r.date)}</small><br>${U.esc(r.text)}</div>`).join('')}
+          </div>` : ''}
+          <div class="reply-input-box" id="reply_box_${m.id}" style="display:none">
+            <input type="text" id="reply_input_${m.id}" placeholder="Répondre...">
+            <button class="btn btn-sm btn-primary" data-action="community.reply" data-id="${m.id}" data-author="${U.esc(me)}">➤</button>
+          </div>
+        </div>`;
+      }).join('') : '<div class="empty"><div class="empty-icon">📰</div><p>Aucune publication</p></div>'}`;
+  },
+
+  _renderMarket() {
+    const s = State.get();
+    const items = [...s.marketplace].sort((a, b) => new Date(b.date) - new Date(a.date));
+    return `
+      <div class="info-box">🛒 Modération : validez ou rejetez les produits publiés par les apprenants.</div>
+      ${items.length ? items.map(p => {
+        const l = State.learner(p.sellerId);
+        return `<div class="card" style="border-left:4px solid ${p.approved ? 'var(--v)' : 'var(--o)'}">
+          <div style="display:flex;gap:10px;margin-bottom:8px">
+            ${p.image ? `<img src="${p.image}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;flex-shrink:0">` : `<div style="width:80px;height:80px;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0">📦</div>`}
+            <div style="flex:1;min-width:0">
+              <b style="color:var(--b);font-size:14px">${U.esc(p.title)}</b>
+              <div style="color:var(--o);font-weight:800;font-size:15px">${U.money(p.price)}</div>
+              <small class="text-muted">Par ${U.esc(l?.name || p.sellerName || '?')} · ${U.date(p.date)}</small>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--m);margin-bottom:10px">${U.esc(p.description || '')}</p>
+          <div class="flex">
+            ${!p.approved ? `<button class="btn btn-vert btn-sm btn-block" data-action="admin.approveMarket" data-id="${p.id}">✅ Valider</button>` : ''}
+            <button class="btn btn-rouge btn-sm btn-block" data-action="admin.delMarket" data-id="${p.id}">🗑️ ${p.approved ? 'Retirer' : 'Rejeter'}</button>
+          </div>
+        </div>`;
+      }).join('') : '<div class="empty"><div class="empty-icon">🛒</div><p>Aucun produit</p></div>'}`;
+  },
+
+  sendCommunity() {
+    const txt = document.getElementById('comm_text').value.trim();
+    if (!txt) return To.show('⚠️ Message vide', 'error');
+    const s = State.get();
+    s.community.push({
+      id: U.uid(), from: 'coach', learnerId: null,
+      name: State.currentAdmin()?.name || 'Coach',
+      text: txt, date: new Date().toISOString(),
+      likes: [], replies: []
+    });
+    State.save();
+    To.show('✅ Publié', 'success');
+    this.renderCommunity();
+  },
+
+  delCommunity(id) {
+    Dg.confirm('Supprimer cette publication ?', () => {
+      const s = State.get();
+      s.community = s.community.filter(c => c.id !== id);
+      State.save();
+      this.renderCommunity();
+    }, { danger: true, yes: 'Supprimer' });
+  },
+
+  approveMarket(id) {
+    const s = State.get();
+    const p = s.marketplace.find(x => x.id === id);
+    if (!p) return;
+    p.approved = true;
+    State.save();
+    To.show('✅ Produit validé', 'success');
+    this.renderCommunity();
+  },
+
+  delMarket(id) {
+    Dg.confirm('Supprimer ce produit ?', () => {
+      const s = State.get();
+      s.marketplace = s.marketplace.filter(x => x.id !== id);
+      State.save();
+      To.show('🗑️ Supprimé', 'success');
+      this.renderCommunity();
+    }, { danger: true, yes: 'Supprimer' });
+  },
+
+  renderPayments() {
+    const s = State.get();
+    if (!State.isOwner()) { document.getElementById('av-payments').innerHTML = '<div class="empty"><p>Réservé à l\'admin principal</p></div>'; return; }
+    const pending = s.learners.filter(l => l.accessStatus === 'payment_submitted' && l.paymentProof);
+    const pays = [...s.payments].sort((a, b) => new Date(b.date) - new Date(a.date));
+    document.getElementById('av-payments').innerHTML = `
+      <button class="btn btn-vert btn-block mb-12" data-action="admin.manualPayment">➕ Enregistrer un paiement manuel (Espèces)</button>
+      ${pending.length ? `<div class="card" style="border-left:4px solid var(--o);background:#fffbeb">
+        <div class="card-title">⏳ À valider (${pending.length})</div>
+        ${pending.map(l => { const p = l.paymentProof; return `<div style="background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid #fde68a">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px"><b>${U.esc(l.name)}</b><span class="badge badge-or">⏳</span></div>
+          <div style="font-size:13px;margin-bottom:10px">
+            <div><b>Montant :</b> ${U.money(p.amount || 0)}</div>
+            <div><b>Type :</b> ${p.type === 'pack' ? 'Pack Complet' : 'Module ' + p.moduleId}</div>
+            <div><b>Méthode :</b> ${U.esc(p.method || '—')}</div>
+            <div><b>Réf :</b> <code>${U.esc(p.ref || '—')}</code></div>
+          </div>
+          <div class="flex">
+            <button class="btn btn-vert btn-sm btn-block" data-action="admin.approvePayment" data-id="${l.id}">✅ Valider</button>
+            <button class="btn btn-rouge btn-sm btn-block" data-action="admin.rejectPayment" data-id="${l.id}">❌ Rejeter</button>
+          </div></div>`; }).join('')}</div>` : ''}
+      <div class="card"><div class="card-title">📊 Historique (${pays.length})</div>
+        ${pays.map(p => { const l = State.learner(p.learnerId); return `<div style="padding:10px 0;border-bottom:1px solid var(--br)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+            <b>${U.esc(l?.name || '?')}</b><b style="color:var(--v)">${U.money(p.amount)}</b></div>
+          <div class="text-muted" style="font-size:11px">${U.date(p.date)} · ${U.esc(p.type)} · ${U.esc(p.method)}</div>
+        </div>`; }).join('') || '<p class="text-muted">Aucun paiement</p>'}</div>`;
+  },
+
+  manualPayment() {
+    const s = State.get();
+    if (!s.learners.length) return To.show('Aucun apprenant', 'error');
+    Md.open(`<div class="modal-title">💰 Paiement Manuel<button class="modal-close" data-action="modal.close">✕</button></div>
+      <div class="form-group"><label class="form-label">Apprenant *</label>
+        <select class="form-select" id="mp_learner">
+          ${s.learners.map(l => `<option value="${l.id}">${U.esc(l.name)} (${U.money(l.amountPaid)})</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Type d'accès *</label>
+        <select class="form-select" id="mp_type">
+          <option value="pack">Pack Complet · ${U.money(s.settings.packPrice)}</option>
+          <option value="module">Module à l'unité · ${U.money(s.settings.modulePrice)}</option>
+        </select>
+      </div>
+      <div class="form-group" id="mp_module_box" style="display:none">
+        <label class="form-label">Numéro du module</label>
+        <select class="form-select" id="mp_mid">
+          ${Object.keys(s.modules).map(k => `<option value="${k}">Module ${k} - ${U.esc(s.modules[k].title)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Montant reçu (FCFA) *</label><input class="form-input" id="mp_amount" type="number" placeholder="Ex: 20000"></div>
+      <div class="form-group"><label class="form-label">Méthode</label>
+        <select class="form-select" id="mp_method">
+          <option value="Espèces">Espèces</option>
+          <option value="Orange Money">Orange Money</option>
+          <option value="MTN MoMo">MTN MoMo</option>
+        </select>
+      </div>
+      <button class="btn btn-vert btn-block" data-action="admin.saveManualPayment">💾 Enregistrer & Débloquer</button>`);
+    document.getElementById('mp_type').addEventListener('change', (e) => {
+      document.getElementById('mp_module_box').style.display = e.target.value === 'module' ? 'block' : 'none';
+    });
+  },
+
+  saveManualPayment() {
+    const lid = document.getElementById('mp_learner').value;
+    const type = document.getElementById('mp_type').value;
+    const mid = document.getElementById('mp_mid').value;
+    const amount = Number(document.getElementById('mp_amount').value);
+    const method = document.getElementById('mp_method').value;
+    if (!amount || amount <= 0) return To.show('⚠️ Montant invalide', 'error');
+    Access.approvePayment(lid, type, mid, method, amount);
+    To.show('✅ Paiement enregistré · Accès débloqué · Revenus mis à jour', 'success');
+    Md.close();
+    this.renderPayments();
+  },
+
+  approvePayment(id) {
+    const l = State.learner(id);
+    if (!l || !l.paymentProof) return;
+    const p = l.paymentProof;
+    Dg.confirm(`Valider ce paiement (${U.money(p.amount)}) ?`, () => {
+      Access.approvePayment(id, p.type, p.moduleId, p.method);
+      To.show('✅ Validé', 'success');
+      this.renderPayments();
+    }, { title: 'Valider', yes: 'Valider' });
+  },
+
+  rejectPayment(id) {
+    Dg.prompt('Motif du rejet :', (reason) => {
+      Access.rejectPayment(id, reason);
+      To.show('Rejeté', 'info');
+      this.renderPayments();
+    }, { title: 'Rejeter', yes: 'Rejeter' });
+  },
+
+  renderSettings() {
+    const s = State.get();
+    if (!State.isOwner()) { document.getElementById('av-settings').innerHTML = '<div class="empty"><p>Réservé à l\'admin principal</p></div>'; return; }
+    document.getElementById('av-settings').innerHTML = `
+      <div class="card"><div class="card-title">💰 Tarification</div>
+        <div class="form-group"><label class="form-label">Prix Pack Complet (FCFA)</label><input class="form-input" id="setPackPrice" type="number" value="${s.settings.packPrice}"></div>
+        <div class="form-group"><label class="form-label">Lien paiement Pack</label><input class="form-input" id="setPackUrl" value="${U.esc(s.settings.chariowPackUrl || '')}" placeholder="https://votre-lien-paiement"></div>
+        <div class="form-group"><label class="form-label">Prix Module (FCFA)</label><input class="form-input" id="setModulePrice" type="number" value="${s.settings.modulePrice}"></div>
+        <div class="form-group"><label class="form-label">Lien paiement Module</label><input class="form-input" id="setModuleUrl" value="${U.esc(s.settings.chariowModuleUrl || '')}" placeholder="https://votre-lien-paiement"></div>
+        <button class="btn btn-primary btn-block" data-action="admin.savePricing">💾 Enregistrer les tarifs</button></div>
+      <div class="card"><div class="card-title">🛒 Marketplace</div>
+        <div class="form-group"><label class="form-label" style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="setMarketAuto" ${s.settings.marketplaceAutoApprove ? 'checked' : ''} style="width:20px;height:20px">
+          <span>Publier automatiquement sans validation</span>
+        </label></div>
+        <button class="btn btn-primary btn-block" data-action="admin.saveMarketSettings">💾 Enregistrer</button></div>
+      <div class="card"><div class="card-title">👨‍🏫 Coach principal</div>
+        <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="setCoachName" value="${U.esc(s.settings.coachName)}"></div>
+        <div class="form-group"><label class="form-label">WhatsApp</label><input class="form-input" id="setCoachWA" value="${U.esc(s.settings.coachWhatsApp)}"></div>
+        <button class="btn btn-primary btn-block" data-action="admin.saveCoach">💾 Enregistrer</button></div>
+      <div class="card"><div class="card-title">🔐 Mot de passe Admin</div>
+        <div class="form-group"><input class="form-input" id="setPwd" type="password" placeholder="Nouveau mot de passe (6+ car, mixte)"></div>
+        <button class="btn btn-primary btn-block" data-action="admin.savePwd">💾 Mettre à jour</button></div>
+      <div class="card"><div class="card-title">👥 Co-Administrateurs</div>
+        <div class="info-box">Ajoutez des coachs qui gèrent certains modules uniquement.</div>
+        ${s.coAdmins.length ? s.coAdmins.map(c => `<div class="row" style="cursor:default">
+          <div class="avatar" style="background:var(--pp)">${(c.name||'?').charAt(0)}</div>
+          <div class="info"><b>${U.esc(c.name)}</b><small>Modules : ${(c.moduleIds||[]).join(', ') || 'Aucun'} ${c.active ? '· <span style="color:var(--v)">Actif</span>' : '· <span style="color:var(--r)">Inactif</span>'}</small></div>
+          <button class="btn btn-sm btn-outline" data-action="admin.editCoAdmin" data-id="${c.id}">✎</button>
+          <button class="btn btn-sm btn-rouge" data-action="admin.delCoAdmin" data-id="${c.id}">✕</button>
+        </div>`).join('') : '<p class="text-muted">Aucun co-admin</p>'}
+        <button class="btn btn-vert btn-block mt-8" data-action="admin.newCoAdmin">➕ Inviter un co-admin</button></div>
+      <div class="card"><div class="card-title">🔗 Réseaux sociaux</div>
+        <div class="form-group"><label class="form-label">WhatsApp Groupe</label><input class="form-input" id="setWaGroup" value="${U.esc(s.settings.whatsappGroup || '')}"></div>
+        <div class="form-group"><label class="form-label">WhatsApp Chaîne</label><input class="form-input" id="setWaChannel" value="${U.esc(s.settings.whatsappChannel || '')}"></div>
+        <div class="form-group"><label class="form-label">TikTok</label><input class="form-input" id="setTikTok" value="${U.esc(s.settings.tiktok || '')}"></div>
+        <div class="form-group"><label class="form-label">YouTube</label><input class="form-input" id="setYouTube" value="${U.esc(s.settings.youtube || '')}"></div>
+        <div class="form-group"><label class="form-label">Facebook</label><input class="form-input" id="setFacebook" value="${U.esc(s.settings.facebook || '')}"></div>
+        <div class="form-group"><label class="form-label">Instagram</label><input class="form-input" id="setInstagram" value="${U.esc(s.settings.instagram || '')}"></div>
+        <div class="form-group"><label class="form-label">Telegram</label><input class="form-input" id="setTelegram" value="${U.esc(s.settings.telegram || '')}"></div>
+        <button class="btn btn-primary btn-block" data-action="admin.saveSocial">💾 Enregistrer</button></div>
+      <div class="card"><div class="card-title">☁️ Synchronisation Cloud</div>
+        <div id="syncStatus" style="font-size:13px;padding:10px;background:var(--bg);border-radius:8px;margin-bottom:10px">🔄 Test en cours…</div>
+        <button class="btn btn-or btn-block" data-action="admin.forcePullCloud">⬇️ Récupérer du Cloud</button>
+        <button class="btn btn-vert btn-block mt-8" data-action="admin.forcePushCloud">⬆️ Envoyer vers le Cloud</button></div>`;
+    setTimeout(() => this.testSync(), 100);
+  },
+
+  async testSync() {
+    const el = document.getElementById('syncStatus');
+    if (!el) return;
+    if (!window.SupaSync) { el.textContent = '❌ Sync indisponible'; return; }
+    const r = await SupaSync.test();
+    el.innerHTML = r.msg;
+  },
+
+  async forcePullCloud() {
+    const remote = await St.loadFromCloud();
+    if (!remote) return To.show('⚠️ Rien à récupérer', 'error');
+    const d = State.get();
+    Object.keys(remote).forEach(k => { d[k] = remote[k]; });
+    State.save();
+    To.show('✅ Données récupérées', 'success');
+    setTimeout(() => location.reload(), 800);
+  },
+
+  async forcePushCloud() {
+    try {
+      await SupaSync.save(State.get());
+      To.show('✅ Envoyé au Cloud', 'success');
+    } catch { To.show('❌ Échec', 'error'); }
+  },
+
+  savePricing() {
+    const s = State.get();
+    s.settings.packPrice = Number(document.getElementById('setPackPrice').value) || 20000;
+    s.settings.chariowPackUrl = document.getElementById('setPackUrl').value.trim();
+    s.settings.modulePrice = Number(document.getElementById('setModulePrice').value) || 5000;
+    s.settings.chariowModuleUrl = document.getElementById('setModuleUrl').value.trim();
+    State.save();
+    To.show('✅ Tarifs enregistrés', 'success');
+  },
+
+  saveMarketSettings() {
+    const s = State.get();
+    s.settings.marketplaceAutoApprove = document.getElementById('setMarketAuto').checked;
+    State.save();
+    To.show('✅ Paramètres Marketplace enregistrés', 'success');
+  },
+
+  saveCoach() {
+    const s = State.get();
+    s.settings.coachName = document.getElementById('setCoachName').value.trim() || 'Coach';
+    s.settings.coachWhatsApp = document.getElementById('setCoachWA').value.trim();
+    State.save();
+    To.show('✅ Enregistré', 'success');
+  },
+
+  async savePwd() {
+    const pwd = document.getElementById('setPwd').value;
+    if (!pwd) return;
+    if (!Cr.isStrong(pwd)) return To.show('❌ 6+ car. mixte requis', 'error');
+    const s = State.get();
+    s.settings.masterPasswordHash = await Cr.hash(pwd);
+    State.save();
+    To.show('✅ Mot de passe mis à jour', 'success');
+  },
+
+  saveSocial() {
+    const s = State.get();
+    s.settings.whatsappGroup = document.getElementById('setWaGroup').value.trim();
+    s.settings.whatsappChannel = document.getElementById('setWaChannel').value.trim();
+    s.settings.tiktok = document.getElementById('setTikTok').value.trim();
+    s.settings.youtube = document.getElementById('setYouTube').value.trim();
+    s.settings.facebook = document.getElementById('setFacebook').value.trim();
+    s.settings.instagram = document.getElementById('setInstagram').value.trim();
+    s.settings.telegram = document.getElementById('setTelegram').value.trim();
+    State.save();
+    To.show('✅ Réseaux sociaux enregistrés', 'success');
+  },
+
+  newCoAdmin() {
+    Md.open(`<div class="modal-title">➕ Inviter un co-admin<button class="modal-close" data-action="modal.close">✕</button></div>
+      <div class="form-group"><label class="form-label">Nom *</label><input class="form-input" id="co_name" placeholder="Nom complet"></div>
+      <div class="form-group"><label class="form-label">WhatsApp</label><input class="form-input" id="co_phone" placeholder="+237..."></div>
+      <div class="form-group"><label class="form-label">Code PIN (4-6 chiffres) *</label><input class="form-input" id="co_pin" type="password" placeholder="Ex: 1234" maxlength="6"></div>
+      <div class="form-group"><label class="form-label">Modules autorisés</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          ${Object.keys(State.get().modules).map(k => `<label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" value="${k}" class="co-mod-check"> Module ${k}</label>`).join('')}
+        </div></div>
+      <button class="btn btn-vert btn-block" data-action="admin.saveNewCoAdmin">💾 Créer le co-admin</button>`);
+  },
+
+  async saveNewCoAdmin() {
+    const name = document.getElementById('co_name').value.trim();
+    const phone = document.getElementById('co_phone').value.trim();
+    const pin = document.getElementById('co_pin').value;
+    if (!name) return To.show('⚠️ Nom requis', 'error');
+    if (!Cr.isPin(pin)) return To.show('❌ PIN 4-6 chiffres requis', 'error');
+    const modules = Array.from(document.querySelectorAll('.co-mod-check:checked')).map(c => Number(c.value));
+    const s = State.get();
+    const hash = await Cr.hash(pin);
+    s.coAdmins.push({
+      id: U.uid(), name, phone, pinHash: hash,
+      moduleIds: modules, active: true,
+      dateCreated: new Date().toISOString()
+    });
+    State.save();
+    Md.close();
+    To.show('✅ Co-admin créé', 'success');
+    this.renderSettings();
+  },
+
+  editCoAdmin(id) {
+    const c = State.coAdmin(id);
+    if (!c) return;
+    Md.open(`<div class="modal-title">✎ Éditer co-admin<button class="modal-close" data-action="modal.close">✕</button></div>
+      <div class="form-group"><label class="form-label">Nom *</label><input class="form-input" id="co_name" value="${U.esc(c.name)}"></div>
+      <div class="form-group"><label class="form-label">WhatsApp</label><input class="form-input" id="co_phone" value="${U.esc(c.phone || '')}"></div>
+      <div class="form-group"><label class="form-label">Nouveau PIN (vide = inchangé)</label><input class="form-input" id="co_pin" type="password" maxlength="6" placeholder="••••"></div>
+      <div class="form-group"><label class="form-label">Statut</label>
+        <select class="form-select" id="co_active">
+          <option value="1" ${c.active ? 'selected' : ''}>Actif</option>
+          <option value="0" ${!c.active ? 'selected' : ''}>Inactif</option>
+        </select></div>
+      <div class="form-group"><label class="form-label">Modules autorisés</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          ${Object.keys(State.get().modules).map(k => `<label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" value="${k}" class="co-mod-check" ${(c.moduleIds||[]).includes(Number(k)) ? 'checked' : ''}> Module ${k}</label>`).join('')}
+        </div></div>
+      <button class="btn btn-vert btn-block" data-action="admin.saveCoAdminEdit" data-id="${id}">💾 Enregistrer</button>`);
+  },
+
+  async saveCoAdminEdit(id) {
+    const c = State.coAdmin(id);
+    if (!c) return;
+    const name = document.getElementById('co_name').value.trim();
+    const phone = document.getElementById('co_phone').value.trim();
+    const pin = document.getElementById('co_pin').value;
+    const active = document.getElementById('co_active').value === '1';
+    const modules = Array.from(document.querySelectorAll('.co-mod-check:checked')).map(x => Number(x.value));
+    if (!name) return To.show('⚠️ Nom requis', 'error');
+    c.name = name;
+    c.phone = phone;
+    c.active = active;
+    c.moduleIds = modules;
+    if (pin) {
+      if (!Cr.isPin(pin)) return To.show('❌ PIN invalide', 'error');
+      c.pinHash = await Cr.hash(pin);
+    }
+    State.save();
+    Md.close();
+    To.show('✅ Co-admin mis à jour', 'success');
+    this.renderSettings();
+  },
+
+  delCoAdmin(id) {
+    Dg.confirm('Supprimer ce co-admin ?', () => {
+      const s = State.get();
+      s.coAdmins = s.coAdmins.filter(c => c.id !== id);
+      State.save();
+      To.show('🗑️ Supprimé', 'success');
+      this.renderSettings();
+    }, { danger: true, yes: 'Supprimer' });
+  }
+};
+
+const LearnerUI = {
+  currentTab: 'home',
+  _commTab: 'feed',
+
+  open() {
+    const l = State.currentLearner();
+    if (!l) return Auth.logout();
+    document.body.classList.add('learner-mode');
+    document.getElementById('learnerWho').textContent = l.name;
+    Router.go('s-learner');
+    this.go('home');
+    this._refreshWaFab();
+    Nw.refresh();
+  },
+
+  go(tab) {
+    this.currentTab = tab;
+    document.querySelectorAll('#s-learner .view').forEach(v => v.classList.remove('active'));
+    const v = document.getElementById('lv-' + tab);
+    if (v) v.classList.add('active');
+    document.querySelectorAll('#s-learner .nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('#s-learner .nav-item').forEach(n => { if (n.dataset.tab === tab) n.classList.add('active'); });
+    window.scrollTo(0, 0);
+    this.render(tab);
+    this.updateBadges();
+  },
+
+  showTab(tab) {
+    document.querySelectorAll('#s-learner .view').forEach(v => v.classList.remove('active'));
+    const v = document.getElementById('lv-' + tab);
+    if (v) v.classList.add('active');
+    window.scrollTo(0, 0);
+  },
+
+  updateBadges() {
+    const l = State.currentLearner();
+    if (!l) return;
+    const s = State.get();
+    const unread = s.messages.filter(m => m.from === 'admin' && (m.learnerId === l.id || m.learnerId === null) && !m.read).length;
+    const b = document.getElementById('learnerBadgeMsg');
+    if (b) { b.textContent = unread; b.style.display = unread > 0 ? 'block' : 'none'; }
+  },
+
+  render(tab) {
+    const r = {
+      home: () => this.renderHome(),
+      modules: () => this.renderModules(),
+      submissions: () => this.renderSubmissions(),
+      messages: () => this.renderMessages(),
+      community: () => this.renderCommunity(),
+      attestation: () => this.renderAttestation(),
+      profile: () => this.renderProfile()
+    };
+    try { r[tab]?.(); } catch (e) { console.error('learner render', tab, e); }
+  },
+
+  _refreshWaFab() {
+    const fab = document.getElementById('waFab');
+    if (!fab) return;
+    const s = State.get();
+    const l = State.currentLearner();
+    const wa = s.settings.coachWhatsApp;
+    if (!wa || !l) { fab.style.display = 'none'; return; }
+    const msg = encodeURIComponent(`Bonjour Coach, je suis ${l.name} (${l.phone || ''}). J'ai besoin d'aide sur IA MASTER.`);
+    fab.href = `https://wa.me/${wa.replace(/[^0-9]/g,'')}?text=${msg}`;
+    fab.style.display = 'flex';
+  },
+
+  renderHome() {
+    if (State.get().currentUser?.role !== 'learner') return Auth.logout();
+    const l = State.currentLearner();
+    const s = State.get();
+    const stats = MyData.stats();
+    if (!stats) return;
+    const isActive = Access.isActive(l);
+    const moduleKeys = Object.keys(s.modules).map(Number).sort((a,b)=>a-b);
+    const pct = stats.modulesTotal ? Math.round((stats.modulesDone / stats.modulesTotal) * 100) : 0;
+    document.getElementById('lv-home').innerHTML = `
+      <div class="stats">
+        <div class="stat hl"><div class="stat-label">Progression</div><div class="stat-value">${pct}%</div></div>
+        <div class="stat"><div class="stat-label">Modules</div><div class="stat-value">${stats.modulesDone}/${stats.modulesTotal}</div></div>
+        <div class="stat"><div class="stat-label">Série 🔥</div><div class="stat-value">${stats.streak} j</div></div>
+        <div class="stat"><div class="stat-label">Accès</div><div class="stat-value" style="font-size:14px">${l.hasFullAccess ? '✅ Pack' : isActive ? '🔓 ' + (l.unlockedModules?.length || 0) + ' mod.' : '🔒 Gratuit'}</div></div>
+      </div>
+      ${!isActive ? `<div class="card" style="border-left:4px solid var(--o);background:#fffbeb">
+        <div class="card-title">🔓 Débloquer mes modules</div>
+        <p style="font-size:13px;margin-bottom:12px">Choisissez votre formule pour accéder à tous les contenus :</p>
+        <button class="btn btn-or btn-block mb-8" data-action="learner.buyPack">💰 Pack Complet · ${U.money(s.settings.packPrice)}</button>
+        <button class="btn btn-outline btn-block" data-action="learner.buyModule" data-mid="${moduleKeys[0]||1}">📚 Module à l'unité · ${U.money(s.settings.modulePrice)}</button>
+      </div>` : ''}
+      <div class="card"><div class="card-title">📊 Ma progression</div>
+        <div class="progress-bar"><div class="fill" style="width:${pct}%"></div></div>
+        <p class="text-muted mt-8">${stats.modulesDone} module(s) terminé(s)</p>
+      </div>
+      <div class="card"><div class="card-title">🎯 Prochaines étapes</div>
+        ${moduleKeys.slice(0, 3).map(k => {
+          const unlocked = Access.isModuleUnlocked(l, k);
+          const isDone = l.exercises?.[k];
+          return `<div class="row" data-action="learner.openModule" data-mid="${k}" style="opacity:${unlocked ? 1 : 0.6}">
+            <div class="avatar" style="background:${isDone ? 'var(--v)' : unlocked ? 'var(--b)' : 'var(--m)'}">${isDone ? '✓' : unlocked ? k : '🔒'}</div>
+            <div class="info"><b>Module ${k} · ${U.esc(s.modules[k].title)}</b><small>${isDone ? 'Terminé' : unlocked ? 'À découvrir' : 'Débloquer'}</small></div>
+            <span style="color:var(--m)">›</span>
+          </div>`;
+        }).join('')}
+      </div>
+      ${s.settings.whatsappGroup ? `<div class="card"><div class="card-title">🔗 Rejoindre la communauté</div>
+        <a href="${U.esc(s.settings.whatsappGroup)}" target="_blank" class="btn btn-vert btn-block" style="text-decoration:none">💬 Groupe WhatsApp</a>
+      </div>` : ''}`;
+  },
+
+  renderModules() {
+    const l = State.currentLearner();
+    const s = State.get();
+    const moduleKeys = Object.keys(s.modules).map(Number).sort((a,b)=>a-b);
+    document.getElementById('lv-modules').innerHTML = moduleKeys.map(k => {
+      const m = s.modules[k];
+      const unlocked = Access.isModuleUnlocked(l, k);
+      const isDone = l.exercises?.[k];
+      const hasQuiz = (s.quizzes[k] || []).length > 0;
+      const score = s.quizScores[l.id]?.[k];
+      return `<div class="mod-card ${isDone ? 'done' : ''} ${!unlocked ? 'locked' : ''}" data-action="learner.openModule" data-mid="${k}">
+        <div class="num">${isDone ? '✓' : !unlocked ? '🔒' : k}</div>
+        <div style="flex:1">
+          <h3>${U.esc(m.title)}</h3>
+          <small>${m.lessons.length} leçons ${hasQuiz ? ' · Quiz' : ''} ${score ? `· Score ${score.score}/${score.total}` : ''}</small>
+        </div>
+      </div>`;
+    }).join('');
+  },
+
+  openModule(mid) {
+    const l = State.currentLearner();
+    const s = State.get();
+    const m = s.modules[mid];
+    if (!m) return;
+    const unlocked = Access.isModuleUnlocked(l, mid);
+    const isDone = l.exercises?.[mid];
+    const hasQuiz = (s.quizzes[mid] || []).length > 0;
+    document.getElementById('lv-module-detail').innerHTML = `
+      <button class="back-btn" data-action="learner.go" data-tab="modules">← Retour aux modules</button>
+      <div class="detail-header"><h2>Module ${mid} · ${U.esc(m.title)}</h2><p>${U.esc(m.objectif || '')}</p></div>
+      ${!unlocked ? `<div class="warning-box">🔒 Ce module est verrouillé.<br><button class="btn btn-or btn-sm" style="margin-top:8px" data-action="learner.buyModule" data-mid="${mid}">Débloquer · ${U.money(s.settings.modulePrice)}</button></div>` : ''}
+      ${m.lessons.map((ls, idx) => {
+        const partsHtml = (ls.parts && ls.parts.length) ? ls.parts.map((p, i) => `
+          <div style="background:var(--bg);border-radius:10px;padding:12px;margin:8px 0;border-left:3px solid var(--b2)">
+            <b style="color:var(--b2);font-size:13px;display:block;margin-bottom:4px">${U.esc(p.title || 'Sous-partie ' + (i+1))}</b>
+            <p style="font-size:14px;line-height:1.6;white-space:pre-line">${U.esc(p.content || '')}</p>
+            ${p.prompt ? `<div class="prompt-box" style="margin-top:8px">${U.esc(p.prompt)}</div>` : ''}
+          </div>`).join('') : '';
+        return `<div class="lesson">
+          <h4>Leçon ${idx+1} : ${U.esc(ls.h)}</h4>
+          ${U.video(ls.video)}
+          ${ls.p ? `<p>${U.esc(ls.p)}</p>` : ''}
+          ${ls.prompt ? `<div class="prompt-box">${U.esc(ls.prompt)}</div>` : ''}
+          ${partsHtml}
+        </div>`;
+      }).join('')}
+      ${m.exercice ? `<div class="exercise-box"><b>🎯 Exercice Pratique</b>${U.esc(m.exercice)}</div>` : ''}
+      ${m.revenu ? `<div class="revenu-box">💰 ${U.esc(m.revenu)}</div>` : ''}
+      ${unlocked && !isDone ? `<button class="btn btn-vert btn-block mt-12" data-action="learner.submitExercise" data-mid="${mid}">📤 Soumettre mon exercice</button>` : ''}
+      ${isDone ? `<div class="info-box mt-12">✅ Module terminé !</div>` : ''}
+      ${hasQuiz && unlocked ? `<button class="btn btn-or btn-block mt-8" data-action="quiz.start" data-module="${mid}">📝 Faire le Quiz</button>` : ''}`;
+    this.showTab('module-detail');
+  },
+
+  submitExercise(mid) {
+    Dg.prompt('Décrivez votre travail (liens, captures, texte...) :', (txt) => {
+      if (!txt) return To.show('⚠️ Vide', 'error');
+      const s = State.get();
+      const l = State.currentLearner();
+      s.submissions.push({
+        id: U.uid(), learnerId: l.id, moduleId: Number(mid),
+        text: txt, status: 'pending', date: new Date().toISOString()
+      });
+      State.save();
+      To.show('✅ Soumis au coach', 'success');
+      this.openModule(mid);
+    }, { title: 'Soumettre', yes: 'Envoyer' });
+  },
+
+  renderSubmissions() {
+    const l = State.currentLearner();
+    const s = State.get();
+    const mySubs = s.submissions.filter(x => x.learnerId === l.id).sort((a,b) => new Date(b.date) - new Date(a.date));
+    document.getElementById('lv-submissions').innerHTML = mySubs.length ? mySubs.map(x => `
+      <div class="submission ${x.status}">
+        <div class="s-head">
+          <div><b>Module ${x.moduleId}</b><br><small class="text-muted">${U.dateTime(x.date)}</small></div>
+          <span class="badge ${x.status === 'approved' ? 'badge-vert' : x.status === 'rejected' ? 'badge-rouge' : 'badge-or'}">${x.status === 'approved' ? '✅ Validé' : x.status === 'rejected' ? '❌ Rejeté' : '⏳ En attente'}</span>
+        </div>
+        <div class="s-content">${U.esc(x.text)}</div>
+        ${x.feedback ? `<div class="s-feedback ${x.status==='approved'?'approved':''}">${U.esc(x.feedback)}</div>` : ''}
+      </div>`).join('') : '<div class="empty"><div class="empty-icon">📝</div><p>Aucun rendu pour l\'instant</p></div>';
+  },
+
+  renderMessages() {
+    const l = State.currentLearner();
+    const s = State.get();
+    const msgs = s.messages.filter(m =>
+      (m.learnerId === l.id && (m.from === 'admin' || m.from === 'learner')) ||
+      (m.learnerId === null && m.from === 'admin')
+    ).sort((a,b) => new Date(a.date) - new Date(b.date));
+    s.messages.forEach(m => {
+      if (m.from === 'admin' && (m.learnerId === l.id || m.learnerId === null)) m.read = true;
+    });
+    State.save();
+    document.getElementById('lv-messages').innerHTML = `
+      <div class="card list-box" id="learnerChatList">
+        ${msgs.length ? msgs.map(m => {
+          const isAnn = m.learnerId === null;
+          const cls = isAnn ? 'msg-announcement' : (m.from === 'admin' ? 'msg-admin' : 'msg-learner');
+          return `<div class="msg ${cls}">
+            <div class="msg-meta">${isAnn ? '📢 Annonce' : m.from === 'admin' ? '👨‍💼 Coach' : '🎓 Moi'} · ${U.dateTime(m.date)}</div>
+            <div class="msg-text">${U.esc(m.text)}</div>
+          </div>`;
+        }).join('') : '<p class="text-muted">Aucun message</p>'}
+      </div>
+      <div class="msg-input-bar" style="position:sticky;bottom:0">
+        <input class="form-input" id="learnerChatInput" placeholder="Message au coach..." style="flex:1">
+        <button class="btn btn-primary" data-action="learner.sendMessage">➤</button>
+      </div>`;
+  },
+
+  sendMessage() {
+    const l = State.currentLearner();
+    const inp = document.getElementById('learnerChatInput');
+    const txt = inp?.value.trim();
+    if (!txt) return;
+    const s = State.get();
+    s.messages.push({
+      id: U.uid(), learnerId: l.id, from: 'learner',
+      text: txt, date: new Date().toISOString(), read: false
+    });
+    State.save();
+    this.renderMessages();
+  },
+
+  commTab(tab) { this._commTab = tab; this.renderCommunity(); },
+
+  renderCommunity() {
+    const isFeed = this._commTab === 'feed';
+    document.getElementById('lv-community').innerHTML = `
+      <div class="chip-row">
+        <div class="chip ${isFeed?'active':''}" data-action="learner.commTab" data-tab="feed">📰 Fil</div>
+        <div class="chip ${!isFeed?'active':''}" data-action="learner.commTab" data-tab="market">🛒 Marketplace</div>
+      </div>
+      ${isFeed ? this._renderLearnerFeed() : this._renderLearnerMarket()}`;
+  },
+
+  _renderLearnerFeed() {
+    const s = State.get();
+    const l = State.currentLearner();
+    const posts = [...s.community].sort((a,b) => new Date(b.date) - new Date(a.date));
+    return posts.length ? posts.map(m => {
+      const isLiked = (m.likes || []).includes(l.name);
+      return `<div class="post-card">
+        <div class="post-head">
+          <div class="post-author">
+            <div class="avatar" style="width:32px;height:32px;font-size:14px">${U.esc(m.name).charAt(0)}</div>
+            ${U.esc(m.name)}
+            ${m.from === 'coach' ? '<span class="badge badge-bleu" style="font-size:9px;margin-left:4px">COACH</span>' : ''}
+          </div>
+          <small class="text-muted">${U.dateTime(m.date)}</small>
+        </div>
+        <div class="post-content">${U.esc(m.text)}</div>
+        <div class="post-actions">
+          <button class="post-btn ${isLiked?'liked':''}" data-action="community.like" data-id="${m.id}" data-author="${U.esc(l.name)}">❤️ ${(m.likes||[]).length}</button>
+          <button class="post-btn" data-action="community.toggleReply" data-id="${m.id}">💬 ${(m.replies||[]).length}</button>
+        </div>
+        ${(m.replies && m.replies.length) ? `<div class="replies-box">
+          ${m.replies.map(r => `<div class="reply"><b>${U.esc(r.name)}</b> <small class="text-muted">${U.date(r.date)}</small><br>${U.esc(r.text)}</div>`).join('')}
+        </div>` : ''}
+        <div class="reply-input-box" id="reply_box_${m.id}" style="display:none">
+          <input type="text" id="reply_input_${m.id}" placeholder="Répondre...">
+          <button class="btn btn-sm btn-primary" data-action="community.reply" data-id="${m.id}" data-author="${U.esc(l.name)}">➤</button>
+        </div>
+      </div>`;
+    }).join('') : '<div class="empty"><div class="empty-icon">🌍</div><p>Aucune publication</p></div>';
+  },
+
+  _renderLearnerMarket() {
+    const s = State.get();
+    const l = State.currentLearner();
+    const items = s.marketplace.filter(p => p.approved || p.sellerId === l.id)
+      .sort((a,b) => new Date(b.date) - new Date(a.date));
+    return `
+      <button class="btn btn-or btn-block mb-12" data-action="learner.newProduct">➕ Vendre un produit/service</button>
+      ${items.length ? items.map(p => {
+        const isMine = p.sellerId === l.id;
+        return `<div class="post-card" style="border-left:4px solid ${p.approved ? 'var(--v)' : 'var(--o)'}">
+          <div style="display:flex;gap:10px;margin-bottom:8px">
+            ${p.image ? `<img src="${p.image}" style="width:90px;height:90px;object-fit:cover;border-radius:8px;flex-shrink:0">` : `<div style="width:90px;height:90px;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0">📦</div>`}
+            <div style="flex:1;min-width:0">
+              <b style="color:var(--b);font-size:15px">${U.esc(p.title)}</b>
+              <div style="color:var(--o);font-weight:800;font-size:17px;margin:2px 0">${U.money(p.price)}</div>
+              <small class="text-muted">${isMine ? '👤 Votre annonce' : 'Vendeur : ' + U.esc(p.sellerName || '?')} · ${U.date(p.date)}</small>
+              ${!p.approved ? '<div class="badge badge-or" style="margin-top:4px">⏳ En attente</div>' : ''}
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--m);margin-bottom:10px;white-space:pre-wrap">${U.esc(p.description || '')}</p>
+          <div class="flex">
+            ${p.whatsapp ? `<a href="https://wa.me/${p.whatsapp.replace(/[^0-9]/g,'')}?text=${encodeURIComponent('Bonjour, je suis intéressé par : ' + p.title)}" target="_blank" class="btn btn-vert btn-sm btn-block" style="text-decoration:none">💬 Contacter</a>` : ''}
+            ${isMine ? `<button class="btn btn-rouge btn-sm" data-action="learner.delMyProduct" data-id="${p.id}">🗑️</button>` : ''}
+          </div>
+        </div>`;
+      }).join('') : '<div class="empty"><div class="empty-icon">🛒</div><p>Aucun produit. Soyez le premier !</p></div>'}`;
+  },
+
+  newProduct() {
+    const s = State.get();
+    const l = State.currentLearner();
+    Md.open(`<div class="modal-title">🛒 Nouveau produit<button class="modal-close" data-action="modal.close">✕</button></div>
+      <div class="form-group"><label class="form-label">Titre *</label><input class="form-input" id="mp_title" placeholder="Ex: 30 prompts marketing"></div>
+      <div class="form-group"><label class="form-label">Description *</label><textarea class="form-textarea" id="mp_desc" placeholder="Détails du produit..." style="min-height:80px"></textarea></div>
+      <div class="form-group"><label class="form-label">Prix (FCFA) *</label><input class="form-input" id="mp_price" type="number" placeholder="5000"></div>
+      <div class="form-group"><label class="form-label">WhatsApp de contact</label><input class="form-input" id="mp_wa" value="${U.esc(l.phone || '')}" placeholder="+237..."></div>
+      <div class="form-group"><label class="form-label">Photo (optionnel)</label><input class="form-input" id="mp_img" type="file" accept="image/*"></div>
+      <button class="btn btn-vert btn-block" data-action="learner.saveProduct">📤 Publier</button>
+      ${s.settings.marketplaceAutoApprove ? '' : '<p class="text-muted mt-8" style="font-size:11px;text-align:center">⏳ Votre produit sera visible après validation du coach.</p>'}`);
+  },
+
+  saveProduct() {
+    const title = document.getElementById('mp_title').value.trim();
+    const desc = document.getElementById('mp_desc').value.trim();
+    const price = Number(document.getElementById('mp_price').value);
+    const wa = document.getElementById('mp_wa').value.trim();
+    const file = document.getElementById('mp_img').files[0];
+    if (!title || !price) return To.show('⚠️ Titre et prix requis', 'error');
+    const s = State.get();
+    const l = State.currentLearner();
+    const finalize = (imgData) => {
+      s.marketplace.push({
+        id: U.uid(), sellerId: l.id, sellerName: l.name,
+        title, description: desc, price, whatsapp: wa,
+        image: imgData || null,
+        date: new Date().toISOString(),
+        approved: !!s.settings.marketplaceAutoApprove
+      });
+      State.save();
+      Md.close();
+      To.show(s.settings.marketplaceAutoApprove ? '✅ Publié' : '⏳ En attente de validation', 'success');
+      this.renderCommunity();
+    };
+    if (!file) return finalize(null);
+    if (file.size > 2 * 1024 * 1024) return To.show('⚠️ Image > 2 Mo', 'error');
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX = 400;
+        let w = img.width, h = img.height;
+        if (w > h) { if (w > MAX) { h = h * MAX / w; w = MAX; } }
+        else { if (h > MAX) { w = w * MAX / h; h = MAX; } }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        finalize(canvas.toDataURL('image/jpeg', 0.7));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  },
+
+  delMyProduct(id) {
+    Dg.confirm('Supprimer votre annonce ?', () => {
+      const s = State.get();
+      s.marketplace = s.marketplace.filter(x => x.id !== id);
+      State.save();
+      To.show('🗑️ Supprimé', 'success');
+      this.renderCommunity();
+    }, { danger: true, yes: 'Supprimer' });
+  },
+
+  renderAttestation() {
+    const l = State.currentLearner();
+    const s = State.get();
+    const moduleKeys = Object.keys(s.modules).map(Number);
+    const done = moduleKeys.filter(k => l.exercises?.[k]).length;
+    const allDone = done === moduleKeys.length && moduleKeys.length > 0;
+    document.getElementById('lv-attestation').innerHTML = `
+      <div class="card">
+        <div class="card-title">🎓 Attestation</div>
+        ${allDone ? `
+          <div class="info-box">✅ Félicitations ! Vous avez terminé tous les modules.</div>
+          <button class="btn btn-or btn-block" data-action="learner.downloadAttestation">📄 Télécharger mon attestation</button>
+        ` : `
+          <p style="font-size:14px;margin-bottom:12px">Terminez tous les modules pour débloquer votre attestation.</p>
+          <div class="progress-bar"><div class="fill" style="width:${Math.round((done/moduleKeys.length)*100)}%"></div></div>
+          <p class="text-muted mt-8">${done}/${moduleKeys.length} modules terminés</p>
+        `}
+      </div>`;
+  },
+
+  downloadAttestation() {
+    const l = State.currentLearner();
+    const s = State.get();
+    const content = `IA MASTER ACADEMY\n=================\n\nATTESTATION DE RÉUSSITE\n\nNom : ${l.name}\nTéléphone : ${l.phone}\nDate de début : ${U.date(l.dateStart)}\nDate de fin : ${U.date(new Date().toISOString())}\n\nCe certifie que ${l.name} a complété avec succès\nle programme IA MASTER ACADEMY (10 modules).\n\nCompétences : Prompts, Design Canva, Photo IA, Vidéo CapCut, Musique Suno, TikTok, YouTube, PDF digital, Clients & Prix.\n\n_________________________\nCoach IA MASTER\n${s.settings.coachName || ''}`.trim();
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Attestation_${l.name.replace(/\s+/g, '_')}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    To.show('📄 Attestation téléchargée', 'success');
+  },
+
+  renderProfile() {
+    if (State.get().currentUser?.role !== 'learner') return Auth.logout();
+    const l = State.currentLearner();
+    const s = State.get();
+    const stats = MyData.stats();
+    document.getElementById('lv-profile').innerHTML = `
+      <div class="card">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:16px">
+          <div style="position:relative">
+            ${U.avatar(l, 'width:80px;height:80px;font-size:32px')}
+            <label style="position:absolute;bottom:-4px;right:-4px;background:var(--o);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;border:2px solid #fff">
+              📷
+              <input type="file" accept="image/*" data-input="learner-photo" style="display:none">
+            </label>
+          </div>
+          <div style="text-align:center"><b style="font-size:16px">${U.esc(l.name)}</b><br><small class="text-muted">${U.esc(l.phone || '')}</small></div>
+        </div>
+        <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="prof_name" value="${U.esc(l.name)}"></div>
+        <div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="prof_phone" value="${U.esc(l.phone || '')}"></div>
+        <button class="btn btn-primary btn-block" data-action="learner.saveProfile">💾 Enregistrer</button>
+      </div>
+      <div class="card"><div class="card-title">🔒 Sécurité</div>
+        <div class="form-group"><label class="form-label">Nouveau mot de passe</label><input class="form-input" id="prof_pwd" type="password" placeholder="6+ car, mixte"></div>
+        <button class="btn btn-outline btn-block" data-action="learner.changePassword">Changer</button>
+      </div>
+      <div class="card"><div class="card-title">📊 Mes stats</div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0"><span>Modules terminés</span><b>${stats.modulesDone}/${stats.modulesTotal}</b></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0"><span>Total payé</span><b>${U.money(stats.amountPaid)}</b></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0"><span>Série</span><b>${stats.streak} 🔥</b></div>
+      </div>
+      <div class="card"><div class="card-title">☎️ Besoin d'aide ?</div>
+        ${s.settings.coachWhatsApp ? `<a href="https://wa.me/${s.settings.coachWhatsApp.replace(/[^0-9]/g,'')}?text=${encodeURIComponent('Bonjour Coach, je suis ' + l.name + ' et j\\'ai besoin d\\'aide sur IA MASTER.')}" target="_blank" class="btn btn-vert btn-block" style="text-decoration:none">💬 Contacter le coach</a>` : '<p class="text-muted">Coach non configuré</p>'}
+      </div>`;
+  },
+
+  async saveProfile() {
+    const l = State.currentLearner();
+    const name = document.getElementById('prof_name').value.trim();
+    const phone = document.getElementById('prof_phone').value.trim();
+    if (!name) return To.show('⚠️ Nom requis', 'error');
+    l.name = name;
+    l.phone = phone;
+    State.save();
+    To.show('✅ Profil mis à jour', 'success');
+    document.getElementById('learnerWho').textContent = name;
+    this._refreshWaFab();
+  },
+
+  async changePassword() {
+    const l = State.currentLearner();
+    const pwd = document.getElementById('prof_pwd').value;
+    if (!Cr.isStrong(pwd)) return To.show('❌ 6+ car. mixte', 'error');
+    l.passwordHash = await Cr.hash(pwd);
+    State.save();
+    document.getElementById('prof_pwd').value = '';
+    To.show('✅ Mot de passe changé', 'success');
+  },
+
+  buyPack() {
+    const s = State.get();
+    if (s.settings.chariowPackUrl) return Pay.open('pack');
+    const l = State.currentLearner();
+    Dg.confirm(`Contactez le coach pour payer ${U.money(s.settings.packPrice)} et débloquer le pack complet.\n\nWhatsApp : ${s.settings.coachWhatsApp || 'non configuré'}`, () => {
+      if (s.settings.coachWhatsApp) {
+        window.open(`https://wa.me/${s.settings.coachWhatsApp.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(`Bonjour, je suis ${l.name}. Je veux acheter le Pack Complet IA MASTER (${U.money(s.settings.packPrice)}).`)}`, '_blank');
+      }
+    }, { title: 'Contact Coach', yes: 'Ouvrir WhatsApp' });
+  },
+
+  buyModule(mid) {
+    const s = State.get();
+    if (s.settings.chariowModuleUrl) return Pay.open('module', mid);
+    const l = State.currentLearner();
+    Dg.confirm(`Contactez le coach pour payer ${U.money(s.settings.modulePrice)} et débloquer le module ${mid}.`, () => {
+      if (s.settings.coachWhatsApp) {
+        window.open(`https://wa.me/${s.settings.coachWhatsApp.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(`Bonjour, je suis ${l.name}. Je veux acheter le module ${mid} IA MASTER (${U.money(s.settings.modulePrice)}).`)}`, '_blank');
+      }
+    }, { title: 'Contact Coach', yes: 'Ouvrir WhatsApp' });
+  }
+};
+
+const Actions = {
+  map: {
+    'go': (el) => Router.go(el.dataset.screen),
+    'nav': (el) => {
+      if (el.dataset.screen === 'admin') AdminUI.go(el.dataset.tab);
+      else if (el.dataset.screen === 'learner') LearnerUI.go(el.dataset.tab);
+    },
+    'modal.close': () => Md.close(),
+    'auth.adminLogin': () => Auth.adminLogin(),
+    'auth.learnerLogin': () => Auth.learnerLogin(),
+    'auth.register': () => Auth.register(),
+    'auth.logout': () => Auth.logout(),
+    'auth.forgotPassword': () => Auth.forgotPassword(),
+    'auth.sendForgot': () => Auth.sendForgot(),
+
+    'admin.go': (el) => AdminUI.go(el.dataset.tab),
+    'admin.filter': (el) => AdminUI.filterLearners(el.dataset.filter),
+    'admin.openDetail': (el) => AdminUI.openDetail(el.dataset.id),
+    'admin.activateLearner': (el) => AdminUI.activateLearner(el.dataset.id),
+    'admin.deactivateLearner': (el) => AdminUI.deactivateLearner(el.dataset.id),
+    'admin.toggleUnlock': (el) => AdminUI.toggleUnlock(el.dataset.id, el.dataset.k),
+    'admin.toggleModuleDone': (el) => AdminUI.toggleModuleDone(el.dataset.id, el.dataset.k),
+    'admin.newModule': () => AdminUI.newModule(),
+    'admin.saveNewModule': () => AdminUI.saveNewModule(),
+    'admin.editModuleMeta': (el) => AdminUI.editModuleMeta(el.dataset.mid),
+    'admin.saveModuleMeta': (el) => AdminUI.saveModuleMeta(el.dataset.mid),
+    'admin.delModule': (el) => AdminUI.delModule(el.dataset.mid),
+    'admin.addLesson': (el) => AdminUI.addLesson(el.dataset.mid),
+    'admin.saveNewLesson': (el) => AdminUI.saveNewLesson(el.dataset.mid),
+    'admin.editLesson': (el) => AdminUI.editLesson(el.dataset.mid, el.dataset.idx),
+    'admin.saveLessonEdit': (el) => AdminUI.saveLessonEdit(el.dataset.mid, el.dataset.idx),
+    'admin.delLesson': (el) => AdminUI.delLesson(el.dataset.mid, el.dataset.idx),
+    'admin.approveSub': (el) => AdminUI.approveSub(el.dataset.id),
+    'admin.rejectSub': (el) => AdminUI.rejectSub(el.dataset.id),
+    'admin.sendAnnouncement': () => AdminUI.sendAnnouncement(),
+    'admin.openChat': (el) => AdminUI.openChat(el.dataset.id),
+    'admin.sendChat': () => AdminUI.sendChat(),
+    'admin.commTab': (el) => AdminUI.commTab(el.dataset.tab),
+    'admin.sendCommunity': () => AdminUI.sendCommunity(),
+    'admin.delCommunity': (el) => AdminUI.delCommunity(el.dataset.id),
+    'admin.approveMarket': (el) => AdminUI.approveMarket(el.dataset.id),
+    'admin.delMarket': (el) => AdminUI.delMarket(el.dataset.id),
+    'admin.manualPayment': () => AdminUI.manualPayment(),
+    'admin.saveManualPayment': () => AdminUI.saveManualPayment(),
+    'admin.approvePayment': (el) => AdminUI.approvePayment(el.dataset.id),
+    'admin.rejectPayment': (el) => AdminUI.rejectPayment(el.dataset.id),
+    'admin.savePricing': () => AdminUI.savePricing(),
+    'admin.saveMarketSettings': () => AdminUI.saveMarketSettings(),
+    'admin.saveCoach': () => AdminUI.saveCoach(),
+    'admin.savePwd': () => AdminUI.savePwd(),
+    'admin.saveSocial': () => AdminUI.saveSocial(),
+    'admin.newCoAdmin': () => AdminUI.newCoAdmin(),
+    'admin.saveNewCoAdmin': () => AdminUI.saveNewCoAdmin(),
+    'admin.editCoAdmin': (el) => AdminUI.editCoAdmin(el.dataset.id),
+    'admin.saveCoAdminEdit': (el) => AdminUI.saveCoAdminEdit(el.dataset.id),
+    'admin.delCoAdmin': (el) => AdminUI.delCoAdmin(el.dataset.id),
+    'admin.forcePullCloud': () => AdminUI.forcePullCloud(),
+    'admin.forcePushCloud': () => AdminUI.forcePushCloud(),
+
+    'quiz.select': (el) => Quiz.select(el.dataset.q, el.dataset.o, el),
+    'quiz.submit': (el) => Quiz.submit(el.dataset.module),
+    'quiz.start': (el) => Quiz.start(el.dataset.module),
+
+    'learner.go': (el) => LearnerUI.go(el.dataset.tab),
+    'learner.openModule': (el) => LearnerUI.openModule(el.dataset.mid),
+    'learner.submitExercise': (el) => LearnerUI.submitExercise(el.dataset.mid),
+    'learner.buyPack': () => LearnerUI.buyPack(),
+    'learner.buyModule': (el) => LearnerUI.buyModule(el.dataset.mid),
+    'learner.saveProfile': () => LearnerUI.saveProfile(),
+    'learner.changePassword': () => LearnerUI.changePassword(),
+    'learner.sendMessage': () => LearnerUI.sendMessage(),
+    'learner.downloadAttestation': () => LearnerUI.downloadAttestation(),
+    'learner.commTab': (el) => LearnerUI.commTab(el.dataset.tab),
+    'learner.newProduct': () => LearnerUI.newProduct(),
+    'learner.saveProduct': () => LearnerUI.saveProduct(),
+    'learner.delMyProduct': (el) => LearnerUI.delMyProduct(el.dataset.id),
+
+    'community.toggleReply': (el) => {
+      const box = document.getElementById('reply_box_' + el.dataset.id);
+      if (box) box.style.display = box.style.display === 'none' ? 'flex' : 'none';
+    },
+    'community.like': (el) => {
+      const s = State.get();
+      const p = s.community.find(x => x.id === el.dataset.id);
+      if (!p) return;
+      p.likes = p.likes || [];
+      const author = el.dataset.author;
+      if (p.likes.includes(author)) p.likes = p.likes.filter(x => x !== author);
+      else p.likes.push(author);
+      State.save();
+      if (State.currentUser?.role === 'admin') AdminUI.renderCommunity();
+      else if (State.currentUser?.role === 'learner') LearnerUI.renderCommunity();
+    },
+    'community.reply': (el) => {
+      const s = State.get();
+      const p = s.community.find(x => x.id === el.dataset.id);
+      if (!p) return;
+      const inp = document.getElementById('reply_input_' + p.id);
+      const txt = inp?.value.trim();
+      if (!txt) return;
+      p.replies = p.replies || [];
+      p.replies.push({ name: el.dataset.author, text: txt, date: new Date().toISOString() });
+      State.save();
+      if (State.currentUser?.role === 'admin') AdminUI.renderCommunity();
+      else if (State.currentUser?.role === 'learner') LearnerUI.renderCommunity();
+    }
+  },
+
+  init() {
+    document.addEventListener('click', (e) => {
+      const el = e.target.closest('[data-action]');
+      if (!el) return;
+      const act = el.dataset.action;
+      if (this.map[act]) {
+        e.preventDefault();
+        Hp.tap();
+        try { this.map[act](el); } catch (err) { console.error('[Action]', act, err); To.show('⚠️ Erreur action', 'error'); }
+      }
+    });
+
+    document.addEventListener('input', U.debounce((e) => {
+      if (e.target.dataset.input === 'admin-search') {
+        const list = document.getElementById('adminLearnersList');
+        if (list) list.innerHTML = AdminUI.learnersHTML(e.target.value, AdminUI._currentFilter);
+      }
+    }, 200));
+
+    document.addEventListener('change', (e) => {
+      if (e.target.dataset.input === 'learner-photo') {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 3 * 1024 * 1024) return To.show('⚠️ Image > 3 Mo', 'error');
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const SIZE = 200;
+            canvas.width = SIZE; canvas.height = SIZE;
+            const ctx = canvas.getContext('2d');
+            const side = Math.min(img.width, img.height);
+            const sx = (img.width - side) / 2;
+            const sy = (img.height - side) / 2;
+            ctx.drawImage(img, sx, sy, side, side, 0, 0, SIZE, SIZE);
+            const l = State.currentLearner();
+            if (l) {
+              l.photo = canvas.toDataURL('image/jpeg', 0.75);
+              State.save();
+              To.show('✅ Photo mise à jour', 'success');
+              LearnerUI.renderProfile();
+            }
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+};
+
+(async () => {
+  try {
+    await State.init();
+    Actions.init();
+    Nw.init();
+    try { Pay.checkReturn(); } catch (e) { console.error('Pay.checkReturn:', e); }
+
+    const s = State.get();
+    if (s.currentUser?.role === 'admin') {
+      AdminUI.open();
+    } else if (s.currentUser?.role === 'learner') {
+      const l = State.learner(s.currentUser.id);
+      if (l) { Streak.update(l.id); LearnerUI.open(); }
+      else { s.currentUser = null; State.save(); Router.go('s-login'); }
+    } else {
+      Router.go('s-login');
+    }
+  } catch (e) {
+    console.error('Init error:', e);
+    const bar = document.getElementById('netBar');
+    if (bar) { bar.className = 'off'; bar.textContent = '⚠️ Erreur d\'initialisation'; }
+  }
+})();
+</script>
+</body>
+</html>
