@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a1f44">
+<title>IA MASTER Academy - Formation</title>
+<style>
+:root{--bleu:#0a1f44;--bleu2:#1e3a8a;--or:#f59e0b;--or2:#fbbf24;--vert:#059669;--rouge:#dc2626;--bg:#f3f4f6;--card:#fff;--text:#1a1a1a;--muted:#6b7280;--border:#e5e7eb;--radius:16px;--shadow:0 4px 20px rgba(0,0,0,.06)}
+[data-theme="dark"]{--bleu:#1e3a8a;--bleu2:#3b82f6;--bg:#111827;--card:#1f2937;--text:#f3f4f6;--muted:#9ca3af;--border:#374151;--shadow:0 4px 20px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;min-height:100vh;padding-bottom:80px;transition:background .3s}
+#netBar{position:fixed;top:0;left:0;right:0;height:24px;line-height:24px;text-align:center;font-size:11px;font-weight:600;z-index:9999;background:#d1fae5;color:#065f46}
+#netBar.off{background:#fee2e2;color:#991b1b}
+.screen{display:none;min-height:100vh;padding-top:24px}
+.screen.active{display:block;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.topbar{position:sticky;top:24px;background:linear-gradient(135deg,var(--bleu),var(--bleu2));color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.topbar h1{font-size:16px;font-weight:800;flex:1}.topbar h1 span{color:var(--or2)}
+.btn-logout{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.view{display:none;padding:16px}.view.active{display:block}
+.navbar{position:fixed;bottom:0;left:0;right:0;background:var(--card);display:flex;border-top:1px solid var(--border);z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 10px rgba(0,0,0,.05);overflow-x:auto}
+.nav-item{flex:1;min-width:65px;background:none;border:none;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:10px;font-weight:600;cursor:pointer;font-family:inherit}
+.nav-icon{font-size:20px}.nav-item.active{color:var(--bleu2)}
+.nav-badge{position:absolute;top:4px;right:calc(50% - 16px);background:var(--rouge);color:#fff;font-size:9px;padding:1px 5px;border-radius:10px;font-weight:800}
+.card{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.card-title{font-size:13px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:12px;letter-spacing:.5px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.stat-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase}
+.stat-value{font-size:22px;font-weight:800;color:var(--bleu);margin-top:6px}
+.stat.hl{background:linear-gradient(135deg,var(--bleu),var(--bleu2));color:#fff;border:none}.stat.hl .stat-label{color:var(--or2)}.stat.hl .stat-value{color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .1s}
+.btn:active{transform:scale(.96)}
+.btn-primary{background:linear-gradient(135deg,var(--bleu),var(--bleu2));color:#fff}
+.btn-or{background:linear-gradient(135deg,var(--or),var(--or2));color:#fff}
+.btn-vert{background:linear-gradient(135deg,var(--vert),#10b981);color:#fff}
+.btn-rouge{background:linear-gradient(135deg,var(--rouge),#ef4444);color:#fff}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}
+.btn-block{display:flex;width:100%}.btn-sm{padding:8px 14px;font-size:13px;border-radius:10px}
+.form-group{margin-bottom:16px}.form-label{font-size:13px;font-weight:600;display:block;margin-bottom:6px}
+.form-input,.form-textarea,.form-select{width:100%;padding:14px;border:1.5px solid var(--border);border-radius:12px;font-size:16px;font-family:inherit;background:var(--bg);color:var(--text);transition:border-color .2s}
+.form-input:focus,.form-textarea:focus{outline:none;border-color:var(--bleu2)}
+.form-textarea{resize:vertical;min-height:100px}
+.login-screen{min-height:100vh;background:linear-gradient(135deg,var(--bleu),var(--bleu2) 60%,var(--or));display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;color:#fff;text-align:center}
+.login-screen h1{font-size:40px;font-weight:900;margin-bottom:10px;letter-spacing:-1px}.login-screen h1 span{color:var(--or2)}
+.login-btn{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);color:#fff;padding:18px 24px;border-radius:16px;width:100%;max-width:340px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;gap:16px;font-family:inherit;text-align:left}
+.login-btn .icon{font-size:28px}.login-btn .txt{flex:1}.login-btn .sub{font-size:12px;opacity:.7;font-weight:400;display:block;margin-top:2px}
+.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:280px;margin:20px auto}
+.pin-key{background:var(--card);border:none;padding:20px;border-radius:16px;font-size:24px;font-weight:700;color:var(--text);cursor:pointer;box-shadow:var(--shadow);font-family:inherit}
+.pin-key:active{background:var(--border)}
+.pin-dots{display:flex;justify-content:center;gap:16px;margin:20px 0}
+.pin-dot{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.3);transition:background .2s}
+.pin-dot.filled{background:var(--or2);transform:scale(1.1)}
+.avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--bleu),var(--or));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.row{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;border:1px solid var(--border);cursor:pointer}
+.row .info{flex:1;min-width:0}.row .info b{display:block;font-size:15px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .info small{color:var(--muted);font-size:12px}
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-vert{background:#d1fae5;color:var(--vert)}.badge-or{background:#fef3c7;color:#92400e}
+.badge-gris{background:var(--border);color:var(--muted)}.badge-bleu{background:#dbeafe;color:var(--bleu2)}.badge-rouge{background:#fee2e2;color:var(--rouge)}
+.mod-card{background:var(--card);border-radius:16px;padding:18px;margin-bottom:12px;display:flex;gap:16px;align-items:center;border-left:6px solid var(--or);box-shadow:var(--shadow)}
+.mod-card.done{border-left-color:var(--vert)}
+.mod-card.locked{border-left-color:var(--muted);opacity:.7}
+.mod-card .num{width:44px;height:44px;border-radius:50%;background:var(--bleu);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0}
+.mod-card.done .num{background:var(--vert)}.mod-card.locked .num{background:var(--muted)}
+.mod-card h3{font-size:15px;margin-bottom:4px}.mod-card small{font-size:12px;color:var(--muted)}
+.lesson{background:var(--card);border-radius:14px;padding:18px;margin-bottom:12px;border:1px solid var(--border)}
+.lesson h4{font-size:15px;margin-bottom:8px;color:var(--bleu)}[data-theme="dark"] .lesson h4{color:var(--or2)}
+.lesson p{font-size:14px;line-height:1.6;white-space:pre-line}
+.prompt-box{background:var(--bleu);color:#e0e7ff;padding:14px;border-radius:10px;font-family:monospace;font-size:13px;margin:10px 0;line-height:1.6;white-space:pre-line}
+.exercise-box{background:#fffbeb;border-left:4px solid var(--or);padding:14px;border-radius:10px;margin:12px 0;color:#92400e}
+.info-box{background:#eff6ff;border-left:4px solid var(--bleu2);padding:14px;border-radius:10px;margin-bottom:14px;color:#1e3a8a;font-size:13px}
+.warning-box{background:#fef3c7;border-left:4px solid var(--or);padding:14px;border-radius:10px;margin-bottom:14px;color:#92400e;font-size:13px}
+.msg{background:var(--card);border-radius:14px;padding:12px 16px;margin-bottom:10px;max-width:85%;box-shadow:var(--shadow);font-size:14px}
+.msg-admin{background:#dbeafe;color:#1e3a8a;margin-right:auto;border-bottom-left-radius:4px}
+.msg-learner{background:#d1fae5;color:#065f46;margin-left:auto;border-bottom-right-radius:4px}
+.msg-meta{font-size:11px;margin-bottom:4px;opacity:.7;font-weight:600}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.active{display:flex;animation:fadeIn .2s}
+.modal{background:var(--card);width:100%;max-width:500px;border-radius:24px 24px 0 0;padding:24px;max-height:90vh;overflow-y:auto;animation:slideUp .3s}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-size:18px;font-weight:800;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--bleu);color:#fff;padding:14px 24px;border-radius:30px;font-size:14px;font-weight:600;opacity:0;transition:all .3s;pointer-events:none;z-index:300;box-shadow:0 4px 12px rgba(0,0,0,.3);max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-10px)}
+.toast.toast-success{background:var(--vert)}.toast.toast-error{background:var(--rouge)}
+.flex{display:flex;gap:10px}.flex-1{flex:1}
+.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}
+.mt-8{margin-top:8px}.mt-12{margin-top:12px}
+.text-muted{color:var(--muted);font-size:13px}
+.back-btn{background:none;border:none;color:var(--bleu2);font-weight:700;padding:8px 0;cursor:pointer;font-size:14px;margin-bottom:12px}
+[data-theme="dark"] .back-btn{color:var(--or2)}
+.progress-bar{height:10px;background:var(--border);border-radius:5px;overflow:hidden;margin:10px 0}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--or),var(--vert));border-radius:5px;transition:width .5s}
+.streak-badge{background:linear-gradient(135deg,#f59e0b,#dc2626);color:#fff;padding:6px 14px;border-radius:20px;font-weight:800;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+<div id="netBar" class="on">● En ligne</div>
+
+<!-- LOGIN -->
+<div class="screen active" id="s-login">
+  <div class="login-screen">
+    <h1>IA <span>MASTER</span></h1>
+    <p style="font-size:14px;opacity:.9;margin-bottom:32px;font-style:italic">« L'IA ne remplace pas l'Africain. Elle arme l'Africain. »</p>
+    <button class="login-btn" data-action="go" data-screen="admin-login">
+      <span class="icon">👨‍💼</span><div class="txt">Administrateur<span class="sub">Gestion de la plateforme</span></div>
+    </button>
+    <button class="login-btn" data-action="go" data-screen="learner-entry">
+      <span class="icon">🎓</span><div class="txt">Apprenant<span class="sub">Mon espace formation</span></div>
+    </button>
+    <button class="btn btn-outline btn-block mt-12" data-action="toggle-theme" style="max-width:320px;color:#fff;border-color:rgba(255,255,255,.3)">🌓 Thème Clair / Sombre</button>
+    <div style="margin-top:30px;font-size:11px;opacity:.5">IA MASTER ACADEMY · Douala · v9.0</div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div class="screen" id="s-admin-login">
+  <div class="login-screen" style="background:linear-gradient(135deg,var(--bleu),var(--bleu2))">
+    <h1 style="font-size:24px">Accès Admin</h1>
+    <p style="font-size:13px;opacity:.8;margin-bottom:10px">Code PIN Administrateur</p>
+    <div class="pin-dots" id="pinDotsAdmin"></div>
+    <div class="pinpad" id="pinPadAdmin"></div>
+    <button class="btn btn-outline mt-12" data-action="go" data-screen="login" style="color:#fff;border-color:rgba(255,255,255,.3)">← Retour</button>
+  </div>
+</div>
+
+<!-- LEARNER ENTRY -->
+<div class="screen" id="s-learner-entry">
+  <div class="login-screen">
+    <h1 style="font-size:30px">🎓 Apprenant</h1>
+    <p style="font-size:14px;opacity:.9;margin-bottom:32px">Bienvenue dans la formation IA la plus complète</p>
+    <button class="login-btn" data-action="go" data-screen="learner-register">
+      <span class="icon">✨</span><div class="txt">S'inscrire<span class="sub">Créer mon compte gratuitement</span></div>
+    </button>
+    <button class="login-btn" data-action="go" data-screen="learner-login">
+      <span class="icon">🔑</span><div class="txt">Se connecter<span class="sub">J'ai déjà un compte</span></div>
+    </button>
+    <button class="btn btn-outline mt-12" data-action="go" data-screen="login" style="color:#fff;border-color:rgba(255,255,255,.3)">← Retour</button>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div class="screen" id="s-learner-register">
+  <div class="topbar"><h1>✨ <span>Inscription</span></h1><button class="btn-logout" data-action="go" data-screen="login">Retour</button></div>
+  <div class="view active">
+    <div class="card">
+      <div class="card-title">Créer mon compte</div>
+      <div class="info-box">📌 Ton compte sera en attente de validation après paiement.</div>
+      <div class="form-group"><label class="form-label">Nom complet *</label><input class="form-input" id="reg_name" placeholder="Ex: Marie Dupont"></div>
+      <div class="form-group"><label class="form-label">Téléphone WhatsApp *</label><input class="form-input" id="reg_phone" type="tel" placeholder="+237 6 XX XX XX XX"></div>
+      <div class="form-group"><label class="form-label">Code PIN (4 chiffres) *</label><input class="form-input" id="reg_pin" type="tel" maxlength="4" placeholder="0000"></div>
+      <div class="form-group"><label class="form-label">Confirmer le PIN *</label><input class="form-input" id="reg_pin2" type="tel" maxlength="4" placeholder="0000"></div>
+      <button class="btn btn-or btn-block" data-action="auth.register">✅ Créer mon compte</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEARNER LOGIN LIST -->
+<div class="screen" id="s-learner-login">
+  <div class="topbar"><h1>🔑 <span>Connexion</span></h1><button class="btn-logout" data-action="go" data-screen="login">Retour</button></div>
+  <div class="view active">
+    <div class="search-bar"><input type="search" id="searchLogin" placeholder="Rechercher mon nom..." oninput="APP.filterLearnerLogin(this.value)" style="width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:16px"></div>
+    <div id="learnerLoginList"></div>
+  </div>
+</div>
+
+<!-- LEARNER PIN -->
+<div class="screen" id="s-learner-pin">
+  <div class="login-screen" style="background:linear-gradient(135deg,var(--bleu2),var(--bleu))">
+    <h1 style="font-size:22px">Code personnel</h1>
+    <div style="font-size:16px;margin:10px 0;font-weight:700" id="pinLearnerName"></div>
+    <div class="pin-dots" id="pinDotsL"></div>
+    <div class="pinpad" id="pinPadL"></div>
+    <button class="btn btn-outline mt-12" data-action="go" data-screen="learner-login" style="color:#fff;border-color:rgba(255,255,255,.3)">← Retour</button>
+  </div>
+</div>
+
+<!-- LOCKED (PAYWALL) -->
+<div class="screen" id="s-learner-locked">
+  <div class="login-screen" style="background:linear-gradient(135deg,#1f2937,#0a1f44)">
+    <div style="font-size:64px;margin-bottom:16px">🔒</div>
+    <h1 style="font-size:24px">Accès formation verrouillé</h1>
+    <p style="font-size:14px;opacity:.85;max-width:320px;margin:16px 0;line-height:1.6">Pour accéder aux modules, tu dois régler ta formation.</p>
+    <div id="lockedLearnerName" style="font-weight:700;margin-bottom:8px"></div>
+    <div id="lockedPayInfo" style="font-size:14px;opacity:.9;margin-bottom:24px;background:rgba(255,255,255,.1);padding:16px;border-radius:12px;width:100%;max-width:340px"></div>
+    
+    <div style="width:100%;max-width:340px">
+      <button class="btn btn-or btn-block mb-8" data-action="learner.payNow">💳 Payer maintenant</button>
+      <button class="btn btn-outline btn-block mb-8" data-action="learner.previewModule" style="color:#fff;border-color:rgba(255,255,255,.3)">👀 Voir le programme</button>
+    </div>
+    
+    <div style="margin-top:16px;display:flex;gap:8px;width:100%;max-width:340px">
+      <button class="btn btn-outline flex-1" data-action="learner.contactCoach" style="color:#fff;border-color:rgba(255,255,255,.3);font-size:13px">📱 Contacter</button>
+      <button class="btn btn-rouge flex-1" data-action="auth.logout" style="font-size:13px">🚪 Quitter</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="screen" id="s-admin">
+  <div class="topbar"><h1>👨‍💼 <span>Admin</span></h1><button class="btn-logout" data-action="auth.logout">Déconnexion</button></div>
+  <div id="adminViews">
+    <div class="view active" id="av-home"></div>
+    <div class="view" id="av-learners"></div>
+    <div class="view" id="av-detail"></div>
+    <div class="view" id="av-payments"></div>
+    <div class="view" id="av-modules"></div>
+    <div class="view" id="av-messages"></div>
+    <div class="view" id="av-chat"></div>
+    <div class="view" id="av-settings"></div>
+  </div>
+  <div class="navbar">
+    <button class="nav-item active" data-action="nav" data-screen="admin" data-tab="home"><span class="nav-icon">🏠</span>Accueil</button>
+    <button class="nav-item" data-action="nav" data-screen="admin" data-tab="learners"><span class="nav-icon">👥</span>Apprenants</button>
+    <button class="nav-item" data-action="nav" data-screen="admin" data-tab="payments"><span class="nav-icon">💰</span>Paiements<span class="nav-badge" id="adminBadgePay" style="display:none">0</span></button>
+    <button class="nav-item" data-action="nav" data-screen="admin" data-tab="modules"><span class="nav-icon">📖</span>Modules</button>
+    <button class="nav-item" data-action="nav" data-screen="admin" data-tab="messages"><span class="nav-icon">💬</span>Messages<span class="nav-badge" id="adminBadgeMsg" style="display:none">0</span></button>
+    <button class="nav-item" data-action="nav" data-screen="admin" data-tab="settings"><span class="nav-icon">⚙️</span>Réglages</button>
+  </div>
+</div>
+
+<!-- LEARNER DASHBOARD -->
+<div class="screen" id="s-learner">
+  <div class="topbar"><h1>🎓 <span id="learnerWho">Mon espace</span></h1><button class="btn-logout" data-action="auth.logout">Déconnexion</button></div>
+  <div id="learnerViews">
+    <div class="view active" id="lv-home"></div>
+    <div class="view" id="lv-modules"></div>
+    <div class="view" id="lv-module-detail"></div>
+    <div class="view" id="lv-messages"></div>
+    <div class="view" id="lv-profile"></div>
+  </div>
+  <div class="navbar">
+    <button class="nav-item active" data-action="nav" data-screen="learner" data-tab="home"><span class="nav-icon">🏠</span>Accueil</button>
+    <button class="nav-item" data-action="nav" data-screen="learner" data-tab="modules"><span class="nav-icon">📚</span>Modules</button>
+    <button class="nav-item" data-action="nav" data-screen="learner" data-tab="messages"><span class="nav-icon">💬</span>Coach<span class="nav-badge" id="learnerBadgeMsg" style="display:none">0</span></button>
+    <button class="nav-item" data-action="nav" data-screen="learner" data-tab="profile"><span class="nav-icon">👤</span>Profil</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalBg"><div class="modal" id="modalContent"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const APP = {
+  DB_KEY: 'IAMASTER_FORMATION_V9',
+  db: null,
+  session: { role: null, userId: null, pinBuffer: '', targetLearnerId: null, activeChatId: null, activeModuleId: null, detailLearnerId: null },
+
+  init() {
+    this.loadDB();
+    this.initTheme();
+    this.setupPinPads();
+    this.bindEvents();
+    this.checkAutoLogin();
+    this.updateNetwork();
+    window.addEventListener('online', () => this.updateNetwork());
+    window.addEventListener('offline', () => this.updateNetwork());
+  },
+
+  loadDB() {
+    const raw = localStorage.getItem(this.DB_KEY);
+    if (raw) {
+      this.db = JSON.parse(raw);
+    } else {
+      this.db = {
+        settings: { theme: 'light', coachPhone: '237600000000', pricePack: 25000, priceModule: 5000, adminPin: '1234' },
+        learners: [],
+        modules: [
+          { id: 1, title: "Maîtrise des Prompts", desc: "Savoir parler à l'IA pour obtenir exactement ce que tu veux.", duration: "45 min", exercise: "Écris 3 prompts complets avec la formule PROMPT PRO.", lessons: [{ title: "C'est quoi un prompt ?", content: "Un prompt est la consigne que tu écris à l'IA. Un bon prompt = réponse utile." }, { title: "La formule PROMPT PRO", content: "RÔLE + TÂCHE + DÉTAILS + STYLE + FORMAT." }] },
+          { id: 2, title: "Affiches Pro", desc: "Créer une affiche qui vend en 10 minutes.", duration: "1h", exercise: "Créer 3 affiches (restaurant, vêtements, coiffure).", lessons: [{ title: "Canva", content: "Canva = Photoshop pour les gens normaux." }] },
+          { id: 3, title: "Logo Professionnel", desc: "Créer un logo simple, propre et mémorable.", duration: "45 min", exercise: "Créer 1 logo complet pour un commerce réel.", lessons: [{ title: "Règles d'or", content: "Simple, mémorable, lisible, intemporel." }] },
+          { id: 4, title: "Shooting Photo IA", desc: "Rendre une photo amateur professionnelle.", duration: "30 min", exercise: "Retoucher 2 photos : 1 Remini + 1 PhotoRoom.", lessons: [{ title: "Remini & PhotoRoom", content: "Améliorer la netteté et supprimer le fond." }] },
+          { id: 5, title: "Vidéo IA avec Avatar", desc: "Créer une vidéo de 30 secondes qui présente un produit.", duration: "1h", exercise: "Créer 1 vidéo 30 sec avec hook + valeur + CTA.", lessons: [{ title: "Structure", content: "Hook (3s) + Valeur (22s) + CTA (5s)." }] },
+          { id: 6, title: "Musique avec Suno", desc: "Créer une musique de fond ou un jingle.", duration: "30 min", exercise: "Créer 1 musique 30 sec.", lessons: [{ title: "Suno", content: "Décris le style, l'ambiance et le tempo." }] },
+          { id: 7, title: "TikTok Rentable", desc: "Comprendre la vraie monétisation TikTok.", duration: "45 min", exercise: "Créer 1 vidéo TikTok 30 sec.", lessons: [{ title: "La vérité", content: "TikTok ne paie pas au Cameroun. Utilise TamTam." }] },
+          { id: 8, title: "YouTube Vitrine", desc: "Utiliser YouTube comme carte de visite.", duration: "40 min", exercise: "Créer 1 miniature YouTube.", lessons: [{ title: "Stratégie", content: "Vitrine pro, crédibilité, SEO." }] },
+          { id: 9, title: "Créer un PDF à vendre", desc: "Transformer ton savoir en produit digital.", duration: "1h", exercise: "Créer 1 PDF 5 pages.", lessons: [{ title: "Canva PDF", content: "Structure : Couverture, sommaire, contenu, bonus." }] },
+          { id: 10, title: "Clients & Prix", desc: "Transformer tes compétences en argent régulier.", duration: "1h", exercise: "Lister 10 clients potentiels.", lessons: [{ title: "Grille de prix", content: "Affiches 1500F, Logos 5000F, etc." }] }
+        ],
+        payments: [],
+        messages: []
+      };
+      this.saveDB();
+    }
+  },
+
+  saveDB() {
+    localStorage.setItem(this.DB_KEY, JSON.stringify(this.db));
+    this.updateBadges();
+  },
+
+  initTheme() {
+    document.documentElement.setAttribute('data-theme', this.db.settings.theme || 'light');
+  },
+
+  toggleTheme() {
+    this.db.settings.theme = this.db.settings.theme === 'dark' ? 'light' : 'dark';
+    this.saveDB();
+    this.initTheme();
+  },
+
+  updateNetwork() {
+    const bar = document.getElementById('netBar');
+    if (navigator.onLine) { bar.className = 'on'; bar.textContent = '● En ligne'; }
+    else { bar.className = 'off'; bar.textContent = '○ Hors ligne'; }
+  },
+
+  toast(msg, type = '') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast show ' + (type ? 'toast-' + type : '');
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+  },
+
+  go(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById('s-' + screenId);
+    if (target) target.classList.add('active');
+    this.session.pinBuffer = '';
+    this.updatePinDots('pinDotsAdmin', 0);
+    this.updatePinDots('pinDotsL', 0);
+    window.scrollTo(0, 0);
+    if (screenId === 'learner-login') this.renderLearnerLoginList('');
+  },
+
+  nav(screen, tab) {
+    const container = screen === 'admin' ? 'adminViews' : 'learnerViews';
+    const prefix = screen === 'admin' ? 'av-' : 'lv-';
+    document.querySelectorAll(`#${container} .view`).forEach(v => v.classList.remove('active'));
+    const view = document.getElementById(prefix + tab);
+    if (view) view.classList.add('active');
+    document.querySelectorAll(`#s-${screen} .nav-item`).forEach(n => n.classList.toggle('active', n.dataset.tab === tab));
+    window.scrollTo(0, 0);
+    
+    if (screen === 'admin') this.admin.renderTab(tab);
+    if (screen === 'learner') this.learner.renderTab(tab);
+  },
+
+  openModal(html) { document.getElementById('modalContent').innerHTML = html; document.getElementById('modalBg').classList.add('active'); },
+  closeModal() { document.getElementById('modalBg').classList.remove('active'); },
+
+  setupPinPads() {
+    this.renderPinPad('pinPadAdmin', 'pinDotsAdmin', (pin) => this.auth.verifyAdminPin(pin));
+    this.renderPinPad('pinPadL', 'pinDotsL', (pin) => this.auth.verifyLearnerPin(pin));
+  },
+
+  renderPinPad(padId, dotsId, onComplete) {
+    const pad = document.getElementById(padId);
+    const dots = document.getElementById(dotsId);
+    if (!pad || !dots) return;
+    dots.innerHTML = '<div class="pin-dot"></div>'.repeat(4);
+    const keys = ['1','2','3','4','5','6','7','8','9','C','0','⌫'];
+    pad.innerHTML = keys.map(k => `<button type="button" class="pin-key" data-key="${k}">${k}</button>`).join('');
+    pad.addEventListener('click', (e) => {
+      const btn = e.target.closest('.pin-key');
+      if (!btn) return;
+      const k = btn.dataset.key;
+      if (k === 'C') this.session.pinBuffer = '';
+      else if (k === '⌫') this.session.pinBuffer = this.session.pinBuffer.slice(0, -1);
+      else if (this.session.pinBuffer.length < 4) this.session.pinBuffer += k;
+      this.updatePinDots(dotsId, this.session.pinBuffer.length);
+      if (this.session.pinBuffer.length === 4) {
+        const code = this.session.pinBuffer;
+        setTimeout(() => { onComplete(code); this.session.pinBuffer = ''; this.updatePinDots(dotsId, 0); }, 150);
+      }
+    });
+  },
+
+  updatePinDots(dotsId, count) {
+    document.querySelectorAll(`#${dotsId} .pin-dot`).forEach((d, i) => d.classList.toggle('filled', i < count));
+  },
+
+  checkAutoLogin() {
+    const saved = sessionStorage.getItem('IAM_SESSION_FORMATION');
+    if (!saved) return;
+    const s = JSON.parse(saved);
+    if (s.role === 'admin') { this.session.role = 'admin'; this.go('admin'); this.nav('admin', 'home'); }
+    else if (s.role === 'learner') {
+      const l = this.db.learners.find(x => x.id === s.userId);
+      if (l) this.auth.enterLearnerSpace(l);
+    }
+  },
+
+  updateBadges() {
+    const pendingPay = this.db.payments.filter(p => p.status === 'pending').length;
+    const bPay = document.getElementById('adminBadgePay');
+    if (bPay) { bPay.textContent = pendingPay; bPay.style.display = pendingPay > 0 ? 'block' : 'none'; }
+
+    const unreadAdmin = this.db.messages.filter(m => m.from === 'learner' && !m.read).length;
+    const bMsg = document.getElementById('adminBadgeMsg');
+    if (bMsg) { bMsg.textContent = unreadAdmin; bMsg.style.display = unreadAdmin > 0 ? 'block' : 'none'; }
+
+    if (this.session.role === 'learner' && this.session.userId) {
+      const unreadL = this.db.messages.filter(m => m.learnerId === this.session.userId && m.from === 'admin' && !m.read).length;
+      const blMsg = document.getElementById('learnerBadgeMsg');
+      if (blMsg) { blMsg.textContent = unreadL; blMsg.style.display = unreadL > 0 ? 'block' : 'none'; }
+    }
+  },
+
+  renderLearnerLoginList(query) {
+    const list = document.getElementById('learnerLoginList');
+    const q = (query || '').toLowerCase().trim();
+    const filtered = this.db.learners.filter(l => l.name.toLowerCase().includes(q) || l.phone.includes(q));
+    if (!filtered.length) { list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted)">Aucun apprenant trouvé.</div>`; return; }
+    list.innerHTML = filtered.map(l => `
+      <div class="row" onclick="APP.auth.selectLearner('${l.id}')">
+        <div class="avatar">${l.photo ? `<img src="${l.photo}">` : l.name.charAt(0).toUpperCase()}</div>
+        <div class="info"><b>${l.name}</b><small>${l.phone}</small></div>
+        <span class="badge ${l.accessStatus === 'active' ? 'badge-vert' : 'badge-or'}">${l.accessStatus === 'active' ? 'Actif' : 'Bloqué'}</span>
+      </div>
+    `).join('');
+  },
+
+  filterLearnerLogin(val) { this.renderLearnerLoginList(val); },
+
+  auth: {
+    verifyAdminPin(pin) {
+      if (pin === APP.db.settings.adminPin) {
+        APP.session.role = 'admin';
+        sessionStorage.setItem('IAM_SESSION_FORMATION', JSON.stringify({ role: 'admin' }));
+        APP.go('admin'); APP.nav('admin', 'home'); APP.toast('Bienvenue Admin', 'success');
+      } else { APP.toast('Code PIN incorrect', 'error'); }
+    },
+    register() {
+      const name = document.getElementById('reg_name').value.trim();
+      const phone = document.getElementById('reg_phone').value.trim();
+      const pin = document.getElementById('reg_pin').value.trim();
+      const pin2 = document.getElementById('reg_pin2').value.trim();
+
+      if (name.length < 2) return APP.toast('Nom invalide', 'error');
+      if (phone.length < 8) return APP.toast('Téléphone invalide', 'error');
+      if (!/^\d{4}$/.test(pin)) return APP.toast('PIN doit être 4 chiffres', 'error');
+      if (pin !== pin2) return APP.toast('Les PIN ne correspondent pas', 'error');
+
+      const newLearner = {
+        id: 'L' + Date.now(), name, phone, pin, photo: '',
+        accessStatus: 'awaiting_payment', hasFullAccess: false, unlockedModules: [],
+        completedModules: [], notes: {}, streak: 1, joinedAt: new Date().toISOString()
+      };
+      APP.db.learners.push(newLearner);
+      APP.saveDB();
+      APP.toast('Compte créé !', 'success');
+      this.enterLearnerSpace(newLearner);
+    },
+    selectLearner(id) {
+      const l = APP.db.learners.find(x => x.id === id);
+      if (!l) return;
+      APP.session.targetLearnerId = id;
+      document.getElementById('pinLearnerName').textContent = l.name;
+      APP.go('learner-pin');
+    },
+    verifyLearnerPin(pin) {
+      const l = APP.db.learners.find(x => x.id === APP.session.targetLearnerId);
+      if (!l) return;
+      if (l.pin === pin) { this.enterLearnerSpace(l); }
+      else { APP.toast('Code PIN incorrect', 'error'); }
+    },
+    enterLearnerSpace(learner) {
+      APP.session.role = 'learner';
+      APP.session.userId = learner.id;
+      sessionStorage.setItem('IAM_SESSION_FORMATION', JSON.stringify({ role: 'learner', userId: learner.id }));
+      
+      if (learner.accessStatus !== 'active' && !learner.hasFullAccess && learner.unlockedModules.length === 0) {
+        document.getElementById('lockedLearnerName').textContent = learner.name;
+        document.getElementById('lockedPayInfo').innerHTML = `
+          <div>Formation : <b>${APP.db.settings.pricePack} FCFA</b> (Pack Complet)</div>
+          <div>Ou : <b>${APP.db.settings.priceModule} FCFA</b> / module</div>
+        `;
+        APP.go('learner-locked');
+        return;
+      }
+      document.getElementById('learnerWho').textContent = learner.name.split(' ')[0];
+      APP.go('learner'); APP.nav('learner', 'home');
+    },
+    logout() {
+      APP.session = { role: null, userId: null, pinBuffer: '', targetLearnerId: null, activeChatId: null, activeModuleId: null, detailLearnerId: null };
+      sessionStorage.removeItem('IAM_SESSION_FORMATION');
+      APP.go('login');
+    }
+  },
+
+  admin: {
+    renderTab(tab) {
+      if (tab === 'home') this.renderHome();
+      if (tab === 'learners') this.renderLearners();
+      if (tab === 'detail') this.renderDetail(APP.session.detailLearnerId);
+      if (tab === 'payments') this.renderPayments();
+      if (tab === 'modules') this.renderModules();
+      if (tab === 'messages') this.renderMessages();
+      if (tab === 'chat') this.renderChat(APP.session.activeChatId);
+      if (tab === 'settings') this.renderSettings();
+    },
+    renderHome() {
+      const totalL = APP.db.learners.length;
+      const activeL = APP.db.learners.filter(l => l.accessStatus === 'active').length;
+      const pendingPay = APP.db.payments.filter(p => p.status === 'pending').length;
+      const revenue = APP.db.payments.filter(p => p.status === 'approved').reduce((a, b) => a + Number(b.amount), 0);
+
+      document.getElementById('av-home').innerHTML = `
+        <div class="stats">
+          <div class="stat hl"><div class="stat-label">Apprenants</div><div class="stat-value">${activeL} / ${totalL}</div></div>
+          <div class="stat hl"><div class="stat-label">Revenus</div><div class="stat-value">${revenue} F</div></div>
+          <div class="stat" style="border-left:4px solid var(--or)"><div class="stat-label">Paiements à vérifier</div><div class="stat-value">${pendingPay}</div></div>
+          <div class="stat" style="border-left:4px solid var(--bleu2)"><div class="stat-label">Modules</div><div class="stat-value">${APP.db.modules.length}</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Actions rapides</div>
+          <button class="btn btn-or btn-block mb-8" onclick="APP.admin.showAddModule()">➕ Ajouter un module</button>
+          <button class="btn btn-primary btn-block" onclick="APP.nav('admin', 'payments')">💰 Vérifier les paiements</button>
+        </div>
+      `;
+    },
+    renderLearners() {
+      document.getElementById('av-learners').innerHTML = `
+        <div class="search-bar"><input type="text" placeholder="Rechercher..." oninput="APP.admin.filterLearners(this.value)" style="width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text)"></div>
+        <div id="adminLearnersList">${this.learnersHTML('')}</div>
+      `;
+    },
+    learnersHTML(q) {
+      const list = APP.db.learners.filter(l => l.name.toLowerCase().includes(q.toLowerCase()) || l.phone.includes(q));
+      if (!list.length) return '<p class="text-muted">Aucun apprenant.</p>';
+      return list.map(l => `
+        <div class="row" onclick="APP.admin.openDetail('${l.id}')">
+          <div class="avatar">${l.photo ? `<img src="${l.photo}">` : l.name[0]}</div>
+          <div class="info"><b>${l.name}</b><small>${l.phone}</small></div>
+          <span class="badge ${l.accessStatus === 'active' ? 'badge-vert' : 'badge-or'}">${l.accessStatus === 'active' ? 'Actif' : 'Bloqué'}</span>
+        </div>
+      `).join('');
+    },
+    filterLearners(q) { document.getElementById('adminLearnersList').innerHTML = this.learnersHTML(q); },
+    openDetail(id) { APP.session.detailLearnerId = id; APP.nav('admin', 'detail'); },
+    renderDetail(id) {
+      const l = APP.db.learners.find(x => x.id === id);
+      if (!l) return APP.nav('admin', 'learners');
+      document.getElementById('av-detail').innerHTML = `
+        <button class="back-btn" onclick="APP.nav('admin', 'learners')">← Retour</button>
+        <div class="detail-header" style="background:linear-gradient(135deg,var(--bleu),var(--bleu2));color:#fff;padding:20px;border-radius:16px;margin-bottom:14px">
+          <h2>${l.name}</h2><p>${l.phone}</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Gestion de l'accès</div>
+          <div class="flex">
+            <button class="btn ${l.accessStatus === 'active' ? 'btn-rouge' : 'btn-vert'} flex-1" onclick="APP.admin.toggleAccess('${l.id}')">${l.accessStatus === 'active' ? '🔒 Suspendre' : '✅ Activer'}</button>
+            <button class="btn btn-primary flex-1" onclick="APP.admin.openChat('${l.id}')">💬 Message</button>
+          </div>
+        </div>
+      `;
+    },
+    toggleAccess(id) {
+      const l = APP.db.learners.find(x => x.id === id);
+      l.accessStatus = l.accessStatus === 'active' ? 'awaiting_payment' : 'active';
+      if (l.accessStatus === 'active') l.hasFullAccess = true;
+      APP.saveDB(); this.renderDetail(id); APP.toast('Statut mis à jour');
+    },
+    renderPayments() {
+      const pays = [...APP.db.payments].reverse();
+      document.getElementById('av-payments').innerHTML = `
+        <div class="card-title">Preuves de paiement</div>
+        ${pays.length ? pays.map(p => {
+          const l = APP.db.learners.find(x => x.id === p.userId) || { name: 'Inconnu' };
+          return `
+            <div class="card" style="border-left:4px solid ${p.status === 'approved' ? 'var(--vert)' : p.status === 'rejected' ? 'var(--rouge)' : 'var(--or)'}">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                <b>${l.name}</b><span class="badge ${p.status === 'approved' ? 'badge-vert' : p.status === 'rejected' ? 'badge-rouge' : 'badge-or'}">${p.status}</span>
+              </div>
+              <div class="text-muted mb-8">Montant : <b>${p.amount} F</b> · Méthode : ${p.method} · Réf : ${p.ref}</div>
+              ${p.status === 'pending' ? `
+                <div class="flex">
+                  <button class="btn btn-vert flex-1 btn-sm" onclick="APP.admin.validatePay('${p.id}', '${l.id}', ${p.isPack})">✅ Valider</button>
+                  <button class="btn btn-rouge flex-1 btn-sm" onclick="APP.admin.rejectPay('${p.id}')">❌ Refuser</button>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('') : '<p class="text-muted">Aucun paiement.</p>'}
+      `;
+    },
+    validatePay(payId, userId, isPack) {
+      const p = APP.db.payments.find(x => x.id === payId);
+      p.status = 'approved';
+      const l = APP.db.learners.find(x => x.id === userId);
+      if (l) {
+        l.accessStatus = 'active';
+        if (isPack) l.hasFullAccess = true;
+        else if (!l.unlockedModules.includes(p.moduleId)) l.unlockedModules.push(p.moduleId);
+      }
+      APP.saveDB(); this.renderPayments(); APP.toast('Paiement validé et accès débloqué', 'success');
+    },
+    rejectPay(payId) {
+      const p = APP.db.payments.find(x => x.id === payId);
+      p.status = 'rejected';
+      APP.saveDB(); this.renderPayments(); APP.toast('Paiement refusé');
+    },
+    renderModules() {
+      document.getElementById('av-modules').innerHTML = `
+        <button class="btn btn-or btn-block mb-12" onclick="APP.admin.showAddModule()">➕ Ajouter un module</button>
+        ${APP.db.modules.map(m => `
+          <div class="card">
+            <div style="display:flex;justify-content:space-between">
+              <b>M${m.id} : ${m.title}</b>
+              <button class="btn btn-rouge btn-sm" onclick="APP.admin.deleteModule(${m.id})">🗑️</button>
+            </div>
+            <p class="text-muted mt-8">${m.desc}</p>
+          </div>
+        `).join('')}
+      `;
+    },
+    showAddModule() {
+      APP.openModal(`
+        <div class="modal-title">Nouveau Module <button class="modal-close" onclick="APP.closeModal()">✕</button></div>
+        <div class="form-group"><label class="form-label">Titre</label><input class="form-input" id="m_title"></div>
+        <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="m_desc"></div>
+        <div class="form-group"><label class="form-label">Durée</label><input class="form-input" id="m_dur" value="45 min"></div>
+        <button class="btn btn-primary btn-block" onclick="APP.admin.saveModule()">Enregistrer</button>
+      `);
+    },
+    saveModule() {
+      const title = document.getElementById('m_title').value;
+      const desc = document.getElementById('m_desc').value;
+      const dur = document.getElementById('m_dur').value;
+      if (!title) return APP.toast('Titre requis', 'error');
+      APP.db.modules.push({ id: APP.db.modules.length + 1, title, desc, duration: dur, exercise: 'Faites l\'exercice.', lessons: [{title: 'Intro', content: desc}] });
+      APP.saveDB(); APP.closeModal(); this.renderModules(); APP.toast('Module ajouté');
+    },
+    deleteModule(id) {
+      if (!confirm('Supprimer ce module ?')) return;
+      APP.db.modules = APP.db.modules.filter(m => m.id !== id);
+      APP.saveDB(); this.renderModules();
+    },
+    renderMessages() {
+      document.getElementById('av-messages').innerHTML = `
+        <div class="card-title">Discussions</div>
+        ${APP.db.learners.map(l => {
+          const unread = APP.db.messages.filter(m => m.learnerId === l.id && m.from === 'learner' && !m.read).length;
+          return `
+            <div class="row" onclick="APP.admin.openChat('${l.id}')">
+              <div class="avatar">${l.name[0]}</div>
+              <div class="info"><b>${l.name}</b><small>${l.phone}</small></div>
+              ${unread ? `<span class="badge badge-rouge">${unread}</span>` : ''}
+            </div>
+          `;
+        }).join('')}
+      `;
+    },
+    openChat(id) {
+      APP.session.activeChatId = id;
+      APP.db.messages.forEach(m => { if (m.learnerId === id && m.from === 'learner') m.read = true; });
+      APP.saveDB(); APP.nav('admin', 'chat');
+    },
+    renderChat(id) {
+      const l = APP.db.learners.find(x => x.id === id);
+      const msgs = APP.db.messages.filter(m => m.learnerId === id);
+      document.getElementById('av-chat').innerHTML = `
+        <button class="back-btn" onclick="APP.nav('admin', 'messages')">← Retour</button>
+        <div class="card-title">Chat avec ${l.name}</div>
+        <div>${msgs.map(m => `<div class="msg ${m.from === 'admin' ? 'msg-admin' : 'msg-learner'}"><div class="msg-meta">${m.from === 'admin' ? 'Vous' : l.name}</div>${m.text}</div>`).join('')}</div>
+        <div class="flex mt-12">
+          <input class="form-input flex-1" id="adminChatInput" placeholder="Répondre...">
+          <button class="btn btn-primary" onclick="APP.admin.sendChat('${id}')">➤</button>
+        </div>
+      `;
+    },
+    sendChat(id) {
+      const txt = document.getElementById('adminChatInput').value;
+      if (!txt) return;
+      APP.db.messages.push({ id: 'M'+Date.now(), learnerId: id, from: 'admin', text: txt, read: false });
+      APP.saveDB(); this.renderChat(id);
+    },
+    renderSettings() {
+      document.getElementById('av-settings').innerHTML = `
+        <div class="card">
+          <div class="card-title">Paramètres généraux</div>
+          <div class="form-group"><label class="form-label">Prix Pack Complet (FCFA)</label><input class="form-input" id="set_pack" type="number" value="${APP.db.settings.pricePack}"></div>
+          <div class="form-group"><label class="form-label">Prix Module (FCFA)</label><input class="form-input" id="set_mod" type="number" value="${APP.db.settings.priceModule}"></div>
+          <div class="form-group"><label class="form-label">Code PIN Admin</label><input class="form-input" id="set_pin" maxlength="4" value="${APP.db.settings.adminPin}"></div>
+          <button class="btn btn-primary btn-block" onclick="APP.admin.saveSettings()">💾 Enregistrer</button>
+        </div>
+      `;
+    },
+    saveSettings() {
+      APP.db.settings.pricePack = Number(document.getElementById('set_pack').value);
+      APP.db.settings.priceModule = Number(document.getElementById('set_mod').value);
+      APP.db.settings.adminPin = document.getElementById('set_pin').value;
+      APP.saveDB(); APP.toast('Paramètres sauvegardés', 'success');
+    }
+  },
+
+  learner: {
+    getCurrent() { return APP.db.learners.find(x => x.id === APP.session.userId); },
+    renderTab(tab) {
+      if (tab === 'home') this.renderHome();
+      if (tab === 'modules') this.renderModules();
+      if (tab === 'module-detail') this.renderModuleDetail(APP.session.activeModuleId);
+      if (tab === 'messages') this.renderMessages();
+      if (tab === 'profile') this.renderProfile();
+    },
+    payNow() {
+      const l = this.getCurrent();
+      if (!l) return;
+      APP.openModal(`
+        <div class="modal-title">💳 Payer la formation <button class="modal-close" onclick="APP.closeModal()">✕</button></div>
+        <div class="info-box">Effectue le paiement puis entre les détails pour validation.</div>
+        <div class="form-group"><label class="form-label">Type d'accès</label>
+          <select class="form-input" id="pay_type" onchange="document.getElementById('pay_mod_grp').style.display = this.value === 'module' ? 'block' : 'none'">
+            <option value="pack">Pack Complet (${APP.db.settings.pricePack} FCFA)</option>
+            <option value="module">Un seul Module (${APP.db.settings.priceModule} FCFA)</option>
+          </select>
+        </div>
+        <div class="form-group" id="pay_mod_grp" style="display:none"><label class="form-label">Module</label>
+          <select class="form-input" id="pay_module">${APP.db.modules.map(m => `<option value="${m.id}">M${m.id} - ${m.title}</option>`).join('')}</select>
+        </div>
+        <div class="form-group"><label class="form-label">Méthode</label><select class="form-input" id="pay_method"><option>Orange Money</option><option>MTN MoMo</option></select></div>
+        <div class="form-group"><label class="form-label">Référence Transaction</label><input class="form-input" id="pay_ref" placeholder="Ex: OM2611..."></div>
+        <button class="btn btn-vert btn-block" onclick="APP.learner.submitPayment()">Envoyer la preuve</button>
+      `);
+    },
+    submitPayment() {
+      const l = this.getCurrent();
+      const type = document.getElementById('pay_type').value;
+      const method = document.getElementById('pay_method').value;
+      const ref = document.getElementById('pay_ref').value;
+      const modId = type === 'module' ? Number(document.getElementById('pay_module').value) : null;
+      const amount = type === 'pack' ? APP.db.settings.pricePack : APP.db.settings.priceModule;
+      
+      if (!ref) return APP.toast('Référence requise', 'error');
+      
+      APP.db.payments.push({ id: 'P'+Date.now(), userId: l.id, amount, method, ref, isPack: type === 'pack', moduleId: modId, status: 'pending', date: new Date().toISOString() });
+      APP.saveDB(); APP.closeModal();
+      APP.toast('Preuve envoyée ! En attente de validation.', 'success');
+    },
+    previewModule() {
+      APP.openModal(`
+        <div class="modal-title">Programme <button class="modal-close" onclick="APP.closeModal()">✕</button></div>
+        ${APP.db.modules.map(m => `<div class="row"><div class="info"><b>M${m.id} : ${m.title}</b><small>${m.desc}</small></div></div>`).join('')}
+      `);
+    },
+    contactCoach() {
+      const l = this.getCurrent();
+      window.open(`https://wa.me/${APP.db.settings.coachPhone}?text=${encodeURIComponent(`Bonjour Coach, je suis ${l.name}. Je souhaite payer ma formation.`)}`, '_blank');
+    },
+    renderHome() {
+      const l = this.getCurrent();
+      const done = l.completedModules.length;
+      const pct = (done / APP.db.modules.length) * 100;
+      document.getElementById('lv-home').innerHTML = `
+        <div class="detail-header" style="background:linear-gradient(135deg,var(--bleu),var(--bleu2));color:#fff;padding:20px;border-radius:16px;margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h2>Salut, ${l.name.split(' ')[0]} 👋</h2>
+            <span class="streak-badge">🔥 ${l.streak}j</span>
+          </div>
+          <p style="color:var(--or2);font-size:13px;margin-top:4px">Progression : ${done} / ${APP.db.modules.length} modules</p>
+          <div class="progress-bar mt-12"><div class="fill" style="width:${pct}%"></div></div>
+        </div>
+        
+        ${!l.hasFullAccess ? `
+          <div class="card" style="background:#fef3c7;border-left:4px solid var(--or)">
+            <b>💡 Débloque tout le programme</b>
+            <p class="text-muted mt-8">Passe au Pack Complet pour accéder à tous les modules.</p>
+            <button class="btn btn-or btn-block mt-8" onclick="APP.learner.payNow()">Payer le Pack Complet</button>
+          </div>
+        ` : ''}
+
+        <div class="card">
+          <div class="card-title">Accès rapide</div>
+          <button class="btn btn-primary btn-block mb-8" onclick="APP.nav('learner', 'modules')">📚 Mes modules</button>
+        </div>
+      `;
+    },
+    renderModules() {
+      const l = this.getCurrent();
+      document.getElementById('lv-modules').innerHTML = `
+        <div class="card-title">Programme de formation</div>
+        ${APP.db.modules.map(m => {
+          const isUnlocked = l.hasFullAccess || l.unlockedModules.includes(m.id);
+          const isDone = l.completedModules.includes(m.id);
+          return `
+            <div class="mod-card ${isDone ? 'done' : ''} ${!isUnlocked ? 'locked' : ''}" onclick="${isUnlocked ? `APP.learner.openModule(${m.id})` : `APP.toast('Module verrouillé. Veuillez payer.', 'error')`}">
+              <div class="num">${isDone ? '✓' : isUnlocked ? m.id : '🔒'}</div>
+              <div class="info">
+                <h3>${m.title}</h3>
+                <small>${m.desc} · ${m.duration}</small>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      `;
+    },
+    openModule(id) {
+      APP.session.activeModuleId = id;
+      APP.nav('learner', 'module-detail');
+    },
+    renderModuleDetail(id) {
+      const l = this.getCurrent();
+      const m = APP.db.modules.find(x => x.id === id);
+      if (!m) return APP.nav('learner', 'modules');
+      document.getElementById('lv-module-detail').innerHTML = `
+        <button class="back-btn" onclick="APP.nav('learner', 'modules')">← Retour</button>
+        <div class="detail-header" style="background:linear-gradient(135deg,var(--bleu),var(--bleu2));color:#fff;padding:20px;border-radius:16px;margin-bottom:16px">
+          <h2>M${m.id} : ${m.title}</h2>
+          <p>${m.desc}</p>
+        </div>
+        ${m.lessons.map(les => `<div class="lesson"><h4>${les.title}</h4><p>${les.content}</p></div>`).join('')}
+        <div class="exercise-box">
+          <b>🎯 Exercice pratique</b>
+          <p class="mt-8">${m.exercise}</p>
+          <textarea class="form-textarea mt-8" id="sub_text" placeholder="Colle ton travail ici..."></textarea>
+          <button class="btn btn-vert btn-block mt-8" onclick="APP.learner.submitExercise(${m.id})">Soumettre</button>
+        </div>
+      `;
+    },
+    submitExercise(id) {
+      const txt = document.getElementById('sub_text').value;
+      if (txt.length < 10) return APP.toast('Travail trop court', 'error');
+      const l = this.getCurrent();
+      if (!l.completedModules.includes(id)) l.completedModules.push(id);
+      APP.saveDB(); APP.toast('Exercice envoyé !', 'success');
+    },
+    renderMessages() {
+      const l = this.getCurrent();
+      const msgs = APP.db.messages.filter(m => m.learnerId === l.id);
+      APP.db.messages.forEach(m => { if (m.learnerId === l.id && m.from === 'admin') m.read = true; });
+      APP.saveDB();
+      document.getElementById('lv-messages').innerHTML = `
+        <div class="card-title">Discussion avec le Coach</div>
+        <div>${msgs.map(m => `<div class="msg ${m.from === 'learner' ? 'msg-learner' : 'msg-admin'}"><div class="msg-meta">${m.from === 'learner' ? 'Moi' : 'Coach'}</div>${m.text}</div>`).join('') || '<p class="text-muted">Aucun message.</p>'}</div>
+        <div class="flex mt-12">
+          <input class="form-input flex-1" id="learnerChatInput" placeholder="Écrire au coach...">
+          <button class="btn btn-primary" onclick="APP.learner.sendChat()">➤</button>
+        </div>
+      `;
+    },
+    sendChat() {
+      const l = this.getCurrent();
+      const txt = document.getElementById('learnerChatInput').value;
+      if (!txt) return;
+      APP.db.messages.push({ id: 'M'+Date.now(), learnerId: l.id, from: 'learner', text: txt, read: false });
+      APP.saveDB(); this.renderMessages();
+    },
+    renderProfile() {
+      const l = this.getCurrent();
+      document.getElementById('lv-profile').innerHTML = `
+        <div class="card" style="text-align:center">
+          <div class="avatar" style="width:80px;height:80px;font-size:32px;margin:0 auto 16px">${l.photo ? `<img src="${l.photo}">` : l.name[0]}</div>
+          <h3>${l.name}</h3>
+          <p class="text-muted">${l.phone}</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Modifier mon profil</div>
+          <div class="form-group"><label class="form-label">Photo (URL)</label><input class="form-input" id="pf_photo" value="${l.photo || ''}" placeholder="https://..."></div>
+          <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="pf_name" value="${l.name}"></div>
+          <div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="pf_phone" value="${l.phone}"></div>
+          <div class="form-group"><label class="form-label">Code PIN</label><input class="form-input" id="pf_pin" value="${l.pin}" maxlength="4"></div>
+          <button class="btn btn-primary btn-block" onclick="APP.learner.saveProfile()">💾 Sauvegarder</button>
+        </div>
+      `;
+    },
+    saveProfile() {
+      const l = this.getCurrent();
+      l.photo = document.getElementById('pf_photo').value;
+      l.name = document.getElementById('pf_name').value;
+      l.phone = document.getElementById('pf_phone').value;
+      l.pin = document.getElementById('pf_pin').value;
+      APP.saveDB(); APP.toast('Profil mis à jour', 'success'); this.renderProfile();
+    }
+  },
+
+  bindEvents() {
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest('[data-action]');
+      if (!target) return;
+      const act = target.dataset.action;
+
+      if (act === 'go') this.go(target.dataset.screen);
+      if (act === 'nav') this.nav(target.dataset.screen, target.dataset.tab);
+      if (act === 'toggle-theme') this.toggleTheme();
+      if (act === 'close-modal') this.closeModal();
+      
+      if (act === 'auth.register') this.auth.register();
+      if (act === 'auth.logout') this.auth.logout();
+      
+      if (act === 'learner.payNow') this.learner.payNow();
+      if (act === 'learner.previewModule') this.learner.previewModule();
+      if (act === 'learner.contactCoach') this.learner.contactCoach();
+    });
+
+    document.getElementById('modalBg').addEventListener('click', (e) => {
+      if (e.target.id === 'modalBg') this.closeModal();
+    });
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => APP.init());
+</script>
+</body>
+</html>
